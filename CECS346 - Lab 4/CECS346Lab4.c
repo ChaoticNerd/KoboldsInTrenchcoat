@@ -1,73 +1,54 @@
-// CECS346 Project 1
+// CECS346 Lab 4: SysTick
 // Team members: Justin Narciso, Natasha Kho, Hanna Estrada, William Grefaldeo
-// Lab description: Creating a traffic light using Moore finite state machine
+// Lab description: Creating a properly timed delay to control the traffic light using SysTick Timer
 
 // Hardware Design
 // 1)	Port E will be used to control 4 LEDs: white(PE3), red (PE2), yellow (PE1), green (PE0).
 // 2)	Port A will be used for the two switches: sw1 (PA2), sw2 (PA3)
 
 #include <stdint.h>   // for data type alias
+#include "Lab4SysTick.h"
 
-#include "SysTick.h"
-
-// PB for car LEDS, PE for switches, PF for pedestrian LEDS (1 and 3)
-
-// Registers for car LEDS
+// Registers for switches
 // Complete the following register definitions
-#define CAR_LIGHT  							(*((volatile uint32_t *)0x400050FC)) // bit addresses for 6 LEDS (0-5) 
-#define GPIO_PORTB_DIR_R        (*((volatile uint32_t *)0x40005400)) 
-#define GPIO_PORTB_AFSEL_R      (*((volatile uint32_t *)0x40005420)) 
-#define GPIO_PORTB_DEN_R        (*((volatile uint32_t *)0x4000551C)) 
-#define GPIO_PORTB_AMSEL_R      (*((volatile uint32_t *)0x40005528)) 
-#define GPIO_PORTB_PCTL_R       (*((volatile uint32_t *)0x4000552C)) 
-	
-// Registers for pedestrian LEDS
-#define PED_LIGHT  							(*((volatile uint32_t *)0x40025028)) // bit addresses for 2 LEDS (1 and 3) 
-#define GPIO_PORTF_DIR_R        (*((volatile uint32_t *)0x40025400)) 
-#define GPIO_PORTF_AFSEL_R      (*((volatile uint32_t *)0x40025420)) 
-#define GPIO_PORTF_DEN_R        (*((volatile uint32_t *)0x4002551C)) 
-#define GPIO_PORTF_AMSEL_R      (*((volatile uint32_t *)0x40025528)) 
-#define GPIO_PORTF_PCTL_R       (*((volatile uint32_t *)0x4002552C)) 
+#define SENSOR									(*((volatile uint32_t *)0x40004030)) // bit addresses for the two switches/Sensors: bits 2&3 
+#define GPIO_PORTA_DATA_R       (*((volatile uint32_t *)0x400043FC)) // calls all pins in port to be able to read/write
+#define GPIO_PORTA_DIR_R        (*((volatile uint32_t *)0x40004400)) 
+#define GPIO_PORTA_AFSEL_R      (*((volatile uint32_t *)0x40004420)) 
+#define GPIO_PORTA_DEN_R        (*((volatile uint32_t *)0x4000451C)) 
+#define GPIO_PORTA_AMSEL_R      (*((volatile uint32_t *)0x40004528)) 
+#define GPIO_PORTA_PCTL_R       (*((volatile uint32_t *)0x4000452C)) 
+#define GPIO_PORTA_PDR_R        (*((volatile uint32_t *)0x40004514)) // for resistor
 
-//// Registers for switches
-#define SENSOR                 	(*((volatile uint32_t *)0x4002401C)) // bit addresses for the three switches (0-2)
-#define GPIO_PORTE_DATA_R       (*((volatile uint32_t *)0x400243FC)) // calls all pins in port to be able to read/write
+//// Registers for LEDs
+#define LIGHT                 	(*((volatile uint32_t *)0x4002403C)) // bit addresses for the four LEDs (0-3)
 #define GPIO_PORTE_DIR_R        (*((volatile uint32_t *)0x40024400)) 
 #define GPIO_PORTE_AFSEL_R      (*((volatile uint32_t *)0x40024420)) 
 #define GPIO_PORTE_DEN_R        (*((volatile uint32_t *)0x4002451C)) 
 #define GPIO_PORTE_AMSEL_R      (*((volatile uint32_t *)0x40024528))
 #define GPIO_PORTE_PCTL_R       (*((volatile uint32_t *)0x4002452C))
-#define GPIO_PORTE_PDR_R        (*((volatile uint32_t *)0x40024514)) // for resistor
 #define SYSCTL_RCGC2_R          (*((volatile uint32_t *)0x400FE108)) // activate internal clock
 	
 // Constants definitions
-#define BPORT_012345         		0x3F
-#define BPORT_CTL        				0x00FFFFFF
-#define EPORT_012       				0x07
-#define EPORT_CTL        				0x00000FFF
-#define SYSCTL_RCGC2_GPIOB    	0x00000002    // port B Clock Gating Control
+#define APORT_23         				0x0C
+#define APORT_CTL        				0x0000FF00
+#define EPORT_0123       				0x0F
+#define EPORT_CTL        				0x0000FFFF
 #define SYSCTL_RCGC2_GPIOE    	0x00000010    // port E Clock Gating Control
+#define SYSCTL_RCGC2_GPIOA    	0x00000001    // port A Clock Gating Control
 #define HALF_SEC 								1   					// Half second delay (0.5 x 1)
 #define ONE_SEC 								2							// One second delay (0.5 x 2)
 #define TWO_SEC									4							// Two second delay (0.5 x 4)
 #define NO_DELAY        				0             // Zero second delay (0.5 x 0)
 
-/*#define LED_GREEN       				0x01          // green LED (port E0)
+#define LED_GREEN       				0x01          // green LED (port E0)
 #define LED_YELLOW 							0x02          // yellow LED (port E1)
 #define LED_REDWHITE_0 					0x0C          // red and white LED (port E2, E3)
 #define LED_RED 								0x04          // red LED (port E0)
 #define LED_REDWHITE_1 					0x0C          // red and white LED (port E2, E3)
-#define SENSOR_SHIFT 						2             // shift SENSOR to right by 2 (since we're using port A2 and A3)*/
+#define SENSOR_SHIFT 						2             // shift SENSOR to right by 2 (since we're using port A2 and A3)     
 
-#define S_GREEN
-#define S_YELLOW
-#define S_RED
-#define W_GREEN
-#define W_YELLOW
-#define W_RED
-#define PED_
-
-#define NUM_STATES 							9             // number of states (using 9/16)
+#define NUM_STATES 							8             // number of states (using 5/8)
 
 // define each function
 void Delay(uint8_t n);
@@ -76,7 +57,7 @@ void Sensor_Init(void);
 
 // FSM state data structure
 // Declares the data type for each element in array
-struct Traffic_State {
+struct State {
 	// components at [X][0] represent Out, [X][1] represent Duration of State, [X][2] represent Next State
   uint8_t Out; 
   uint8_t Time;  
@@ -85,10 +66,9 @@ struct Traffic_State {
 
 typedef const struct State STyp;		// never changes
 
-
 // Constants definitions
 // states connected to each output
-enum traffic_States {GoS, WaitS, GoW, WaitW, GoP, WaitPOn0, WaitPOff0, WaitPOn1, WaitPOff1};
+enum my_states {GREEN, YELLOW, REDWHITE_0, RED, REDWHITE_1, NULL_0, NULL_1, NULL_2};
 
 // Output pins are: 3(white), 2(red), 1(yellow), 0(green)
 // Input pins are: 1:sw2, 0:sw1 
@@ -96,27 +76,31 @@ enum traffic_States {GoS, WaitS, GoW, WaitW, GoP, WaitPOn0, WaitPOff0, WaitPOn1,
 // in order: next state for next input 000 001 010 011 100 101 110 111
 // note: 100 101 110 111 are same states as 000 001 010 011 due to having same last 2 bits
 // ** based on state diagram/table
+// no button means stay at current state
 STyp FSM[NUM_STATES]={
-	{S_GREEN, 8, {GoS, WaitS, WaitS, WaitS, GoS, WaitS, WaitS, WaitS}},
-	{WaitS,		4, {GoW, GoP, GoW, GoW, GoP, GoP, GoW, GoP}},
-	
+	{LED_GREEN, 						TWO_SEC, 	{GREEN,      GREEN,      YELLOW,     YELLOW,     GREEN,      GREEN,      YELLOW,     YELLOW}},
+	{LED_YELLOW, 						ONE_SEC, 	{REDWHITE_0, REDWHITE_0, REDWHITE_0, REDWHITE_0, REDWHITE_0, REDWHITE_0, REDWHITE_0, REDWHITE_0}},
+	{LED_REDWHITE_0,        TWO_SEC, 	{REDWHITE_0, RED,        REDWHITE_0, RED,        REDWHITE_0, RED,        REDWHITE_0, RED}},
+	{LED_RED,               HALF_SEC, {REDWHITE_1, REDWHITE_1, REDWHITE_1, REDWHITE_1, REDWHITE_1, REDWHITE_1, REDWHITE_1, REDWHITE_1}},
+	{LED_REDWHITE_1, 			  HALF_SEC, {GREEN,      GREEN,      GREEN,      GREEN,      GREEN,      GREEN,      GREEN,      GREEN}},
+  {NULL_0,                NO_DELAY, {GREEN,      GREEN,      GREEN,      GREEN,      GREEN,      GREEN,      GREEN,      GREEN}},
+  {NULL_1,                NO_DELAY, {GREEN,      GREEN,      GREEN,      GREEN,      GREEN,      GREEN,      GREEN,      GREEN}},
+	{NULL_2,                NO_DELAY, {GREEN,      GREEN,      GREEN,      GREEN,      GREEN,      GREEN,      GREEN,      GREEN}}
 };
-
-
 
 int main(void){ 
   uint8_t S;  // index to the current state 
   uint8_t Input; 
+	SysTick_Init();
 	
 	Light_Init();
 	Sensor_Init();
-  S = S_GREEN;                     // FSM start with green  
+  S = GREEN;                     // FSM start with green  
     
   while(1){
-		/*// output LED color 
+		// output LED color 
 		LIGHT = FSM[S].Out;
 		// activate delay function with correct delay duration from current state
-		// Delay(FSM[S].Time);
 		Wait_N_Half_Sec(FSM[S].Time);
 		
 		// 00001100
@@ -124,19 +108,9 @@ int main(void){
 		// Input = Current Button press value, AND SENSOR with APORT_23 to clear other bits
 		Input = (((~SENSOR & APORT_23) >> SENSOR_SHIFT));
 		// Update State
-		S = FSM[S].Next[Input];*/
+		S = FSM[S].Next[Input];
   }
 }
-
-// delay function
-/*void Delay(uint8_t n_500ms){
-	volatile uint32_t time;
-	
-  time = n_500ms*(727240*100/91);  // 0.5sec
-  while(time){
-		time--;
-  }
-}*/
 
 void Sensor_Init(void){
 	SYSCTL_RCGC2_R |= SYSCTL_RCGC2_GPIOA;       // Activate Port A clocks
