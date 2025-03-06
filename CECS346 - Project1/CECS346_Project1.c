@@ -71,8 +71,8 @@
 
 // define each function 
 void Delay(uint8_t n);
-void Light_Init(void);
-void Car_Light_Init(void);
+void T_Light_Init(void);
+void P_Light_Init(void);
 void Sensor_Init(void);
 
 // FSM state data structure
@@ -113,8 +113,8 @@ int main(void){
   uint8_t S;  // index to the current state 
   uint8_t Input; 
 	
-	Light_Init();
-	Car_Light_Init();
+	T_Light_Init();
+	P_Light_Init();
 	Sensor_Init();
     S = GoS;                     // FSM start with green  
     
@@ -133,7 +133,7 @@ int main(void){
 }
 
 // Port B Initialization
-void Car_Light_Init(void){
+void T_Light_Init(void){
 	SYSCTL_RCGC2_R |= SYSCTL_RCGC2_GPIOB;       // Activate Port B clocks
 	while ((SYSCTL_RCGC2_R & SYSCTL_RCGC2_GPIOB)!= SYSCTL_RCGC2_GPIOB) {} // wait for clock to be active
 		
@@ -146,7 +146,7 @@ void Car_Light_Init(void){
 }
 
 // Port E Initialization
-void Ped_Light_Init(void){
+void P_Light_Init(void){
 	SYSCTL_RCGC2_R |= SYSCTL_RCGC2_GPIOE;      // Activate Port E clocks
 	while ((SYSCTL_RCGC2_R & SYSCTL_RCGC2_GPIOE)!= SYSCTL_RCGC2_GPIOE) {} // wait for clock to be active
 		
