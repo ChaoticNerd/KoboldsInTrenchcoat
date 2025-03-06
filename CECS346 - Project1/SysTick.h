@@ -26,17 +26,12 @@
 
 // Initialize SysTick with busy wait running at bus clock. 
 // Do not enable SysTick timer in this function
-SysTick_Init(void){};
+void SysTick_Init(void);
 
 // This function will generate multiple 0.5s delay
 // Parameter: number of half seconds
 // n_half_s: specify how many 0.5s will be generated
 // maximum delay can be generated: 2^32*0.5s
-void Wait_N_Quart_Sec( uint32_t n_quart_s) {
-	while (n_quart_s) {
-		SysTick_Wait_QuartSec();
-		n_quart_s--;
-	}
-}
+void Wait_N_Quart_Sec( uint32_t n_quart_s);
 
 #endif // __LAB4SYSTICK_H__

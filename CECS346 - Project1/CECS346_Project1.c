@@ -14,7 +14,7 @@
 
 // Registers for car LEDS
 // Complete the following register definitions
-#define T_LIGHT  							(*((volatile uint32_t *)0x400050FC)) // bit addresses for 6 LEDS (0-5) 
+#define T_LIGHT  							  (*((volatile uint32_t *)0x400050FC)) // bit addresses for 6 LEDS (0-5) 
 #define GPIO_PORTB_DIR_R        (*((volatile uint32_t *)0x40005400)) 
 #define GPIO_PORTB_AFSEL_R      (*((volatile uint32_t *)0x40005420)) 
 #define GPIO_PORTB_DEN_R        (*((volatile uint32_t *)0x4000551C)) 
@@ -42,29 +42,29 @@
 	
 // Constants definitions
 #define BPORT_012345         		0x3F
-#define BPORT_CTL        			0x00FFFFFF
-#define EPORT_01       				0x03
-#define EPORT_CTL        			0x000000FF
-#define FPORT_13       				0x0A
-#define FPORT_CTL        			0x0000F0F0
+#define BPORT_CTL        			  0x00FFFFFF
+#define EPORT_01       				  0x03
+#define EPORT_CTL        			  0x000000FF
+#define FPORT_13       				  0x0A
+#define FPORT_CTL        			  0x0000F0F0
 #define SYSCTL_RCGC2_GPIOB    	0x00000002    // port B Clock Gating Control
 #define SYSCTL_RCGC2_GPIOE    	0x00000010    // port E Clock Gating Control
 #define SYSCTL_RCGC2_GPIOF    	0x00000020    // port E Clock Gating Control
 // 0.25 sec
-#define QUARTER_SEC								1							// Quarter second delay (0.25 x 1)
+#define QUARTER_SEC							1							// Quarter second delay (0.25 x 1)
 #define ONE_SEC 								4							// One second delay (0.25 x 4)
 #define TWO_SEC									8							// Two second delay (0.25 x 8)
-#define NO_DELAY        						0             // Zero second delay (0.5 x 0)
+#define NO_DELAY        				0             // Zero second delay (0.25 x 0)
 
-#define GS_RW										100001 // (0x21)
-#define YS_RW										010001 // (0x11)
-#define RS_GW										001100 // (0x0C)
-#define RS_YW										001010 // (0x0A)
-#define RS_RW										001001 // (0x09)
+#define GS_RW										0x21
+#define YS_RW										0x11
+#define RS_GW										0x0C
+#define RS_YW										0x0A
+#define RS_RW										0x09
 // 1010 (bits 3, 1)									
-#define	GP											1000   // (0x08)								
-#define RP											0010   // (0x02)
-#define RFP											0000   // (0x00)
+#define	GP											0x08								
+#define RP											0x02
+#define RFP											0x00
 
 #define NUM_STATES 							9             // number of states (using 9/16)
 #define NUM_OUTS								2
@@ -89,7 +89,7 @@ typedef const struct State STyp;		// never changes
 
 // Constants definitions
 // states connected to each output
-enum traffic_States {GoS, WaitS, GoW, WaitW, GoP, WaitPOn0, WaitPOff0, WaitPOn1, WaitPOff1};
+enum traffic_States {GoS, WaitS, GoW, WaitW, GoP, WaitPOn1, WaitPOff1, WaitPOn2, WaitPOff2};
 
 // Output pins are: 3(white), 2(red), 1(yellow), 0(green)
 // Input pins are: 1:sw2, 0:sw1 
@@ -102,10 +102,10 @@ STyp FSM[NUM_STATES]={
 	{{YS_RW, RP},  ONE_SEC, 		{GoW, GoP, GoW, GoW, GoP, GoP, GoW, GoW, GoP}},													// WaitS
 	{{RS_GW, RP},  TWO_SEC, 		{GoW, WaitW, GoW, WaitW, WaitW, WaitW, WaitW, WaitW}},											// GoW
 	{{RS_YW, RP},  ONE_SEC, 		{GoP, GoP, GoS, GoP, GoS, GoP, GoS, GoS}},														// WaitW
-	{{RS_RW, GP},  TWO_SEC, 		{GoP, GoP, WaitPOn1, WaitPOn1, WaitPOn1, WaitPOn1, WaitPOn1, WaitPOn1}}							// GoP
-	{{RS_RW, RFP}, QUARTER_SEC, 	{WaitPOff1, WaitPOff1, WaitPOff1, WaitPOff1, WaitPOff1, WaitPOff1, WaitPOff1, WaitPOff1}}		// WaitPOn1
-	{{RS_RW, RP},  QUARTER_SEC,		{WaitPOn2, WaitPOn2, WaitPOn2, WaitPOn2, WaitPOn2, WaitPOn2, WaitPOn2, WaitPOn2}}				// WaitPOff1
-	{{RS_RW, RFP}, QUARTER_SEC, 	{WaitPOff2, WaitPOff2, WaitPOff2, WaitPOff2, WaitPOff2, WaitPOff2, WaitPOff2, WaitPOff2}}		// WaitPOn2
+	{{RS_RW, GP},  TWO_SEC, 		{GoP, GoP, WaitPOn1, WaitPOn1, WaitPOn1, WaitPOn1, WaitPOn1, WaitPOn1}},					// GoP
+	{{RS_RW, RFP}, QUARTER_SEC, 	{WaitPOff1, WaitPOff1, WaitPOff1, WaitPOff1, WaitPOff1, WaitPOff1, WaitPOff1, WaitPOff1}},		// WaitPOn1
+	{{RS_RW, RP},  QUARTER_SEC,		{WaitPOn2, WaitPOn2, WaitPOn2, WaitPOn2, WaitPOn2, WaitPOn2, WaitPOn2, WaitPOn2}},				// WaitPOff1
+	{{RS_RW, RFP}, QUARTER_SEC, 	{WaitPOff2, WaitPOff2, WaitPOff2, WaitPOff2, WaitPOff2, WaitPOff2, WaitPOff2, WaitPOff2}},		// WaitPOn2
 	{{RS_RW, RP},  QUARTER_SEC,		{GoS, GoW, GoW, GoW, GoS, GoS, GoS, GoW}}														// WaitPOff2
 };
 
@@ -120,8 +120,8 @@ int main(void){
     
   while(1){
 	// output LED color 
-	T_LIGHT = FSM[S].Out[0];
-	P_LIGHT = FSM[S].Out[1];
+	T_LIGHT = FSM[S].Output[0];
+	P_LIGHT = FSM[S].Output[1];
 	// activate delay function with correct delay duration from current state
 	Wait_N_Quart_Sec(FSM[S].Time);
 	

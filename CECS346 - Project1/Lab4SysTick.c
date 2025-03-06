@@ -42,7 +42,7 @@ void SysTick_Wait_QuartSec(void){
 // Parameter: number of half seconds
 // n_half_s: specify how many 0.25s will be generated
 // maximum delay can be generated: 2^32*0.5s
-void Wait_N_Half_Sec( uint32_t n_quart_s) {
+void Wait_N_Quart_Sec( uint32_t n_quart_s) {
 	// loop number of times we want to use 0.25 sec delay
 	while (n_quart_s) {
 		SysTick_Wait_QuartSec();
