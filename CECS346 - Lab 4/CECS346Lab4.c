@@ -87,7 +87,7 @@ STyp FSM[NUM_STATES]={
   {NULL_1,                NO_DELAY, {GREEN,      GREEN,      GREEN,      GREEN,      GREEN,      GREEN,      GREEN,      GREEN}},
 	{NULL_2,                NO_DELAY, {GREEN,      GREEN,      GREEN,      GREEN,      GREEN,      GREEN,      GREEN,      GREEN}}
 };
-
+//yee
 int main(void){ 
   uint8_t S;  // index to the current state 
   uint8_t Input; 
