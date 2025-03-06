@@ -56,11 +56,11 @@
 #define TWO_SEC									8							// Two second delay (0.25 x 8)
 #define NO_DELAY        				0             // Zero second delay (0.25 x 0)
 
-#define GS_RW										0x21
-#define YS_RW										0x11
-#define RS_GW										0x0C
-#define RS_YW										0x0A
-#define RS_RW										0x09
+#define GS_RW										0x21 //00 W100 S001
+#define YS_RW										0x22 //00 W100 S010
+#define RS_GW										0x0C //00 W001 S100
+#define RS_YW										0x14 //00 W010 S100
+#define RS_RW										0x24 //00 W100 S100
 // 1010 (bits 3, 1)									
 #define	GP											0x08								
 #define RP											0x02
@@ -98,15 +98,15 @@ enum traffic_States {GoS, WaitS, GoW, WaitW, GoP, WaitPOn1, WaitPOff1, WaitPOn2,
 // note: 100 101 110 111 are same states as 000 001 010 011 due to having same last 2 bits
 // ** based on state diagram/table
 STyp FSM[NUM_STATES]={
-	{{GS_RW, RP},  TWO_SEC, 		{GoS, WaitS, WaitS, WaitS, GoS, WaitS, WaitS, WaitS}},											// GoS
-	{{YS_RW, RP},  ONE_SEC, 		{GoW, GoP, GoW, GoW, GoP, GoP, GoW, GoW, GoP}},													// WaitS
-	{{RS_GW, RP},  TWO_SEC, 		{GoW, WaitW, GoW, WaitW, WaitW, WaitW, WaitW, WaitW}},											// GoW
-	{{RS_YW, RP},  ONE_SEC, 		{GoP, GoP, GoS, GoP, GoS, GoP, GoS, GoS}},														// WaitW
-	{{RS_RW, GP},  TWO_SEC, 		{GoP, GoP, WaitPOn1, WaitPOn1, WaitPOn1, WaitPOn1, WaitPOn1, WaitPOn1}},					// GoP
-	{{RS_RW, RFP}, QUARTER_SEC, 	{WaitPOff1, WaitPOff1, WaitPOff1, WaitPOff1, WaitPOff1, WaitPOff1, WaitPOff1, WaitPOff1}},		// WaitPOn1
-	{{RS_RW, RP},  QUARTER_SEC,		{WaitPOn2, WaitPOn2, WaitPOn2, WaitPOn2, WaitPOn2, WaitPOn2, WaitPOn2, WaitPOn2}},				// WaitPOff1
-	{{RS_RW, RFP}, QUARTER_SEC, 	{WaitPOff2, WaitPOff2, WaitPOff2, WaitPOff2, WaitPOff2, WaitPOff2, WaitPOff2, WaitPOff2}},		// WaitPOn2
-	{{RS_RW, RP},  QUARTER_SEC,		{GoS, GoW, GoW, GoW, GoS, GoS, GoS, GoW}}														// WaitPOff2
+	{{GS_RW, RP},  TWO_SEC, 			{GoS, 			WaitS, 			WaitS, 			WaitS, 			GoS, 				WaitS, 			WaitS, 			WaitS}},											// GoS
+	{{YS_RW, RP},  ONE_SEC, 			{GoW, 			GoP, 				GoW, 				GoW, 				GoP, 				GoP, 				GoW, 				GoP}},													// WaitS
+	{{RS_GW, RP},  TWO_SEC, 			{GoW, 			WaitW, 			GoW, 				WaitW, 			WaitW, 			WaitW, 			WaitW, 			WaitW}},											// GoW
+	{{RS_YW, RP},  ONE_SEC, 			{GoP, 			GoP, 				GoS, 				GoP, 				GoS, 				GoP, 				GoS, 				GoS}},														// WaitW
+	{{RS_RW, GP},  TWO_SEC, 			{GoP, 			GoP, 				WaitPOn1, 	WaitPOn1, 	WaitPOn1, 	WaitPOn1, 	WaitPOn1, 	WaitPOn1}},					// GoP
+	{{RS_RW, RFP}, QUARTER_SEC, 	{WaitPOff1, WaitPOff1, 	WaitPOff1, 	WaitPOff1, 	WaitPOff1, 	WaitPOff1, 	WaitPOff1, 	WaitPOff1}},		// WaitPOn1
+	{{RS_RW, RP},  QUARTER_SEC,		{WaitPOn2, 	WaitPOn2, 	WaitPOn2, 	WaitPOn2, 	WaitPOn2, 	WaitPOn2, 	WaitPOn2, 	WaitPOn2}},				// WaitPOff1
+	{{RS_RW, RFP}, QUARTER_SEC, 	{WaitPOff2, WaitPOff2, 	WaitPOff2, 	WaitPOff2, 	WaitPOff2, 	WaitPOff2, 	WaitPOff2, 	WaitPOff2}},		// WaitPOn2
+	{{RS_RW, RP},  QUARTER_SEC,		{GoS, 			GoW, 				GoW, 				GoW, 				GoS, 				GoS, 				GoS, 				GoW}}														// WaitPOff2
 };
 
 int main(void){ 

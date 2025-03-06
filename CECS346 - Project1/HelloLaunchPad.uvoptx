@@ -129,6 +129,19 @@
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
+<<<<<<< Updated upstream
+=======
+          <Key>Lab5OutputPort</Key>
+          <Name>1</Name>
+        </SetRegEntry>
+        <SetRegEntry>
+          <Number>0</Number>
+          <Key>Lab5InputPort</Key>
+          <Name>2</Name>
+        </SetRegEntry>
+        <SetRegEntry>
+          <Number>0</Number>
+>>>>>>> Stashed changes
           <Key>Stepper_OUTPUT_SEL</Key>
           <Name>4</Name>
         </SetRegEntry>
@@ -205,7 +218,11 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>DLGDARM</Key>
+<<<<<<< Updated upstream
           <Name>(1010=-1,-1,-1,-1,0)(1007=-1,-1,-1,-1,0)(1008=90,117,456,339,0)(1009=-1,-1,-1,-1,0)(1012=-1,-1,-1,-1,0)(3006=180,121,586,482,0)(3004=-1,-1,-1,-1,0)</Name>
+=======
+          <Name>(1010=-1,-1,-1,-1,0)(1007=-1,-1,-1,-1,0)(1008=90,117,456,339,0)(1009=-1,-1,-1,-1,0)(1012=-1,-1,-1,-1,0)(3006=1265,178,1671,539,0)(3004=-1,-1,-1,-1,0)</Name>
+>>>>>>> Stashed changes
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
