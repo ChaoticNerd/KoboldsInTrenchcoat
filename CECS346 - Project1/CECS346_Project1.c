@@ -1,7 +1,7 @@
 // CECS346 Project 1
 // Team members: Justin Narciso, Natasha Kho, Hanna Estrada, William Grefaldeo
 // Lab description: Creating two traffic lights and a pedestrian light using Moore finite state machine
-
+ 
 // Hardware Design
 // 1)	Port E will be used to control 4 LEDs: white(PE3), red (PE2), yellow (PE1), green (PE0).
 // 2)	Port A will be used for the two switches: sw1 (PA2), sw2 (PA3)
