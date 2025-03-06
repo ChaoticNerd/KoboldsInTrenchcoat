@@ -77,7 +77,7 @@ void Sensor_Init(void);
 
 // FSM state data structure
 // Declares the data type for each element in array
-struct Traffic_State {
+struct State {
 	// components at [X][0] represent Out, [X][1] represent Duration of State, [X][2] represent Next State
   uint8_t Output[NUM_OUTS];
   uint8_t Time;  

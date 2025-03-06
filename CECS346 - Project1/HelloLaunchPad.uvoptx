@@ -282,12 +282,12 @@
     <File>
       <GroupNumber>1</GroupNumber>
       <FileNumber>3</FileNumber>
-      <FileType>5</FileType>
+      <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>.\SysTick.h</PathWithFileName>
-      <FilenameWithoutPath>SysTick.h</FilenameWithoutPath>
+      <PathWithFileName>.\Lab4SysTick.c</PathWithFileName>
+      <FilenameWithoutPath>Lab4SysTick.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>

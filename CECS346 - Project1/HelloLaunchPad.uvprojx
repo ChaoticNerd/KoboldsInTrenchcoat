@@ -396,9 +396,9 @@
               <FilePath>.\CECS346_Project1.c</FilePath>
             </File>
             <File>
-              <FileName>SysTick.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\SysTick.h</FilePath>
+              <FileName>Lab4SysTick.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Lab4SysTick.c</FilePath>
             </File>
           </Files>
         </Group>
