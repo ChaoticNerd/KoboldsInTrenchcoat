@@ -43,7 +43,7 @@
 // Constants definitions
 #define BPORT_012345         		0x3F
 #define BPORT_CTL        			  0x00FFFFFF
-#define EPORT_01       				  0x03
+#define EPORT_012       				0x07
 #define EPORT_CTL        			  0x000000FF
 #define FPORT_13       				  0x0A
 #define FPORT_CTL        			  0x0000F0F0
@@ -146,25 +146,25 @@ void T_Light_Init(void){
 }
 
 // Port E Initialization
-void P_Light_Init(void){
+void Sensor_Init(void){
 	SYSCTL_RCGC2_R |= SYSCTL_RCGC2_GPIOE;      // Activate Port E clocks
 	while ((SYSCTL_RCGC2_R & SYSCTL_RCGC2_GPIOE)!= SYSCTL_RCGC2_GPIOE) {} // wait for clock to be active
 		
-  GPIO_PORTE_AMSEL_R &= ~EPORT_01;// Disable analog function on PE0-1
+  GPIO_PORTE_AMSEL_R &= ~EPORT_012;// Disable analog function on PE0-2
   GPIO_PORTE_PCTL_R &= ~EPORT_CTL;// Enable regular GPIO
-  GPIO_PORTE_DIR_R  |= EPORT_01;  // Outputs on PE0-1
-  GPIO_PORTE_AFSEL_R &= ~EPORT_01;// Regular function on PE0-1
-  GPIO_PORTE_DEN_R |= EPORT_01;  // Enable digital on PE0-1
+  GPIO_PORTE_DIR_R  &= ~EPORT_012;  // Inputs on PE0-2
+  GPIO_PORTE_AFSEL_R &= ~EPORT_012;// Regular function on PE0-2
+  GPIO_PORTE_DEN_R |= EPORT_012;  // Enable digital on PE0-2
 }
 
 // Port F Initialization
-void Sensor_Init(void){
+void P_Light_Init(void){
 	SYSCTL_RCGC2_R |= SYSCTL_RCGC2_GPIOF;      // Activate Port F clocks
 	while ((SYSCTL_RCGC2_R & SYSCTL_RCGC2_GPIOF)!= SYSCTL_RCGC2_GPIOF) {} // wait for clock to be active
 		
   GPIO_PORTF_AMSEL_R &= ~FPORT_13;// Disable analog function on PF1,3
   GPIO_PORTF_PCTL_R &= ~FPORT_CTL;// Enable regular GPIO
-  GPIO_PORTF_DIR_R  |= FPORT_13;  // Inputs on PF1,3
+  GPIO_PORTF_DIR_R  |= FPORT_13;  // Outputs on PF1,3
   GPIO_PORTF_AFSEL_R &= ~FPORT_13;// Regular function on PF1,3
   GPIO_PORTF_DEN_R |= FPORT_13;  // Enable digital on PF1,3
 }
