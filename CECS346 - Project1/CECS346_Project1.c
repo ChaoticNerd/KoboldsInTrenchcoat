@@ -164,7 +164,7 @@ void Sensor_Init(void){
 		
   GPIO_PORTF_AMSEL_R &= ~FPORT_13;// Disable analog function on PF1,3
   GPIO_PORTF_PCTL_R &= ~FPORT_CTL;// Enable regular GPIO
-  GPIO_PORTF_DIR_R  &= ~FPORT_13;  // Inputs on PF1,3
+  GPIO_PORTF_DIR_R  |= FPORT_13;  // Inputs on PF1,3
   GPIO_PORTF_AFSEL_R &= ~FPORT_13;// Regular function on PF1,3
   GPIO_PORTF_DEN_R |= FPORT_13;  // Enable digital on PF1,3
 }
