@@ -77,6 +77,7 @@ enum my_states {GREEN, YELLOW, REDWHITE_0, RED, REDWHITE_1, NULL_0, NULL_1, NULL
 // note: 100 101 110 111 are same states as 000 001 010 011 due to having same last 2 bits
 // ** based on state diagram/table
 // no button means stay at current state
+
 STyp FSM[NUM_STATES]={
 	{LED_GREEN, 						TWO_SEC, 	{GREEN,      GREEN,      YELLOW,     YELLOW,     GREEN,      GREEN,      YELLOW,     YELLOW}},
 	{LED_YELLOW, 						ONE_SEC, 	{REDWHITE_0, REDWHITE_0, REDWHITE_0, REDWHITE_0, REDWHITE_0, REDWHITE_0, REDWHITE_0, REDWHITE_0}},
