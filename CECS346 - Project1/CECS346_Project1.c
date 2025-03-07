@@ -55,18 +55,18 @@
 #define ONE_SEC 								4							// One second delay (0.25 x 4)
 #define TWO_SEC									8							// Two second delay (0.25 x 8)
 
-#define GS_RW										0x21 //00 W100 S001
-#define YS_RW										0x22 //00 W100 S010
-#define RS_GW										0x0C //00 W001 S100
-#define RS_YW										0x14 //00 W010 S100
-#define RS_RW										0x24 //00 W100 S100
+#define GS_RW										0x21 					//00 W100 S001
+#define YS_RW										0x22 					//00 W100 S010
+#define RS_GW										0x0C 					//00 W001 S100
+#define RS_YW										0x14 					//00 W010 S100
+#define RS_RW										0x24 					//00 W100 S100
 // 1010 (bits 3, 1)									
 
 #define	GP											0x08								
 #define RP											0x02
 #define RFP											0x00
 
-#define NUM_STATES 							9    // number of states (using 9/16)
+#define NUM_STATES 							9    					// number of states (using 9/16)
 
 
 // define each function 
@@ -83,7 +83,7 @@ struct State {
   uint8_t Next[NUM_STATES];
 }; 
 
-typedef const struct State STyp;		// never changes
+typedef const struct State STyp;	
 
 
 // Constants definitions
@@ -94,7 +94,6 @@ enum traffic_States {GoS, WaitS, GoW, WaitW, GoP, WaitPOn1, WaitPOff1, WaitPOn2,
 // Input pins are: 1:sw2, 0:sw1 
 // Declares and initializes values to Finite State Machine
 // in order: next state for next input 000 001 010 011 100 101 110 111
-// note: 100 101 110 111 are same states as 000 001 010 011 due to having same last 2 bits
 // ** based on state diagram/table
 STyp FSM[NUM_STATES]={
 	{GS_RW, RP,  TWO_SEC, 			{GoS, 			WaitS, 			WaitS, 			WaitS, 			GoS, 				WaitS, 			WaitS, 			WaitS}},				// GoS
@@ -118,15 +117,17 @@ int main(void){
 	SysTick_Init();
 	
   S = GoS;                     // FSM start with green  
+	
   while(1){
-		// output LED color 
-		T_LIGHT = FSM[S].T_Out;
-		P_LIGHT = FSM[S].P_Out;
+		T_LIGHT = FSM[S].T_Out; // Traffic Light output
+		P_LIGHT = FSM[S].P_Out; // Pedestrian Light output
+		
 		// activate delay function with correct delay duration from current state
 		Wait_N_Quart_Sec(FSM[S].Time); //calls delay function from file Lab4SysTick.c
 		
 		// Input = current button press value
 		Input = SENSORS;
+		
 		// Update State
 		S = FSM[S].Next[Input];
   }
@@ -142,7 +143,6 @@ void T_Light_Init(void){
   GPIO_PORTB_DIR_R  |= BPORT_012345;  	// Outputs on PB0-5
   GPIO_PORTB_AFSEL_R &= ~BPORT_012345; 	// Regular function on PB0-5
   GPIO_PORTB_DEN_R |= BPORT_012345;   	// Enable digital signals on PB0-5
-	// GPIO_PORTB_PDR_R |= BPORT_01234;  	// Enable pull-down resistors for PB0-5 (Optional)
 }
 
 // Port E Initialization
