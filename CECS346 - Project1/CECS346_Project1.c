@@ -67,7 +67,7 @@
 #define RFP											0x00
 
 #define NUM_STATES 							9    // number of states (using 9/16)
-#define NUM_OUTS								2
+
 
 // define each function 
 void T_Light_Init(void);
@@ -77,8 +77,8 @@ void Sensor_Init(void);
 // FSM state data structure
 // Declares the data type for each element in array
 struct State {
-	// components at [X][0] represent Out, [X][1] represent Duration of State, [X][2] represent Next State
-  uint8_t Output[NUM_OUTS];
+  uint8_t T_Out;
+	uint8_t P_Out;
   uint8_t Time;  
   uint8_t Next[NUM_STATES];
 }; 
@@ -97,20 +97,20 @@ enum traffic_States {GoS, WaitS, GoW, WaitW, GoP, WaitPOn1, WaitPOff1, WaitPOn2,
 // note: 100 101 110 111 are same states as 000 001 010 011 due to having same last 2 bits
 // ** based on state diagram/table
 STyp FSM[NUM_STATES]={
-	{{GS_RW, RP},  TWO_SEC, 			{GoS, 			WaitS, 			WaitS, 			WaitS, 			GoS, 				WaitS, 			WaitS, 			WaitS}},											// GoS
-	{{YS_RW, RP},  ONE_SEC, 			{GoW, 			GoP, 				GoW, 				GoW, 				GoP, 				GoP, 				GoW, 				GoP}},													// WaitS
-	{{RS_GW, RP},  TWO_SEC, 			{GoW, 			WaitW, 			GoW, 				WaitW, 			WaitW, 			WaitW, 			WaitW, 			WaitW}},											// GoW
-	{{RS_YW, RP},  ONE_SEC, 			{GoP, 			GoP, 				GoS, 				GoP, 				GoS, 				GoP, 				GoS, 				GoS}},														// WaitW
-	{{RS_RW, GP},  TWO_SEC, 			{GoP, 			GoP, 				WaitPOn1, 	WaitPOn1, 	WaitPOn1, 	WaitPOn1, 	WaitPOn1, 	WaitPOn1}},					// GoP
-	{{RS_RW, RFP}, QUARTER_SEC, 	{WaitPOff1, WaitPOff1, 	WaitPOff1, 	WaitPOff1, 	WaitPOff1, 	WaitPOff1, 	WaitPOff1, 	WaitPOff1}},		// WaitPOn1
-	{{RS_RW, RP},  QUARTER_SEC,		{WaitPOn2, 	WaitPOn2, 	WaitPOn2, 	WaitPOn2, 	WaitPOn2, 	WaitPOn2, 	WaitPOn2, 	WaitPOn2}},				// WaitPOff1
-	{{RS_RW, RFP}, QUARTER_SEC, 	{WaitPOff2, WaitPOff2, 	WaitPOff2, 	WaitPOff2, 	WaitPOff2, 	WaitPOff2, 	WaitPOff2, 	WaitPOff2}},		// WaitPOn2
-	{{RS_RW, RP},  QUARTER_SEC,		{GoS, 			GoW, 				GoW, 				GoW, 				GoS, 				GoS, 				GoS, 				GoW}}														// WaitPOff2
+	{GS_RW, RP,  TWO_SEC, 			{GoS, 			WaitS, 			WaitS, 			WaitS, 			GoS, 				WaitS, 			WaitS, 			WaitS}},				// GoS
+	{YS_RW, RP,  ONE_SEC, 			{GoW, 			GoP, 				GoW, 				GoW, 				GoP, 				GoP, 				GoW, 				GoP}},					// WaitS
+	{RS_GW, RP,  TWO_SEC, 			{GoW, 			WaitW, 			GoW, 				WaitW, 			WaitW, 			WaitW, 			WaitW, 			WaitW}},				// GoW
+	{RS_YW, RP,  ONE_SEC, 			{GoP, 			GoP, 				GoS, 				GoP, 				GoS, 				GoP, 				GoS, 				GoS}},					// WaitW
+	{RS_RW, GP,  TWO_SEC, 			{GoP, 			GoP, 				WaitPOn1, 	WaitPOn1, 	WaitPOn1, 	WaitPOn1, 	WaitPOn1, 	WaitPOn1}},			// GoP
+	{RS_RW, RFP, QUARTER_SEC, 	{WaitPOff1, WaitPOff1, 	WaitPOff1, 	WaitPOff1, 	WaitPOff1, 	WaitPOff1, 	WaitPOff1, 	WaitPOff1}},		// WaitPOn1
+	{RS_RW, RP,  QUARTER_SEC,		{WaitPOn2, 	WaitPOn2, 	WaitPOn2, 	WaitPOn2, 	WaitPOn2, 	WaitPOn2, 	WaitPOn2, 	WaitPOn2}},			// WaitPOff1
+	{RS_RW, RFP, QUARTER_SEC, 	{WaitPOff2, WaitPOff2, 	WaitPOff2, 	WaitPOff2, 	WaitPOff2, 	WaitPOff2, 	WaitPOff2, 	WaitPOff2}},		// WaitPOn2
+	{RS_RW, RP,  QUARTER_SEC,		{GoS, 			GoW, 				GoW, 				GoW, 				GoS, 				GoS, 				GoS, 				GoW}}						// WaitPOff2
 };
 
 int main(void){ 
-  uint8_t S;  // index to the current state 
-  uint8_t Input; 
+  uint8_t S;  		// index to the current state 
+  uint8_t Input; 	
 	
 	T_Light_Init();
 	P_Light_Init();
@@ -120,10 +120,10 @@ int main(void){
   S = GoS;                     // FSM start with green  
   while(1){
 		// output LED color 
-		T_LIGHT = FSM[S].Output[0];
-		P_LIGHT = FSM[S].Output[1];
+		T_LIGHT = FSM[S].T_Out;
+		P_LIGHT = FSM[S].P_Out;
 		// activate delay function with correct delay duration from current state
-		Wait_N_Quart_Sec(FSM[S].Time);
+		Wait_N_Quart_Sec(FSM[S].Time); //calls delay function from file Lab4SysTick.c
 		
 		// Input = current button press value
 		Input = SENSORS;
@@ -138,11 +138,11 @@ void T_Light_Init(void){
 	while ((SYSCTL_RCGC2_R & SYSCTL_RCGC2_GPIOB)!= SYSCTL_RCGC2_GPIOB) {} // wait for clock to be active
 		
   GPIO_PORTB_AMSEL_R &= ~BPORT_012345;  // Disable analog function on PB0-5
-  GPIO_PORTB_PCTL_R &= ~BPORT_CTL; // Enable regular GPIO
-  GPIO_PORTB_DIR_R  |= BPORT_012345;  // Outputs on PB0-5
-  GPIO_PORTB_AFSEL_R &= ~BPORT_012345; // Regular function on PB0-5
-  GPIO_PORTB_DEN_R |= BPORT_012345;   // Enable digital signals on PB0-5
-	// GPIO_PORTB_PDR_R |= BPORT_01234;  // Enable pull-down resistors for PB0-5 (Optional)
+  GPIO_PORTB_PCTL_R &= ~BPORT_CTL; 			// Enable regular GPIO
+  GPIO_PORTB_DIR_R  |= BPORT_012345;  	// Outputs on PB0-5
+  GPIO_PORTB_AFSEL_R &= ~BPORT_012345; 	// Regular function on PB0-5
+  GPIO_PORTB_DEN_R |= BPORT_012345;   	// Enable digital signals on PB0-5
+	// GPIO_PORTB_PDR_R |= BPORT_01234;  	// Enable pull-down resistors for PB0-5 (Optional)
 }
 
 // Port E Initialization
@@ -150,11 +150,11 @@ void Sensor_Init(void){
 	SYSCTL_RCGC2_R |= SYSCTL_RCGC2_GPIOE;      // Activate Port E clocks
 	while ((SYSCTL_RCGC2_R & SYSCTL_RCGC2_GPIOE)!= SYSCTL_RCGC2_GPIOE) {} // wait for clock to be active
 		
-  GPIO_PORTE_AMSEL_R &= ~EPORT_012;// Disable analog function on PE0-2
-  GPIO_PORTE_PCTL_R &= ~EPORT_CTL;// Enable regular GPIO
+  GPIO_PORTE_AMSEL_R &= ~EPORT_012;	// Disable analog function on PE0-2
+  GPIO_PORTE_PCTL_R &= ~EPORT_CTL;	// Enable regular GPIO
   GPIO_PORTE_DIR_R  &= ~EPORT_012;  // Inputs on PE0-2
-  GPIO_PORTE_AFSEL_R &= ~EPORT_012;// Regular function on PE0-2
-  GPIO_PORTE_DEN_R |= EPORT_012;  // Enable digital on PE0-2
+  GPIO_PORTE_AFSEL_R &= ~EPORT_012;	// Regular function on PE0-2
+  GPIO_PORTE_DEN_R |= EPORT_012;  	// Enable digital on PE0-2
 }
 
 // Port F Initialization
@@ -162,9 +162,9 @@ void P_Light_Init(void){
 	SYSCTL_RCGC2_R |= SYSCTL_RCGC2_GPIOF;      // Activate Port F clocks
 	while ((SYSCTL_RCGC2_R & SYSCTL_RCGC2_GPIOF)!= SYSCTL_RCGC2_GPIOF) {} // wait for clock to be active
 		
-  GPIO_PORTF_AMSEL_R &= ~FPORT_13;// Disable analog function on PF1,3
-  GPIO_PORTF_PCTL_R &= ~FPORT_CTL;// Enable regular GPIO
-  GPIO_PORTF_DIR_R  |= FPORT_13;  // Outputs on PF1,3
-  GPIO_PORTF_AFSEL_R &= ~FPORT_13;// Regular function on PF1,3
-  GPIO_PORTF_DEN_R |= FPORT_13;  // Enable digital on PF1,3
+  GPIO_PORTF_AMSEL_R &= ~FPORT_13;	// Disable analog function on PF1,3
+  GPIO_PORTF_PCTL_R &= ~FPORT_CTL;	// Enable regular GPIO
+  GPIO_PORTF_DIR_R  |= FPORT_13;  	// Outputs on PF1,3
+  GPIO_PORTF_AFSEL_R &= ~FPORT_13;	// Regular function on PF1,3
+  GPIO_PORTF_DEN_R |= FPORT_13;  		// Enable digital on PF1,3
 }
