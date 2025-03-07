@@ -19,7 +19,7 @@
 // Initialize SysTick with busy wait running at bus clock. 
 // Do not enable SysTick timer in this function
 void SysTick_Init(void){
-	NVIC_ST_CTRL_R &= ~NVIC_ST_CTRL_ENABLE; // disable SysTick when setting up
+	NVIC_ST_CTRL_R = 0; // disable SysTick when setting up
 	NVIC_ST_CTRL_R |= NVIC_ST_CTRL_CLK_SRC; // source clock from internal system
 }
 

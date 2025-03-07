@@ -50,11 +50,10 @@
 #define SYSCTL_RCGC2_GPIOB    	0x00000002    // port B Clock Gating Control
 #define SYSCTL_RCGC2_GPIOE    	0x00000010    // port E Clock Gating Control
 #define SYSCTL_RCGC2_GPIOF    	0x00000020    // port E Clock Gating Control
-// 0.25 sec
+
 #define QUARTER_SEC							1							// Quarter second delay (0.25 x 1)
 #define ONE_SEC 								4							// One second delay (0.25 x 4)
 #define TWO_SEC									8							// Two second delay (0.25 x 8)
-#define NO_DELAY        				0             // Zero second delay (0.25 x 0)
 
 #define GS_RW										0x21 //00 W100 S001
 #define YS_RW										0x22 //00 W100 S010
@@ -62,15 +61,15 @@
 #define RS_YW										0x14 //00 W010 S100
 #define RS_RW										0x24 //00 W100 S100
 // 1010 (bits 3, 1)									
+
 #define	GP											0x08								
 #define RP											0x02
 #define RFP											0x00
 
-#define NUM_STATES 							9             // number of states (using 9/16)
+#define NUM_STATES 							9    // number of states (using 9/16)
 #define NUM_OUTS								2
 
 // define each function 
-void Delay(uint8_t n);
 void T_Light_Init(void);
 void P_Light_Init(void);
 void Sensor_Init(void);
@@ -116,19 +115,20 @@ int main(void){
 	T_Light_Init();
 	P_Light_Init();
 	Sensor_Init();
-    S = GoS;                     // FSM start with green  
-    
-  while(1){
-	// output LED color 
-	T_LIGHT = FSM[S].Output[0];
-	P_LIGHT = FSM[S].Output[1];
-	// activate delay function with correct delay duration from current state
-	Wait_N_Quart_Sec(FSM[S].Time);
+	SysTick_Init();
 	
-	// Input = current button press value
-	Input = SENSORS;
-	// Update State
-	S = FSM[S].Next[Input];
+  S = GoS;                     // FSM start with green  
+  while(1){
+		// output LED color 
+		T_LIGHT = FSM[S].Output[0];
+		P_LIGHT = FSM[S].Output[1];
+		// activate delay function with correct delay duration from current state
+		Wait_N_Quart_Sec(FSM[S].Time);
+		
+		// Input = current button press value
+		Input = SENSORS;
+		// Update State
+		S = FSM[S].Next[Input];
   }
 }
 
