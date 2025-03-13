@@ -31,8 +31,8 @@
 #include "SysTick.h"
 #include "PLL.h"
 
-#define GREEN_LED       (*((volatile unsigned long *)0x40025010)) // double check?
-#define GREEN_LED_MASK    0x04  // bit position for onboard green LED
+#define GREEN_LED       (*((volatile unsigned long *)0x40025020))
+#define GREEN_LED_MASK    0x08  // bit position for onboard green LED
 
 void PORTF_Init(void);
 
