@@ -13,9 +13,11 @@
 // TODO: define bit addresses for the three LEDs connected to PORTF
 // need ports 0-3, SW2 as port0 and LED as port1-3
 // idk which symbolic name defines specifically those ports???
-#define LED_ADR    0x40025038
-#define SW2_ADR    0x40025004
-#define PF_UNLOCK  0x4C4F434B
+#define LED_ADR        0x40025038
+#define SW2_ADR        0x40025004
+#define PF_UNLOCK      0x4C4F434B
+#define PORTF_INT_PRI  4U
+#define PORTF_PRI_BITS 0x00E00000
 #define LED        (*((volatile uint32_t *)LED_ADR))   
 #define SW2        (*((volatile uint32_t *)SW2_ADR))   
 	
@@ -31,6 +33,7 @@
 
 // TODO: define constants used in this project.
 // what is u....
+// ok apparently u means unsigned int so we have to set this to 5? if it is 10 ms wait each
 #define HALF_S 							0U          // Assume the system clock is 16MHz.
 																				// define number of clock cycles to generate 0.5s time interval.
                                         // A U follows a constant indicate this is an unsigned number
@@ -104,11 +107,12 @@ void Switch_LED_Init(void) {
   GPIO_PORTF_IM_R |= SW2_MASK;      // (f) arm interrupt on PF0
   // sends interrupt signal to controller at corresponding bit
 
-  // set PF0 to priority 4, P3-1 to priority 1
+  // set PF0 to priority 4 interrupt
   // priority 4 = 100 0 0000 = 0x80
-  // priority 1 = 001 0 0000 = 0x20
-  // bro how do i set two diff priorities for the same port
-//	NVIC_PRI7_R = (NVIC_PRI7_R&0xFF1FFFFF)|0x00A00000; // (g) PORTF Interrupt priority bits: 23-21, priority set to 5
+  // 0xFF1FFFFF is to clear bits 23-21 that determine PF priority
+  // NVIC_PRI7_R = (NVIC_PRI7_R&0xFF1FFFFF)|0x00800000; // (g) PORTF Interrupt priority bits: 23-21, priority set to 5
+  // can use the above OR below line to set the priority
+  // this line does the same thing except it shifts the priority bits from 0 to position 21
   NVIC_PRI7_R = (NVIC_PRI7_R&~PORTF_PRI_BITS)|PORTF_INT_PRI<<21; // (g) PORTF Interrupt priority bits: 23-21, priority set to 5
   NVIC_EN0_R |= 0x40000000;     // (h) PORTF interrupt number is 30, enable bit 30 in NVIC.     
 
@@ -126,6 +130,10 @@ void SysTick_Init(uint32_t period) {
 void GPIOPortF_Handler(void) {
 	// simple solution to take care of button debounce: 20ms to 30ms delay
   for (uint32_t i=0;i<160000;i++) {}	
+  // do the things idk
+  // OH THIS IS BUTTON AND LED CHANGE I SEE
+  // SYSTICK AND INTERRUPT PRIORITY ARE DIFFERENT
+  RisingEdges += 1;
 }
 
 // TODO: ISR that Handles SysTick generated interrupts. 
