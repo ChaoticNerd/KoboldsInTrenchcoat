@@ -33,6 +33,7 @@
 
 #define GREEN_LED       (*((volatile unsigned long *)0x40025020))
 #define GREEN_LED_MASK    0x08  // bit position for onboard green LED
+#define HALF_SEC					1
 
 void PORTF_Init(void);
 
@@ -42,7 +43,7 @@ int main(void){
   SysTick_Init();           // initialize SysTick timer
   while(1){
     GREEN_LED ^= GREEN_LED_MASK; // toggle PF3: Green LED
-    SysTick_Wait10ms(50);    // approximately 10*10 ms = 0.1s
+    SysTick_Wait50ms(1);    // approximately 1*50 ms = 0.5s
   }
 }
 

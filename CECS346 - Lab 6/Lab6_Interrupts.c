@@ -17,16 +17,16 @@
 #define SW2_ADR        0x40025004
 #define PF_UNLOCK      0x4C4F434B
 #define PORTF_INT_PRI  4U
-#define PORTF_PRI_BITS 0x00E00000
+#define PORTF_PRI_BITS 0x00800000
 #define LED        (*((volatile uint32_t *)LED_ADR))   
 #define SW2        (*((volatile uint32_t *)SW2_ADR))   
 	
 // TODO: Define the three LED bit positions
 // is it right to left or am i crazy
 #define SW2_MASK        0x01
-#define RED  			0x02
-#define BLUE 			0x04
-#define GREEN			0x08
+#define RED  			      0x02
+#define BLUE 			      0x04
+#define GREEN			      0x08
 #define RGB             0x0E
 #define PF_3_0          0x0F
 
@@ -69,6 +69,8 @@ volatile uint32_t RisingEdges = 0;
 // keep track of the current active LED 
 volatile uint8_t curr_led = RED;
 
+volatile uint8_t pressed = 0;
+
 int main(void){
 	DisableInterrupts();
   Switch_LED_Init();
@@ -77,15 +79,21 @@ int main(void){
 	
 	// initialize current active LED to be red
 	LED = RED;
-	curr_led = RED;
 	
   while(1){
-		WaitForInterrupt();
-
-    // if button is pressed, call GPIOPortF_Handler
-    // not pressed == 0x00 (positive logic button)
-    if(!(SW2 & SW2_MASK)){
-      GPIOPortF_Handler();
+	
+		WaitForInterrupt();	
+		// when notted, it keeps going into this IF statement
+		// thus starts at 0, notted = 1
+		// never reads presses
+		if(pressed){
+      if (curr_led == GREEN) {
+				curr_led = (curr_led >> 2);
+			} else {
+				curr_led = (curr_led << 1);
+			} 
+			LED = curr_led;
+			pressed = 0;
     }
   }
 }
@@ -97,6 +105,7 @@ void Switch_LED_Init(void) {
 	while ((SYSCTL_RCGCGPIO_R&SYSCTL_RCGCGPIO_R5)!=SYSCTL_RCGCGPIO_R5){}; // wait for the clock to be ready
   // Normal Init Stuff
   GPIO_PORTF_LOCK_R = PF_UNLOCK; // unlock PF0
+	GPIO_PORTF_CR_R |= 0x0F;         		// allow changes to PF4-0 :11111->0x1F     
   GPIO_PORTF_DIR_R &= ~SW2_MASK;    // (c) make PF0 in (built-in button), clear to make in
   GPIO_PORTF_DIR_R |= RGB; // make PF3-1 out (LEDs)
   GPIO_PORTF_AFSEL_R &= ~PF_3_0;  //     disable alt funct on PF3-0
@@ -126,7 +135,6 @@ void Switch_LED_Init(void) {
   // this line does the same thing except it shifts the priority bits from 0 to position 21
   NVIC_PRI7_R = (NVIC_PRI7_R&~PORTF_PRI_BITS)|PORTF_INT_PRI<<21; // (g) PORTF Interrupt priority bits: 23-21, priority set to 5
   NVIC_EN0_R |= NVIC_EN0_PORTF;     // (h) PORTF interrupt number is 30, enable bit 30 in NVIC.     
-
 }
 // Implement Switch_LED_Init() to initialize the three onboard LEDs and rising edge
 // triggered interrupt for PF0 (SW2) using friendly coding.
@@ -146,26 +154,21 @@ void SysTick_Init(uint32_t period) {
   // add interrupt stuff
 }
 
-// Toggles through LED colors on port F (onboard LED) **DONE
+// Toggles through LED colors on port F (onboard LED)
 void GPIOPortF_Handler(void) {
 	// simple solution to take care of button debounce: 20ms to 30ms delay
   for (uint32_t i=0;i<160000;i++) {}
-	GPIO_PORTF_ICR_R = 0x01;
+	//GPIO_PORTF_ICR_R = 0x01;
   // Round-robin LED Red --> Blue --> Green
-  if (curr_led == GREEN) {
-	curr_led = (curr_led >> 2); // why cant this one just be red? it can. but it can also be a shift.
-  } else {
-  curr_led = (curr_led << 1);
-  } 
-	LED = curr_led;
+  if (GPIO_PORTF_RIS_R & SW2_MASK) {
+		GPIO_PORTF_ICR_R |= SW2_MASK;
+		pressed = 1;
     RisingEdges += 1;
+  }
 }
 
-// TODO: ISR that Handles SysTick generated interrupts. 
 // When timer interrupt triggers, do what's necessary then toggle the current LED
 void SysTick_Handler(void) {
   // Flash LED
   LED ^= curr_led; // XORed
-  // i think it's curr_led? LED gives us the piort data, no?
-  // we use LED for the other labs tho... thinkin //well isnt it based on what we defined it as??? 
 }

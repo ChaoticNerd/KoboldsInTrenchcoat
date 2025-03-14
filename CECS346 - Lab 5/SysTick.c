@@ -37,7 +37,7 @@
 #include "tm4c123gh6pm.h"
 #include <stdint.h>
 
-#define TEN_MS 250000  // reload value to generate 10ms for system clock 25MHz.
+#define FIVE_MS 12500000  // reload value to generate 10ms for system clock 25MHz.
 
 // Initialize SysTick with busy wait running at bus clock.
 void SysTick_Init(void){
@@ -47,9 +47,9 @@ void SysTick_Init(void){
 
 // Time delay using busy wait.
 // This assumes 25 MHz system clock.
-// Input: 16-bit interger for multiple of 10ms
-void SysTick_Wait10ms(uint16_t delay){	
-	NVIC_ST_RELOAD_R = TEN_MS*delay-1;
+// Input: 16-bit interger for multiple of 50ms
+void SysTick_Wait50ms(uint16_t delay){	
+	NVIC_ST_RELOAD_R = FIVE_MS*delay-1;
   NVIC_ST_CURRENT_R = 0;                // any write to current clears it                                        
   NVIC_ST_CTRL_R |= NVIC_ST_CTRL_ENABLE; // enable SysTick timer
 	
