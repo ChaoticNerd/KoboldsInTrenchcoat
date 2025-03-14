@@ -129,7 +129,14 @@ void SysTick_Init(uint32_t period) {
 // When Port F interrupt triggers, do what's necessary then increment global variable RisingEdges
 void GPIOPortF_Handler(void) {
 	// simple solution to take care of button debounce: 20ms to 30ms delay
-  for (uint32_t i=0;i<160000;i++) {}	
+  for (uint32_t i=0;i<160000;i++) {}
+  // is it curr_led or LED
+  if (curr_led == BLUE) {
+	curr_led = RED;
+  }	
+  else {
+	curr_led = (curr_led << 1);
+  }
   // do the things idk
   // OH THIS IS BUTTON AND LED CHANGE I SEE
   // SYSTICK AND INTERRUPT PRIORITY ARE DIFFERENT
