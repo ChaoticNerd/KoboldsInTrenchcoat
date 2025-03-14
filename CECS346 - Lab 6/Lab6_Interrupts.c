@@ -29,15 +29,18 @@
 #define GREEN			0x08
 #define RGB             0x0E
 #define PF_3_0          0x0F
-// is sw 0x01?
 
 // TODO: define constants used in this project.
 // what is u....
-// ok apparently u means unsigned int so we have to set this to 5? if it is 10 ms wait each
-#define HALF_S 							0U          // Assume the system clock is 16MHz.
+// ok apparently u means unsigned int
+// it's the usual 1/16000000 (16 million comes from 16MHz)
+// For 0.5s, 16000000*0.5 = 80000000
+#define HALF_S 							80000000U          // Assume the system clock is 16MHz.
 																				// define number of clock cycles to generate 0.5s time interval.
                                         // A U follows a constant indicate this is an unsigned number
-#define NVIC_EN0_PORTF		  0x00000000  // bit position for PORTF interrupt in NVIC_EN0_R register.
+// ok i havent checked this yet but it should be in the slides for interrupt
+// 0100 0000 0000 0000 0000 0000 0000 0000 = 0x40000000
+#define NVIC_EN0_PORTF		  0x40000000  // bit position for PORTF interrupt in NVIC_EN0_R register.
 
 
 // Function Prototypes (external functions from startup.s)
@@ -61,7 +64,7 @@ void SysTick_Init(uint32_t period);
 // it increments once per button release.
 volatile uint32_t RisingEdges = 0;
 
-// keep track of the current active LED
+// keep track of the current active LED 
 volatile uint8_t curr_led = RED;
 
 int main(void){
@@ -76,6 +79,12 @@ int main(void){
 	
   while(1){
 		WaitForInterrupt();
+
+    // if button is pressed, call GPIOPortF_Handler
+    // not pressed == 0x00 (positive logic button)
+    if(SW2&SW2_MASK){
+      GPIOPortF_Handler();
+    }
   }
 }
 
@@ -84,9 +93,7 @@ int main(void){
 void Switch_LED_Init(void) {
 	SYSCTL_RCGCGPIO_R |= SYSCTL_RCGCGPIO_R5;     	// activate F clock
 	while ((SYSCTL_RCGCGPIO_R&SYSCTL_RCGCGPIO_R5)!=SYSCTL_RCGCGPIO_R5){} // wait for the clock to be ready
-  // unlock PF0 and choose alternate function?
-  // oh its a normal init
-  // kinda
+  // Normal Init Stuff
   GPIO_PORTF_LOCK_R = PF_UNLOCK // unlock PF0
   GPIO_PORTF_DIR_R &= ~SW2_MASK;    // (c) make PF0 in (built-in button), clear to make in
   GPIO_PORTF_DIR_R |= RGB; // make PF3-1 out (LEDs)
@@ -95,11 +102,13 @@ void Switch_LED_Init(void) {
   GPIO_PORTF_PCTL_R &= ~PF_3_0;  // configure PF3-0 as GPIO
   GPIO_PORTF_AMSEL_R &= ~PF_3_0;       //     disable analog functionality on PF
   GPIO_PORTF_PUR_R |= PF_3_0;     //     enable weak pull-up on PF4
-  GPIO_PORTF_IS_R &= ~SW2_MASK;     // (d) PF0 is edge-sensitive (value 0)
-  GPIO_PORTF_IBE_R &= ~SW2_MASK;    //     PF0 is not both edges (value 0)
-  GPIO_PORTF_IEV_R |= SW2_MASK;    //     PF4 rising edge event: 1
+
+  // Interrupt Init Stuff
+  GPIO_PORTF_IS_R &= ~SW2_MASK;     // (d) set PF0 to 0 to make it edge sensitive
+  GPIO_PORTF_IBE_R &= ~SW2_MASK;    //  set PF0 to 0 to state it's only sensitive to 1 edge
+  GPIO_PORTF_IEV_R |= SW2_MASK;    //  set PF0 to 1 to make it rising edge sensitive
   // slides say use only = on ICR, but edge trigger lab project uses |=?
-  GPIO_PORTF_ICR_R |= SW2_MASK;     // (e) clear flag4, note: writing 1 will clear bits in RIS
+  GPIO_PORTF_ICR_R |= SW2_MASK;     // (e) clear flag0, note: writing 1 will clear bits in RIS
   // more on RIS: it flags at the port bit where the interrupt occurs, so
   // interrupting on PF0 flags RIS bit 0
   // 1 means an interrupt has occured
@@ -123,27 +132,38 @@ void Switch_LED_Init(void) {
 // TODO: Initialize SysTick timer with interrupt enabled.
 // Parameter "period" specifies number of counts for the time 
 void SysTick_Init(uint32_t period) {
+  // we should take the systick init from prev labs
+  NVIC_ST_CTRL_R = 0; // clear to disable systick while setting up
+  // combine init AND delay?
+  NVIC_ST_RELOAD_R = period - 1; // set reload to .5s
+  NVIC_ST_CURRENT_R = 0; // clear current
+  // priority is 1, aka 0010
+  NVIC_SYS_PRI3_R = (NVIC_SYS_PRI3_R & 0x1FFFFFFF) | 0x20000000;
+  NVIC_ST_CTRL_R = 0x07; // clk_src = 1, inten = 1, en = 1
+  EnableInterrupts();
+  // add interrupt stuff
 }
 
-// TODO: ISR that Handles GPIO Port F interrupts. 
-// When Port F interrupt triggers, do what's necessary then increment global variable RisingEdges
+// Toggles through LED colors on port F (onboard LED) **DONE
 void GPIOPortF_Handler(void) {
 	// simple solution to take care of button debounce: 20ms to 30ms delay
   for (uint32_t i=0;i<160000;i++) {}
-  // is it curr_led or LED
-  if (curr_led == BLUE) {
-	curr_led = RED;
-  }	
-  else {
-	curr_led = (curr_led << 1);
-  }
-  // do the things idk
-  // OH THIS IS BUTTON AND LED CHANGE I SEE
-  // SYSTICK AND INTERRUPT PRIORITY ARE DIFFERENT
-  RisingEdges += 1;
+
+  // Round-robin LED Red --> Blue --> Green
+  if (curr_led == GREEN) {
+	curr_led = (curr_led >> 2); // why cant this one just be red? it can. but it can also be a shift.
+  } else {
+  curr_led = (curr_led << 1);
+  } 
+    RisingEdges += 1;
 }
 
 // TODO: ISR that Handles SysTick generated interrupts. 
 // When timer interrupt triggers, do what's necessary then toggle the current LED
 void SysTick_Handler(void) {
+  // Flash LED
+  //GPIO_PORTF_DATA_R ^= 0x04 //Toggle PF2
+  curr_led ^= curr_led; // XORed
+  // i think it's curr_led? LED gives us the piort data, no?
+  // we use LED for the other labs tho... thinkin //well isnt it based on what we defined it as??? 
 }
