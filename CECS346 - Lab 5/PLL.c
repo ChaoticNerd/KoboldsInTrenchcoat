@@ -51,7 +51,7 @@ void PLL_Init(void){
   // 4) set the desired system divider and the system divider least significant bit
   SYSCTL_RCC2_R |= SYSCTL_RCC2_DIV400;  // use 400 MHz PLL
   SYSCTL_RCC2_R = (SYSCTL_RCC2_R&~0x1FC00000) // clear system clock divider field: setting up bit 22 to 28
-	+ (SYSDIV2<<22);      // configure for 50 MHz clock: assign value 7 to 7 bits(0x0000111(hex), 7(dec)), then move it to the right field: bit 22 to 28
+	+ (SYSDIV2<<22);      // configure for 25 MHz clock: assign value 15 to 7 bits(0x0001111(hex), 15(dec)), then move it to the right field: bit 22 to 28
   
 	// 5) wait for the PLL to lock by polling PLLLRIS
   while((SYSCTL_RIS_R&SYSCTL_RIS_PLLLRIS)==0){};

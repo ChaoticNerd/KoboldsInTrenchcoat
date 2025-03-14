@@ -11,16 +11,26 @@
 // symbolic names instead of addresses
 
 // TODO: define bit addresses for the three LEDs connected to PORTF
-#define LED        (*((volatile uint32_t *)0x0))   
-#define SW2        (*((volatile uint32_t *)0x0))   
+// need ports 0-3, SW2 as port0 and LED as port1-3
+// idk which symbolic name defines specifically those ports???
+#define LED_ADR    0x40025038
+#define SW2_ADR    0x40025004
+#define PF_UNLOCK  0x4C4F434B
+#define LED        (*((volatile uint32_t *)LED_ADR))   
+#define SW2        (*((volatile uint32_t *)SW2_ADR))   
 	
 // TODO: Define the three LED bit positions
-#define RED  			0x00
-#define BLUE 			0x00
-#define GREEN			0x00
-#define SW2_MASK  0x00
+// is it right to left or am i crazy
+#define SW2_MASK        0x01
+#define RED  			0x02
+#define BLUE 			0x04
+#define GREEN			0x08
+#define RGB             0x0E
+#define PF_3_0          0x0F
+// is sw 0x01?
 
 // TODO: define constants used in this project.
+// what is u....
 #define HALF_S 							0U          // Assume the system clock is 16MHz.
 																				// define number of clock cycles to generate 0.5s time interval.
                                         // A U follows a constant indicate this is an unsigned number
@@ -69,8 +79,42 @@ int main(void){
 
 // TODO: Initialize rising edge triggered interrupt for PF0 (SW2) and three LEDs on Port F
 void Switch_LED_Init(void) {
-  
+	SYSCTL_RCGCGPIO_R |= SYSCTL_RCGCGPIO_R5;     	// activate F clock
+	while ((SYSCTL_RCGCGPIO_R&SYSCTL_RCGCGPIO_R5)!=SYSCTL_RCGCGPIO_R5){} // wait for the clock to be ready
+  // unlock PF0 and choose alternate function?
+  // oh its a normal init
+  // kinda
+  GPIO_PORTF_LOCK_R = PF_UNLOCK // unlock PF0
+  GPIO_PORTF_DIR_R &= ~SW2_MASK;    // (c) make PF0 in (built-in button), clear to make in
+  GPIO_PORTF_DIR_R |= RGB; // make PF3-1 out (LEDs)
+  GPIO_PORTF_AFSEL_R &= ~0x0000FFFF;  //     disable alt funct on PF3-0
+  GPIO_PORTF_DEN_R |= PF_3_0;     //     enable digital I/O on PF3-0
+  GPIO_PORTF_PCTL_R &= ~PF_3_0;  // configure PF3-0 as GPIO
+  GPIO_PORTF_AMSEL_R &= ~PF_3_0;       //     disable analog functionality on PF
+  GPIO_PORTF_PUR_R |= PF_3_0;     //     enable weak pull-up on PF4
+  GPIO_PORTF_IS_R &= ~SW2_MASK;     // (d) PF0 is edge-sensitive (value 0)
+  GPIO_PORTF_IBE_R &= ~SW2_MASK;    //     PF0 is not both edges (value 0)
+  GPIO_PORTF_IEV_R |= SW2_MASK;    //     PF4 rising edge event: 1
+  // slides say use only = on ICR, but edge trigger lab project uses |=?
+  GPIO_PORTF_ICR_R |= SW2_MASK;     // (e) clear flag4, note: writing 1 will clear bits in RIS
+  // more on RIS: it flags at the port bit where the interrupt occurs, so
+  // interrupting on PF0 flags RIS bit 0
+  // 1 means an interrupt has occured
+  // we are using ICR on bit 0 to clear that interrupt on initialization
+  GPIO_PORTF_IM_R |= SW2_MASK;      // (f) arm interrupt on PF0
+  // sends interrupt signal to controller at corresponding bit
+
+  // set PF0 to priority 4, P3-1 to priority 1
+  // priority 4 = 100 0 0000 = 0x80
+  // priority 1 = 001 0 0000 = 0x20
+  // bro how do i set two diff priorities for the same port
+//	NVIC_PRI7_R = (NVIC_PRI7_R&0xFF1FFFFF)|0x00A00000; // (g) PORTF Interrupt priority bits: 23-21, priority set to 5
+  NVIC_PRI7_R = (NVIC_PRI7_R&~PORTF_PRI_BITS)|PORTF_INT_PRI<<21; // (g) PORTF Interrupt priority bits: 23-21, priority set to 5
+  NVIC_EN0_R |= 0x40000000;     // (h) PORTF interrupt number is 30, enable bit 30 in NVIC.     
+
 }
+// Implement Switch_LED_Init() to initialize the three onboard LEDs and rising edge
+// triggered interrupt for PF0 (SW2) using friendly coding.
 
 // TODO: Initialize SysTick timer with interrupt enabled.
 // Parameter "period" specifies number of counts for the time 

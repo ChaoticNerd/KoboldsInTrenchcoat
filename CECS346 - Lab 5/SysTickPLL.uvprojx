@@ -401,9 +401,9 @@
               <FilePath>.\PLL.c</FilePath>
             </File>
             <File>
-              <FileName>SysTickPLLTest.c</FileName>
+              <FileName>cecs346lab5.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\SysTickPLLTest.c</FilePath>
+              <FilePath>.\cecs346lab5.c</FilePath>
             </File>
           </Files>
         </Group>

@@ -46,7 +46,7 @@ void SysTick_Init(void){
 }
 
 // Time delay using busy wait.
-// This assumes 50 MHz system clock.
+// This assumes 25 MHz system clock.
 // Input: 16-bit interger for multiple of 10ms
 void SysTick_Wait10ms(uint16_t delay){	
 	NVIC_ST_RELOAD_R = TEN_MS*delay-1;

@@ -37,11 +37,11 @@
 void PORTF_Init(void);
 
 int main(void){
-	PORTF_Init();							// PF2(Blue LED) is an output for debugging
-  PLL_Init();               // set system clock to 50 MHz
+	PORTF_Init();							// PF3(Green LED) is an output for debugging
+  PLL_Init();               // set system clock to 25 MHz
   SysTick_Init();           // initialize SysTick timer
   while(1){
-    GREEN_LED ^= GREEN_LED_MASK; // toggle PF2: Blue LED
+    GREEN_LED ^= GREEN_LED_MASK; // toggle PF3: Green LED
     SysTick_Wait10ms(50);    // approximately 10*10 ms = 0.1s
   }
 }
@@ -51,9 +51,9 @@ void PORTF_Init(void)
 	SYSCTL_RCGCGPIO_R |= SYSCTL_RCGCGPIO_R5; // activate port F
 	while ((SYSCTL_RCGCGPIO_R&SYSCTL_RCGCGPIO_R5)!=SYSCTL_RCGCGPIO_R5){};
 	
-	GPIO_PORTF_DIR_R |= GREEN_LED_MASK; // make PF2 out (built-in blue LED)
-  GPIO_PORTF_AFSEL_R &= ~GREEN_LED_MASK;// disable alt funct on PF2
-  GPIO_PORTF_DEN_R |= GREEN_LED_MASK; // enable digital I/O on PF2                            
-  GPIO_PORTF_PCTL_R &= ~0x00000F00; // configure PF2 as GPIO
-  GPIO_PORTF_AMSEL_R |= GREEN_LED_MASK;   // disable analog functionality on PF  
+	GPIO_PORTF_DIR_R |= GREEN_LED_MASK; // make PF3 out (built-in green LED)
+  GPIO_PORTF_AFSEL_R &= ~GREEN_LED_MASK;// disable alt funct on PF3
+  GPIO_PORTF_DEN_R |= GREEN_LED_MASK; // enable digital I/O on PF3                           
+  GPIO_PORTF_PCTL_R &= ~0x00000F00; // configure PF3 as GPIO
+  GPIO_PORTF_AMSEL_R |= GREEN_LED_MASK;   // disable analog functionality on PF3
 }
