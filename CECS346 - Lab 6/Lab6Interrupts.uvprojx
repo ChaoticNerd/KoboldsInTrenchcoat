@@ -391,9 +391,9 @@
               <FilePath>.\startup.s</FilePath>
             </File>
             <File>
-              <FileName>Lab6_Interrupts.c</FileName>
+              <FileName>CECS346LAB6.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\Lab6_Interrupts.c</FilePath>
+              <FilePath>.\CECS346LAB6.c</FilePath>
             </File>
           </Files>
         </Group>

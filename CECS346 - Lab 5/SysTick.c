@@ -37,7 +37,7 @@
 #include "tm4c123gh6pm.h"
 #include <stdint.h>
 
-#define FIVE_MS 12500000  // reload value to generate 10ms for system clock 25MHz.
+#define FIVE_MS 12500000  // reload value to generate 50ms for system clock 25MHz.
 
 // Initialize SysTick with busy wait running at bus clock.
 void SysTick_Init(void){

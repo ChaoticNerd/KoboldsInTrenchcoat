@@ -34,6 +34,7 @@
 #define GREEN_LED       (*((volatile unsigned long *)0x40025020))
 #define GREEN_LED_MASK    0x08  // bit position for onboard green LED
 #define HALF_SEC					1
+#define PF3_GPIO					0x00000F00
 
 void PORTF_Init(void);
 
@@ -43,7 +44,7 @@ int main(void){
   SysTick_Init();           // initialize SysTick timer
   while(1){
     GREEN_LED ^= GREEN_LED_MASK; // toggle PF3: Green LED
-    SysTick_Wait50ms(1);    // approximately 1*50 ms = 0.5s
+    SysTick_Wait50ms(HALF_SEC);    // approximately 1*50 ms = 0.5s
   }
 }
 
@@ -55,6 +56,6 @@ void PORTF_Init(void)
 	GPIO_PORTF_DIR_R |= GREEN_LED_MASK; // make PF3 out (built-in green LED)
   GPIO_PORTF_AFSEL_R &= ~GREEN_LED_MASK;// disable alt funct on PF3
   GPIO_PORTF_DEN_R |= GREEN_LED_MASK; // enable digital I/O on PF3                           
-  GPIO_PORTF_PCTL_R &= ~0x00000F00; // configure PF3 as GPIO
+  GPIO_PORTF_PCTL_R &= ~PF3_GPIO; // configure PF3 as GPIO
   GPIO_PORTF_AMSEL_R |= GREEN_LED_MASK;   // disable analog functionality on PF3
 }
