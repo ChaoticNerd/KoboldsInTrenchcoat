@@ -118,10 +118,10 @@ void Sensor_Init(void){
 	while ((SYSCTL_RCGC2_R & SYSCTL_RCGC2_GPIOA)!= SYSCTL_RCGC2_GPIOA) {} // wait for clock to be active
 		
 	GPIO_PORTA_AMSEL_R &= ~APORT_23;  // Disable analog function on PA3-2
-  GPIO_PORTA_PCTL_R &= ~APORT_CTL; // Enable regular GPIO
-  GPIO_PORTA_DIR_R  &= ~APORT_23;  // Inputs on PA3-2
-  GPIO_PORTA_AFSEL_R &= ~APORT_23; // Regular function on PA3-2
-  GPIO_PORTA_DEN_R |= APORT_23;   // Enable digital signals on PA3-2
+	GPIO_PORTA_PCTL_R &= ~APORT_CTL; // Enable regular GPIO
+	GPIO_PORTA_DIR_R  &= ~APORT_23;  // Inputs on PA3-2
+	GPIO_PORTA_AFSEL_R &= ~APORT_23; // Regular function on PA3-2
+	GPIO_PORTA_DEN_R |= APORT_23;   // Enable digital signals on PA3-2
 	// GPIO_PORTA_PDR_R |= APORT_23;  // Enable pull-down resistors for PA3-2 (Optional)
 }
 

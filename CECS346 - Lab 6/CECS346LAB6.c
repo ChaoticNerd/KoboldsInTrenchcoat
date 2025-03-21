@@ -13,7 +13,7 @@
 
 // TODO: define bit addresses for the three LEDs connected to PORTF
 // need ports 0-3, SW2 as port0 and LED as port1-3
-// idk which symbolic name defines specifically those ports???
+// HIGHEST PRI 0, LOWEST PRI 7
 #define LED_ADR        0x40025038
 #define SW2_ADR        0x40025004
 #define PF_UNLOCK      0x4C4F434B
@@ -131,6 +131,7 @@ void Switch_LED_Init(void) {
   // priority 4 = 100 0 0000 = 0x80
   // 0xFF1FFFFF is to clear bits 23-21 that determine PF priority
   NVIC_PRI7_R = (NVIC_PRI7_R&~PORTF_PRI_BITS)|PORTF_INT_PRI<<21; 	// (g) PORTF Interrupt priority bits: 23-21, priority set to 4
+
   NVIC_EN0_R |= NVIC_EN0_PORTF;    																// (h) PORTF interrupt number is 30, enable bit 30 in NVIC.     
 }
 
@@ -143,7 +144,7 @@ void SysTick_Init(uint32_t period) {
 	
   NVIC_SYS_PRI3_R = (NVIC_SYS_PRI3_R & PRI4_TOP3_BITS) | PRI4_OTHER_BITS ;		// SLIDE 27 LECTURE 6!!!
   NVIC_ST_CTRL_R = EN_SYSTICK_CC; 		// clk_src = 1, inten = 1, en = 1
-}
+} 
 
 // Toggles through LED colors on port F (onboard LED)
 void GPIOPortF_Handler(void) {
@@ -151,6 +152,7 @@ void GPIOPortF_Handler(void) {
   for (uint32_t i=0;i<160000;i++) {}
 		
   // Round-robin LED Red --> Blue --> Green
+  // RIS is Raw Interrupt Status
   if (GPIO_PORTF_RIS_R & SW2_MASK) {
 		GPIO_PORTF_ICR_R |= SW2_MASK;
 		pressed = 1;
