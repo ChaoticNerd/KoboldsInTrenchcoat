@@ -9,9 +9,9 @@
 #define SWITCHES_MASK   0x0C
 #define RESET_MASK      0x04
 #define LIGHTS_MASK     0xFF
-#define NVIC_EN0_PORTA  0x00000000  // For PA2, PA3; matches IRQ for PORTA_HANDLER
+#define NVIC_EN0_PORTA  0x00000001  // For PA2, PA3; matches IRQ for PORTA_HANDLER
 #define NVIC_EN0_PORTE  0x00000004  // Matches IRQ for PORTE_HANDLER
-#define GPIO_PORTCTRL   0x0000FFFF  // DOUBLE CHECK
+#define GPIO_PORTCTRL   0x0000FF00  // DOUBLE CHECK
 #define PORTA_PRI_BITS  0x20        // Clears bits 7-5
 #define PORTE_PRI_BITS  0x10        // Clears bits 7-5
 #define PORTB_CNTRL    	0xFFFFFFFF
@@ -22,6 +22,7 @@
 // Initialize the two sensors, enable both edge edge-triggered interrupt for both sensors
 void Sensors_Init(void){ // matches Switch_LED_Init
     // PORT A 2,3
+	// use rcgc gpio
     SYSCTL_RCGC2_R |= SYSCTL_RCGC2_GPIOA;                                // Set up PORT A Clock
     while ((SYSCTL_RCGC2_R & SYSCTL_RCGC2_GPIOA)!= SYSCTL_RCGC2_GPIOA) {}  // Waits until clock is ready
 
@@ -29,9 +30,9 @@ void Sensors_Init(void){ // matches Switch_LED_Init
     GPIO_PORTA_DIR_R &= ~SWITCHES_MASK;     // Sets port to input
     GPIO_PORTA_AFSEL_R &= ~SWITCHES_MASK;   // Disables all alt functions on port A2, A3
     GPIO_PORTA_DEN_R |= SWITCHES_MASK;      // Enables digital I/O on A2, A3
-    GPIO_PORTA_PCTL_R &= GPIO_PORTCTRL;      // Sets PA2, PA3 to GPIO
+    GPIO_PORTA_PCTL_R &= ~GPIO_PORTCTRL;      // Sets PA2, PA3 to GPIO
     GPIO_PORTA_AMSEL_R &= ~SWITCHES_MASK;   // Disables analogue functionality of PA2, PA3
-    GPIO_PORTA_PUR_R |= SWITCHES_MASK;      // Weak pull up on PA2, PA3
+    GPIO_PORTA_PUR_R &= ~SWITCHES_MASK;      // Weak pull down on PA2, PA3; pos logic
 
     // Interrupt Init Stuff; need 01X1
     GPIO_PORTA_IS_R  &= ~SWITCHES_MASK;     // Enables Edge sensitive
@@ -55,7 +56,7 @@ void Reset_Init(void){
     GPIO_PORTE_DEN_R |= RESET_MASK;      //  Enables digital I/O on PE2
     GPIO_PORTE_PCTL_R &= GPIO_PORTCTRL;    // PE2 sets to GPIO 
     GPIO_PORTE_AMSEL_R &= ~RESET_MASK;   // Disables analog funtion PE2
-    GPIO_PORTE_PUR_R |= RESET_MASK;      // Weak pull up on PE2
+    GPIO_PORTE_PUR_R &= ~RESET_MASK;      // Weak pull down on PE2
     
     //Interrupt INit Stuff; 
     GPIO_PORTE_IS_R  |= RESET_MASK;     // Enables Edge sensitive

@@ -59,17 +59,17 @@ enum DragRace_states {Init,Wait,CD_Y1,CD_Y2,Go,WL,WR,WB,FSL,FSR,FSB};
 
 //TODO: Define Drag Race FSM
 STyp DragRace_FSM[NUM_STATE] = {
-	{ALL_ON, ONE_SEC,{Wait,Wait,Wait,Wait}}, 				// Init
-	{ALL_OFF, HALF_SEC,{Wait,Wait,Wait,CD_Y1}}, 		// Wait
-	{YELLOW1_ON, HALF_SEC,{FSB, FSL, FSR, CD_Y2}}, 	// CD_Y1
-	{YELLOW2_ON, HALF_SEC,{FSB, FSL, FSR, Go }},		// CD_Y2
-	{GREEN_BOTH, HALF_SEC,{WB, WL, WR, Go }},				// Go
-	{GREEN_LEFT, ONE_SEC,{Wait,Wait,Wait,Wait}},		// WL
-	{GREEN_RIGHT, ONE_SEC,{Wait,Wait,Wait,Wait}},		// WR
-	{GREEN_BOTH, ONE_SEC,{Wait,Wait,Wait,Wait}},		// WB
-	{RED_LEFT, ONE_SEC,{Wait,Wait,Wait,Wait}},			// FSL
-	{RED_RIGHT, ONE_SEC,{Wait,Wait,Wait,Wait}},			// FSR
-	{RED_BOTH, ONE_SEC,{Wait,Wait,Wait,Wait}}				// FSB
+	{ALL_ON, 			ONE_SEC,	{Wait, Wait,	Wait,	Wait}}, 			// Init
+	{ALL_OFF, 		HALF_SEC,	{Wait, Wait,	Wait,	CD_Y1}}, 			// Wait
+	{YELLOW1_ON, 	HALF_SEC,	{FSB,  FSL, 	FSR, 	CD_Y2}}, 			// CD_Y1
+	{YELLOW2_ON, 	HALF_SEC,	{FSB,  FSL, 	FSR, 	Go }},				// CD_Y2
+	{GREEN_BOTH, 	HALF_SEC,	{WB, 	 WL, 		WR, 	Go }},				// Go
+	{GREEN_LEFT, 	ONE_SEC,	{Wait, Wait,	Wait,	Wait}},				// WL
+	{GREEN_RIGHT, ONE_SEC,	{Wait, Wait,	Wait,	Wait}},				// WR
+	{GREEN_BOTH, 	ONE_SEC,	{Wait, Wait,	Wait,	Wait}},				// WB
+	{RED_LEFT, 		ONE_SEC,	{Wait, Wait,	Wait,	Wait}},				// FSL
+	{RED_RIGHT, 	ONE_SEC,	{Wait, Wait,	Wait,	Wait}},				// FSR
+	{RED_BOTH, 		ONE_SEC,	{Wait, Wait,	Wait,	Wait}}				// FSB
 };
 	
 // TODO: define bit positions for left, right and reset buttons
@@ -98,9 +98,11 @@ bool volatile reset;  // flag to reset the system, set by the reset button locat
 			// TO Do: take care of FSM outputs and time in state.
 			LIGHTS = DragRace_FSM[S].Out;
       SysTick_Start(DragRace_FSM[S].Time*HALF_SEC);
+			/*
 			while((!timesup)&&(!reset)){
 			  WaitForInterrupt();
 			}
+			*/
 			timesup=false;
 			S = DragRace_FSM[S].Next[Input];
 		}
@@ -127,6 +129,7 @@ void System_Init(void) {
 void GPIOPortA_Handler(void){
 	// simple solution to take care of button debounce: 20ms to 30ms delay
 	for (uint32_t i=0;i<160000;i++) {}
+		
 	// NVIC_PRI0_R 5-7 bits 
 	if (GPIO_PORTA_RIS_R & 0x04){ //intterupt for R Lane on PA2; PA2 is pressed on during edge trigger
 		GPIO_PORTA_ICR_R = 0x04;
