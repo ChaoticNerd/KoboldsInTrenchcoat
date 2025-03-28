@@ -85,7 +85,7 @@ bool reset;  // flag to reset the system, set by the reset button located at bre
 //uint8_t volatile TEST;
 uint8_t volatile check;
 
-	
+	 
  int main(void){
   uint8_t S;  // current state index
 	System_Init();
@@ -99,19 +99,13 @@ uint8_t volatile check;
 		
 		while (!reset) {
 			// TO Do: take care of FSM outputs and time in state.
-			
 			LIGHTS = DragRace_FSM[S].Out;
-
-			//check++; // DEBUG
-			S = DragRace_FSM[S].Next[Input];
+      SysTick_Start(DragRace_FSM[S].Time*HALF_SEC);
 			while((!timesup)&&(!reset)){
-				WaitForInterrupt();
-				// check++;
+			  WaitForInterrupt();
 			}
-			timesup = false;      
-			SysTick_Start(DragRace_FSM[S].Time);
-
-			// TEST_RESET = RESET_ADR; // USE TO DEBUG RESET
+			timesup=false;
+			S = DragRace_FSM[S].Next[Input];
 		}
 		
 		SysTick_Stop();
@@ -161,7 +155,7 @@ void GPIOPortE_Handler(void) {
 	if (GPIO_PORTE_RIS_R & 0x04){ //Reset on PE2 is pressed during trigger
 		GPIO_PORTE_ICR_R = 0x04;
 		reset = RESET_ADR;
-		 TEST_RESET = RESET_ADR; // DEBUG FOR RESET; checking port output
+		TEST_RESET = RESET_ADR; // DEBUG FOR RESET; checking port output
 	}
 	
 }
@@ -172,4 +166,3 @@ void SysTick_Handler(void) {
 	SysTick_Stop();
 	timesup = true;
 }
-
