@@ -32,7 +32,7 @@ void Sensors_Init(void){ // matches Switch_LED_Init
     GPIO_PORTA_DEN_R |= SWITCHES_MASK;      // Enables digital I/O on A2, A3
     GPIO_PORTA_PCTL_R &= ~GPIO_PORTCTRL;      // Sets PA2, PA3 to GPIO
     GPIO_PORTA_AMSEL_R &= ~SWITCHES_MASK;   // Disables analogue functionality of PA2, PA3
-    GPIO_PORTA_PUR_R &= ~SWITCHES_MASK;      // Weak pull down on PA2, PA3; pos logic
+    GPIO_PORTA_PUR_R &= ~SWITCHES_MASK;      // Disables pull-up, thus using pull-down, thus hardware is positive
 
     // Interrupt Init Stuff; need 01X1
     GPIO_PORTA_IS_R  &= ~SWITCHES_MASK;     // Enables Edge sensitive
@@ -56,7 +56,7 @@ void Reset_Init(void){
     GPIO_PORTE_DEN_R |= RESET_MASK;      //  Enables digital I/O on PE2
     GPIO_PORTE_PCTL_R &= GPIO_PORTCTRL;    // PE2 sets to GPIO 
     GPIO_PORTE_AMSEL_R &= ~RESET_MASK;   // Disables analog funtion PE2
-    GPIO_PORTE_PUR_R &= ~RESET_MASK;      // Weak pull down on PE2
+    GPIO_PORTE_PUR_R |= RESET_MASK;      // Weak pull down on PE2
     
     //Interrupt INit Stuff; 
     GPIO_PORTE_IS_R  |= RESET_MASK;     // Enables Edge sensitive

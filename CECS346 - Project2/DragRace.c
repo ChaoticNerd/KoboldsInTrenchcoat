@@ -31,15 +31,15 @@ void System_Init(void);
 // TODO: FSM definition
 struct State { 
 	uint8_t Out;
-	uint8_t Time;     // multiple of 0.5 second
+	uint32_t Time;     // multiple of 0.5 second
 	uint8_t Next[NUM_STATE];  
 };
 
 typedef const struct State STyp;
 
 // TODO: define reload value for half second
-#define HALF_SEC	(1U)
-#define ONE_SEC		(2U)
+#define HALF_SEC	(8000000U)
+#define ONE_SEC		(16000000U)
 
 // TODO: assign a value to all states in Drag Race FSM
 // use all upper case for constants defined here
@@ -77,9 +77,11 @@ STyp DragRace_FSM[NUM_STATE] = {
 #define LEFT_SENSOR_MASK  (0x04) // bit position for left sensor
 #define RIGHT_SENSOR_MASK (0x08) // bit position for left sensor
 	
-uint8_t volatile Input;
-bool volatile timesup; // default false
-bool volatile reset;  // flag to reset the system, set by the reset button located at breadboard, not the launchpad reset button.
+uint8_t Input;
+bool timesup; // default false
+bool reset;  // flag to reset the system, set by the reset button located at breadboard, not the launchpad reset button.
+uint8_t volatile TEST;
+
 	
  int main(void){
   uint8_t S;  // current state index
@@ -87,23 +89,24 @@ bool volatile reset;  // flag to reset the system, set by the reset button locat
 	System_Init();
 	 reset = false;
 	 timesup = false;
+	 S = Init;
 		
   while(1){
     // TODO: reset FSM to its Initial state, reset globals to default values
-   	S = Init;
+   	
 		reset = RESET;
-		Input = SENSORS;	
+		Input = SENSORS << 3;	
 		
 		while (!reset) {
 			// TO Do: take care of FSM outputs and time in state.
 			LIGHTS = DragRace_FSM[S].Out;
       SysTick_Start(DragRace_FSM[S].Time*HALF_SEC);
-			/*
 			while((!timesup)&&(!reset)){
 			  WaitForInterrupt();
 			}
-			*/
-			timesup=false;
+
+			timesup = false;
+			Input = SENSORS << 3;	
 			S = DragRace_FSM[S].Next[Input];
 		}
   }
@@ -127,16 +130,20 @@ void System_Init(void) {
 
 // Interrupt handler for the two sensors: update Input here 
 void GPIOPortA_Handler(void){
+	TEST++;
 	// simple solution to take care of button debounce: 20ms to 30ms delay
 	for (uint32_t i=0;i<160000;i++) {}
 		
 	// NVIC_PRI0_R 5-7 bits 
 	if (GPIO_PORTA_RIS_R & 0x04){ //intterupt for R Lane on PA2; PA2 is pressed on during edge trigger
 		GPIO_PORTA_ICR_R = 0x04;
+		Input = 0x04;
 	}else if (GPIO_PORTA_RIS_R & 0x08){ //intterupt for L Lane on PA3; PA3 is pressed on during edge trigger
 		GPIO_PORTA_ICR_R = 0x08;
+		Input = 0x08;
 	}else if (GPIO_PORTA_RIS_R & 0x0C){ //intterupt for L and R Lane on both PA2 & PA3; PA2 & PA3 is pressed on during edge trigger
 		GPIO_PORTA_ICR_R = 0x0C;
+		Input = 0x0C;
 	}
 }
 
