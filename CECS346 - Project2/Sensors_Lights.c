@@ -17,7 +17,7 @@
 #define PORTE_PRI_BITS  0x10        // Clears bits 7-5
 #define PORTB_CNTRL    	0xFFFFFFFF
 #define PORTA_INT_PRI   2U          // Priority 2 for both edge trigger
-#define PORTE_INT_PRI   1U          // 
+#define PORTE_INT_PRI   1U          // Priority 1
 
 
 // Initialize the two sensors, enable both edge edge-triggered interrupt for both sensors

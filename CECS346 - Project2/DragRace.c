@@ -98,21 +98,23 @@ uint8_t volatile check;
 		SysTick_Start(DragRace_FSM[S].Time);
 		reset = false;
 		// TEST_RESET = RESET_ADR; // DEBUG FOR RESET; 
+		timesup = false;
+		
 		while (!reset) {
 			// TO Do: take care of FSM outputs and time in state.
-			timesup = false;
+			
 			S = DragRace_FSM[S].Next[Input];
 			LIGHTS = DragRace_FSM[S].Out;
       SysTick_Start(DragRace_FSM[S].Time);
 			Input = SENSORS>>2;	
 			reset = RESET_ADR;
-			check++; // DEBUG
+			//check++; // DEBUG
 
 			while((!timesup)&&(!reset)){
 				WaitForInterrupt();
 			}
 			
-			SysTick_Stop();
+			//SysTick_Stop();
 			
 			// TEST_RESET = RESET_ADR; // USE TO DEBUG RESET
 		}
@@ -135,6 +137,7 @@ void System_Init(void) {
 	reset = false;
 	Input = SENSORS>>2;
 	EnableInterrupts();
+	check++;
 }
 
 // Interrupt handler for the two sensors: update Input here 
@@ -170,6 +173,6 @@ void GPIOPortE_Handler(void) {
 // Systick interrupt handler:
 // Stop systick timer and update global variable: timesup 
 void SysTick_Handler(void) {
-	timesup = !timesup;
+	timesup = true;
 }
 
