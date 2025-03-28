@@ -3,18 +3,18 @@
 <title>Static Call Graph - [.\DragRace.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\DragRace.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6210000: Last Updated: Thu Mar 27 23:19:23 2025
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6210000: Last Updated: Fri Mar 28 12:45:58 2025
 <BR><P>
 <H3>Maximum Stack Usage =          8 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
-SysTick_Handler
+__rt_entry_sh &rArr; __user_setup_stackheap
 <P>
 <H3>
 Functions with no stack information
 </H3><UL>
  <LI><a href="#[0]">Reset_Handler</a>
- <LI><a href="#[8f]">DisableInterrupts</a>
- <LI><a href="#[95]">EnableInterrupts</a>
+ <LI><a href="#[8e]">DisableInterrupts</a>
+ <LI><a href="#[94]">EnableInterrupts</a>
  <LI><a href="#[bd]">StartCritical</a>
  <LI><a href="#[be]">EndCritical</a>
  <LI><a href="#[97]">WaitForInterrupt</a>
@@ -701,11 +701,11 @@ Global Symbols
 <BR><BR>[Calls]<UL><LI><a href="#[8a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_sys_exit
 </UL>
 
-<P><STRONG><a name="[8f]"></a>DisableInterrupts</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, startup.o(.text))
+<P><STRONG><a name="[8e]"></a>DisableInterrupts</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, startup.o(.text))
 <BR><BR>[Called By]<UL><LI><a href="#[85]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[95]"></a>EnableInterrupts</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, startup.o(.text))
+<P><STRONG><a name="[94]"></a>EnableInterrupts</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, startup.o(.text))
 <BR><BR>[Called By]<UL><LI><a href="#[85]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
@@ -764,36 +764,32 @@ Global Symbols
 
 <P><STRONG><a name="[c6]"></a>__semihosting_library_function</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, indicate_semi.o(.text), UNUSED)
 
-<P><STRONG><a name="[a]"></a>GPIOPortA_Handler</STRONG> (Thumb, 74 bytes, Stack size 0 bytes, dragrace.o(.text.GPIOPortA_Handler))
+<P><STRONG><a name="[a]"></a>GPIOPortA_Handler</STRONG> (Thumb, 60 bytes, Stack size 0 bytes, dragrace.o(.text.GPIOPortA_Handler))
 <BR>[Address Reference Count : 1]<UL><LI> startup.o(RESET)
 </UL>
-<P><STRONG><a name="[e]"></a>GPIOPortE_Handler</STRONG> (Thumb, 18 bytes, Stack size 0 bytes, dragrace.o(.text.GPIOPortE_Handler))
+<P><STRONG><a name="[e]"></a>GPIOPortE_Handler</STRONG> (Thumb, 34 bytes, Stack size 0 bytes, dragrace.o(.text.GPIOPortE_Handler))
 <BR>[Address Reference Count : 1]<UL><LI> startup.o(RESET)
 </UL>
-<P><STRONG><a name="[93]"></a>Lights_Init</STRONG> (Thumb, 82 bytes, Stack size 0 bytes, sensors_lights.o(.text.Lights_Init))
+<P><STRONG><a name="[92]"></a>Lights_Init</STRONG> (Thumb, 82 bytes, Stack size 0 bytes, sensors_lights.o(.text.Lights_Init))
 <BR><BR>[Called By]<UL><LI><a href="#[85]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[90]"></a>PLL_Init</STRONG> (Thumb, 106 bytes, Stack size 0 bytes, pll.o(.text.PLL_Init))
+<P><STRONG><a name="[8f]"></a>PLL_Init</STRONG> (Thumb, 106 bytes, Stack size 0 bytes, pll.o(.text.PLL_Init))
 <BR><BR>[Called By]<UL><LI><a href="#[85]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[92]"></a>Reset_Init</STRONG> (Thumb, 158 bytes, Stack size 0 bytes, sensors_lights.o(.text.Reset_Init))
+<P><STRONG><a name="[91]"></a>Reset_Init</STRONG> (Thumb, 158 bytes, Stack size 0 bytes, sensors_lights.o(.text.Reset_Init))
 <BR><BR>[Called By]<UL><LI><a href="#[85]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[91]"></a>Sensors_Init</STRONG> (Thumb, 150 bytes, Stack size 0 bytes, sensors_lights.o(.text.Sensors_Init))
+<P><STRONG><a name="[90]"></a>Sensors_Init</STRONG> (Thumb, 150 bytes, Stack size 0 bytes, sensors_lights.o(.text.Sensors_Init))
 <BR><BR>[Called By]<UL><LI><a href="#[85]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[9]"></a>SysTick_Handler</STRONG> (Thumb, 24 bytes, Stack size 8 bytes, dragrace.o(.text.SysTick_Handler))
-<BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = SysTick_Handler
-</UL>
-<BR>[Calls]<UL><LI><a href="#[8e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SysTick_Stop
-</UL>
+<P><STRONG><a name="[9]"></a>SysTick_Handler</STRONG> (Thumb, 18 bytes, Stack size 0 bytes, dragrace.o(.text.SysTick_Handler))
 <BR>[Address Reference Count : 1]<UL><LI> startup.o(RESET)
 </UL>
-<P><STRONG><a name="[94]"></a>SysTick_Init</STRONG> (Thumb, 26 bytes, Stack size 0 bytes, systick.o(.text.SysTick_Init))
+<P><STRONG><a name="[93]"></a>SysTick_Init</STRONG> (Thumb, 26 bytes, Stack size 0 bytes, systick.o(.text.SysTick_Init))
 <BR><BR>[Called By]<UL><LI><a href="#[85]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
@@ -801,22 +797,21 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[85]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[8e]"></a>SysTick_Stop</STRONG> (Thumb, 22 bytes, Stack size 0 bytes, systick.o(.text.SysTick_Stop))
-<BR><BR>[Called By]<UL><LI><a href="#[9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SysTick_Handler
-<LI><a href="#[85]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
+<P><STRONG><a name="[95]"></a>SysTick_Stop</STRONG> (Thumb, 22 bytes, Stack size 0 bytes, systick.o(.text.SysTick_Stop))
+<BR><BR>[Called By]<UL><LI><a href="#[85]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[85]"></a>main</STRONG> (Thumb, 198 bytes, Stack size 0 bytes, dragrace.o(.text.main))
+<P><STRONG><a name="[85]"></a>main</STRONG> (Thumb, 282 bytes, Stack size 0 bytes, dragrace.o(.text.main))
 <BR><BR>[Calls]<UL><LI><a href="#[96]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SysTick_Start
-<LI><a href="#[8e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SysTick_Stop
-<LI><a href="#[94]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SysTick_Init
-<LI><a href="#[93]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Lights_Init
-<LI><a href="#[92]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Reset_Init
-<LI><a href="#[91]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Sensors_Init
-<LI><a href="#[90]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PLL_Init
+<LI><a href="#[95]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SysTick_Stop
+<LI><a href="#[93]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SysTick_Init
+<LI><a href="#[92]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Lights_Init
+<LI><a href="#[91]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Reset_Init
+<LI><a href="#[90]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Sensors_Init
+<LI><a href="#[8f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PLL_Init
 <LI><a href="#[97]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WaitForInterrupt
-<LI><a href="#[95]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;EnableInterrupts
-<LI><a href="#[8f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DisableInterrupts
+<LI><a href="#[94]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;EnableInterrupts
+<LI><a href="#[8e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DisableInterrupts
 </UL>
 <BR>[Called By]<UL><LI><a href="#[84]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__rt_entry_main
 </UL>

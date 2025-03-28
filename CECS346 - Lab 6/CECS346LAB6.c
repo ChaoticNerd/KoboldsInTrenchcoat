@@ -39,7 +39,7 @@
 #define NVIC_EN0_PORTF		  0x40000000  // bit position for PORTF interrupt in NVIC_EN0_R register.
 
 #define EN_SYSTICK_CC				0x07 // Enable SysTick Core Clock and interrupts
-#define PRI4_TOP3_BITS			0x1FFFFFFF // priority is 4, aka 0001 0000
+#define PRI4_TOP3_BITS			0x1FFFFFFF // priority is 4, aka 0010 0000
 #define PRI4_OTHER_BITS			0x20000000 // remaining bits become this
 
 // Function Prototypes (external functions from startup.s)

@@ -11,12 +11,13 @@
 #define LIGHTS_MASK     0xFF
 #define NVIC_EN0_PORTA  0x00000001  // For PA2, PA3; matches IRQ for PORTA_HANDLER
 #define NVIC_EN0_PORTE  0x00000004  // Matches IRQ for PORTE_HANDLER
-#define GPIO_PORTCTRL   0x0000FF00  // DOUBLE CHECK
+#define GPIO_PORTCTRL_SENSORS   0x0000FF00  // DOUBLE CHECK
+#define GPIO_PORTCTRL_RESET			0x00000F00
 #define PORTA_PRI_BITS  0x20        // Clears bits 7-5
 #define PORTE_PRI_BITS  0x10        // Clears bits 7-5
 #define PORTB_CNTRL    	0xFFFFFFFF
 #define PORTA_INT_PRI   2U          // Priority 2 for both edge trigger
-#define PORTE_INT_PRI   1U
+#define PORTE_INT_PRI   1U          // 
 
 
 // Initialize the two sensors, enable both edge edge-triggered interrupt for both sensors
@@ -30,7 +31,7 @@ void Sensors_Init(void){ // matches Switch_LED_Init
     GPIO_PORTA_DIR_R &= ~SWITCHES_MASK;     // Sets port to input
     GPIO_PORTA_AFSEL_R &= ~SWITCHES_MASK;   // Disables all alt functions on port A2, A3
     GPIO_PORTA_DEN_R |= SWITCHES_MASK;      // Enables digital I/O on A2, A3
-    GPIO_PORTA_PCTL_R &= ~GPIO_PORTCTRL;      // Sets PA2, PA3 to GPIO
+    GPIO_PORTA_PCTL_R &= ~GPIO_PORTCTRL_SENSORS;      // Sets PA2, PA3 to GPIO
     GPIO_PORTA_AMSEL_R &= ~SWITCHES_MASK;   // Disables analogue functionality of PA2, PA3
     GPIO_PORTA_PUR_R &= ~SWITCHES_MASK;      // Disables pull-up, thus using pull-down, thus hardware is positive
 
@@ -50,19 +51,19 @@ void Reset_Init(void){
     SYSCTL_RCGC2_R |= SYSCTL_RCGC2_GPIOE;
     while((SYSCTL_RCGC2_R & SYSCTL_RCGC2_GPIOE) != SYSCTL_RCGC2_GPIOE);
 
-        //Port E Init Stuff
+    //Port E Init Stuff
     GPIO_PORTE_DIR_R &= ~RESET_MASK;     // sets port to input
     GPIO_PORTE_AFSEL_R &= ~RESET_MASK;   //  disables all alt function on PE2 
     GPIO_PORTE_DEN_R |= RESET_MASK;      //  Enables digital I/O on PE2
-    GPIO_PORTE_PCTL_R &= GPIO_PORTCTRL;    // PE2 sets to GPIO 
+    GPIO_PORTE_PCTL_R &= ~GPIO_PORTCTRL_RESET;    // PE2 sets to GPIO 
     GPIO_PORTE_AMSEL_R &= ~RESET_MASK;   // Disables analog funtion PE2
-    GPIO_PORTE_PUR_R |= RESET_MASK;      // Weak pull down on PE2
+    GPIO_PORTE_PUR_R &= ~RESET_MASK;      // Weak pull down on PE2
     
-    //Interrupt INit Stuff; 
-    GPIO_PORTE_IS_R  |= RESET_MASK;     // Enables Level sensitive
-    GPIO_PORTE_IBE_R &= ~RESET_MASK;     // check interrupt event iev
+    //Interrupt Init Stuff; need 1X11
+    GPIO_PORTE_IS_R  |= RESET_MASK;         // Enables Level sensitive
+    GPIO_PORTE_IBE_R &= ~RESET_MASK;        // check interrupt event iev
     GPIO_PORTE_IEV_R |= RESET_MASK;			// choose high level sensitive = 1
-    GPIO_PORTE_IM_R  |= RESET_MASK;  
+    GPIO_PORTE_IM_R  |= RESET_MASK;         // Enable interrupt
 
     // Interrupt Controller
     NVIC_PRI1_R = (NVIC_PRI1_R&~PORTE_PRI_BITS)|PORTE_INT_PRI<<5; // 
