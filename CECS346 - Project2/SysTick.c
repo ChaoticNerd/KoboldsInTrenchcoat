@@ -11,7 +11,7 @@
 #include <stdint.h> // C99 data types
 
 
-#define EN_SYSTICK_CC		NVIC_ST_CTRL_CLK_SRC + NVIC_ST_CTRL_INTEN + NVIC_ST_CTRL_INTEN
+#define EN_SYSTICK_CC		NVIC_ST_CTRL_CLK_SRC | NVIC_ST_CTRL_INTEN
 #define PRI3_TOP3_BITS_RESET	0x1FFFFFFFF
 #define PRI3_TOP3_BITS_SET	0x600000000
 
@@ -29,13 +29,13 @@ void SysTick_Start(uint32_t period) {
 	NVIC_ST_RELOAD_R = period - 1; 												// countdown from this number to 0
 	NVIC_ST_CURRENT_R = 0; 																// clear countdown counter
 	NVIC_ST_CTRL_R |= NVIC_ST_CTRL_ENABLE; 								// enable SysTick timer
-	while ((NVIC_ST_CTRL_R & NVIC_ST_CTRL_COUNT) == 0); 	// busy wait timer
-	NVIC_ST_CTRL_R &= ~NVIC_ST_CTRL_ENABLE; 							// disable SysTick again to set up
+//	while ((NVIC_ST_CTRL_R & NVIC_ST_CTRL_COUNT) == 0); 	// busy wait timer
+//	NVIC_ST_CTRL_R &= ~NVIC_ST_CTRL_ENABLE; 							// disable SysTick again to set up
 }
 
 
 //
 void SysTick_Stop(void) {
     NVIC_ST_CTRL_R &= ~NVIC_ST_CTRL_ENABLE; // disable SysTick again to set up
-		NVIC_ST_CURRENT_R = 0; 									// clear countdown counter
+//		NVIC_ST_CURRENT_R = 0; 									// clear countdown counter
 }

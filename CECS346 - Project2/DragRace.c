@@ -79,7 +79,7 @@ STyp DragRace_FSM[NUM_STATE] = {
 #define RIGHT_SENSOR_MASK (0x08) // bit position for left sensor
 	
 uint8_t Input;
-// uint8_t TEST_RESET;
+uint8_t TEST_RESET;
 bool timesup; // default false
 bool reset;  // flag to reset the system, set by the reset button located at breadboard, not the launchpad reset button.
 //uint8_t volatile TEST;
@@ -88,14 +88,11 @@ uint8_t volatile check;
 	
  int main(void){
   uint8_t S;  // current state index
-	
 	System_Init();
 
   while(1){
     // TODO: reset FSM to its Initial state, reset globals to default values
    	S = Init;
-		LIGHTS = DragRace_FSM[S].Out;
-		SysTick_Start(DragRace_FSM[S].Time);
 		reset = false;
 		// TEST_RESET = RESET_ADR; // DEBUG FOR RESET; 
 		timesup = false;
@@ -103,23 +100,21 @@ uint8_t volatile check;
 		while (!reset) {
 			// TO Do: take care of FSM outputs and time in state.
 			
-			S = DragRace_FSM[S].Next[Input];
 			LIGHTS = DragRace_FSM[S].Out;
-      SysTick_Start(DragRace_FSM[S].Time);
-			Input = SENSORS>>2;	
-			reset = RESET_ADR;
-			//check++; // DEBUG
 
+			//check++; // DEBUG
+			S = DragRace_FSM[S].Next[Input];
 			while((!timesup)&&(!reset)){
 				WaitForInterrupt();
+				// check++;
 			}
-			
-			//SysTick_Stop();
-			
+			timesup = false;      
+			SysTick_Start(DragRace_FSM[S].Time);
+
 			// TEST_RESET = RESET_ADR; // USE TO DEBUG RESET
 		}
+		
 		SysTick_Stop();
-		Input = SENSORS>>2;	
   }
 }
 
@@ -137,7 +132,6 @@ void System_Init(void) {
 	reset = false;
 	Input = SENSORS>>2;
 	EnableInterrupts();
-	check++;
 }
 
 // Interrupt handler for the two sensors: update Input here 
@@ -145,7 +139,8 @@ void GPIOPortA_Handler(void){
 	// simple solution to take care of button debounce: 20ms to 30ms delay
 	for (uint32_t i=0;i<160000;i++) {}
 	timesup = true;
-	
+	Input = SENSORS>>2;	
+
 		// NVIC_PRI0_R 5-7 bits 
 	if (GPIO_PORTA_RIS_R & 0x08){ //intterupt for R Lane on PA2; PA2 is pressed on during edge trigger
 		GPIO_PORTA_ICR_R = 0x08;
@@ -165,14 +160,16 @@ void GPIOPortE_Handler(void) {
 
 	if (GPIO_PORTE_RIS_R & 0x04){ //Reset on PE2 is pressed during trigger
 		GPIO_PORTE_ICR_R = 0x04;
-		reset = true;
-		// TEST_RESET = RESET_ADR; // DEBUG FOR RESET; checking port output
+		reset = RESET_ADR;
+		 TEST_RESET = RESET_ADR; // DEBUG FOR RESET; checking port output
 	}
+	
 }
 
 // Systick interrupt handler:
 // Stop systick timer and update global variable: timesup 
 void SysTick_Handler(void) {
+	SysTick_Stop();
 	timesup = true;
 }
 
