@@ -43,19 +43,19 @@ typedef const struct State STyp;
 
 // TODO: assign a value to all states in Drag Race FSM
 // use all upper case for constants defined here
-enum DragRace_states {Init,Wait,CD_Y1,CD_Y2,Go,WL,WR,WB,FSL,FSR,FSB};
+enum DragRace_states {Init,Wait, CD_Y1,CD_Y2,Go,WL,WR,WB,FSL,FSR,FSB};
 
 // TODO: define Outputs for the FSM DONE
-#define ALL_ON 	    (0xFF) // Turns on all the LEDs 
-#define ALL_OFF 		(0x00) // Turns off all the LEDs 
-#define YELLOW1_ON	(0x01) // Turns on 1st set of yellow LEDs 
-#define YELLOW2_ON  (0x02) // Turns on 2nd set of yellow LEDs
-#define GREEN_BOTH  (0x44) // Turns on the green LEDs 
-#define GREEN_LEFT  (0x40) // Turns on left green LED
-#define GREEN_RIGHT (0x04) // Turns on right green LED
-#define RED_BOTH    (0x88) // Turns on both red LEDS
-#define RED_LEFT    (0x80) // Turns on left red LED
-#define RED_RIGHT   (0x08) // Turns on right red LED 
+#define ALL_ON 	    (~0xFF) // Turns on all the LEDs 
+#define ALL_OFF 		(~0x00) // Turns off all the LEDs 
+#define YELLOW1_ON	(~0x11) // Turns on 1st set of yellow LEDs 
+#define YELLOW2_ON  (~0x22) // Turns on 2nd set of yellow LEDs
+#define GREEN_BOTH  (~0x44) // Turns on the green LEDs 
+#define GREEN_LEFT  (~0x40) // Turns on left green LED
+#define GREEN_RIGHT (~0x04) // Turns on right green LED
+#define RED_BOTH    (~0x88) // Turns on both red LEDS
+#define RED_LEFT    (~0x80) // Turns on left red LED
+#define RED_RIGHT   (~0x08) // Turns on right red LED 
 
 //TODO: Define Drag Race FSM
 STyp DragRace_FSM[NUM_STATE] = {
@@ -71,9 +71,9 @@ STyp DragRace_FSM[NUM_STATE] = {
 	{RED_RIGHT, 	ONE_SEC,	{Wait, Wait,	Wait,	Wait}},				// FSR
 	{RED_BOTH, 		ONE_SEC,	{Wait, Wait,	Wait,	Wait}}				// FSB
 };
-	
+
 // TODO: define bit positions for left, right and reset buttons
-#define RESET_MASK  			(0x01) // bit position for reset button
+#define RESET_MASK  899			(0x01) // bit position for reset button
 #define LEFT_SENSOR_MASK  (0x04) // bit position for left sensor
 #define RIGHT_SENSOR_MASK (0x08) // bit position for left sensor
 	
@@ -81,6 +81,7 @@ uint8_t Input;
 bool timesup; // default false
 bool reset;  // flag to reset the system, set by the reset button located at breadboard, not the launchpad reset button.
 uint8_t volatile TEST;
+uint8_t volatile check;
 
 	
  int main(void){
@@ -94,20 +95,22 @@ uint8_t volatile TEST;
   while(1){
     // TODO: reset FSM to its Initial state, reset globals to default values
    	
-		reset = RESET;
-		Input = SENSORS << 3;	
-		
+		reset = false;
+		Input = SENSORS>>2;	
 		while (!reset) {
 			// TO Do: take care of FSM outputs and time in state.
 			LIGHTS = DragRace_FSM[S].Out;
-      SysTick_Start(DragRace_FSM[S].Time*HALF_SEC);
-			while((!timesup)&&(!reset)){
-			  WaitForInterrupt();
-			}
+      SysTick_Start(DragRace_FSM[S].Time);
+			check++;
 
-			timesup = false;
-			Input = SENSORS << 3;	
+			while((!timesup)&&(!reset)){
+				WaitForInterrupt();
+				
+			}
+			
+			
 			S = DragRace_FSM[S].Next[Input];
+			Input = SENSORS>>2;	
 		}
   }
 }
@@ -124,7 +127,7 @@ void System_Init(void) {
   // TODO: reset global variables: timesup, reset, Input 
 	timesup = false;
 	reset = false;
-	Input = SENSORS;
+	Input = SENSORS>>2;
 	EnableInterrupts();
 }
 
@@ -133,17 +136,15 @@ void GPIOPortA_Handler(void){
 	TEST++;
 	// simple solution to take care of button debounce: 20ms to 30ms delay
 	for (uint32_t i=0;i<160000;i++) {}
-		
-	// NVIC_PRI0_R 5-7 bits 
-	if (GPIO_PORTA_RIS_R & 0x04){ //intterupt for R Lane on PA2; PA2 is pressed on during edge trigger
-		GPIO_PORTA_ICR_R = 0x04;
-		Input = 0x04;
-	}else if (GPIO_PORTA_RIS_R & 0x08){ //intterupt for L Lane on PA3; PA3 is pressed on during edge trigger
+	timesup=true;
+	
+		// NVIC_PRI0_R 5-7 bits 
+	if (GPIO_PORTA_RIS_R & 0x08){ //intterupt for R Lane on PA2; PA2 is pressed on during edge trigger
 		GPIO_PORTA_ICR_R = 0x08;
-		Input = 0x08;
+	}else if (GPIO_PORTA_RIS_R & 0x04){ //intterupt for L Lane on PA3; PA3 is pressed on during edge trigger
+		GPIO_PORTA_ICR_R = 0x04;
 	}else if (GPIO_PORTA_RIS_R & 0x0C){ //intterupt for L and R Lane on both PA2 & PA3; PA2 & PA3 is pressed on during edge trigger
 		GPIO_PORTA_ICR_R = 0x0C;
-		Input = 0x0C;
 	}
 }
 

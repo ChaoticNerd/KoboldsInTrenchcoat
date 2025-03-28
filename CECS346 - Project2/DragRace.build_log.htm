@@ -5,7 +5,7 @@
 <h2>Tool Versions:</h2>
 IDE-Version: µVision V5.39.0.0
 Copyright (C) 2023 ARM Ltd and ARM Germany GmbH. All rights reserved.
-License Information: Natasha Kho, California State University - Long Beach, LIC=----
+License Information: Justin Narciso, CSULB, LIC=----
  
 Tool Versions:
 Toolchain:       MDK-Lite  Version: 5.39.0.0
@@ -21,20 +21,36 @@ Target DLL:      lmidk-agdi.dll V???
 Dialog DLL:      TCM.DLL V1.56.4.0
  
 <h2>Project:</h2>
-C:\Users\mavri\Documents\GitHub\KoboldsInTrenchcoat\CECS346 - Project2\DragRace.uvprojx
+C:\Users\PugWomp\Documents\Github\KoboldsInTrenchcoat\CECS346 - Project2\DragRace.uvprojx
 Project File Date:  03/27/2025
 
 <h2>Output:</h2>
 *** Using Compiler 'V6.21', folder: 'C:\Keil_v5\ARM\ARMCLANG\Bin'
-Rebuild target 'DragRace'
-compiling PLL.c...
-compiling SysTick.c...
+Build target 'DragRace'
 compiling Sensors_Lights.c...
-assembling startup.s...
+DragRace.c(72): warning: implicit conversion from 'int' to 'uint8_t' (aka 'unsigned char') changes value from -137 to 119 [-Wconstant-conversion]
+   72 |         {RED_BOTH,              ONE_SEC,        {Wait, Wait,    Wait,   Wait}}                          // FSB
+      |         ~^~~~~~~~
+DragRace.c(56): note: expanded from macro 'RED_BOTH'
+   56 | #define RED_BOTH    (~0x88) // Turns on both red LEDS
+      |                      ^~~~~
+DragRace.c(70): warning: implicit conversion from 'int' to 'uint8_t' (aka 'unsigned char') changes value from -129 to 127 [-Wconstant-conversion]
+   70 |         {RED_LEFT,              ONE_SEC,        {Wait, Wait,    Wait,   Wait}},                         // FSL
+      |         ~^~~~~~~~
+DragRace.c(57): note: expanded from macro 'RED_LEFT'
+   57 | #define RED_LEFT    (~0x80) // Turns on left red LED
+      |                      ^~~~~
+DragRace.c(62): warning: implicit conversion from 'int' to 'uint8_t' (aka 'unsigned char') changes value from -256 to 0 [-Wconstant-conversion]
+   62 |         {ALL_ON,                        ONE_SEC,        {Wait, Wait,    Wait,   Wait}},                         // Init
+      |         ~^~~~~~
+DragRace.c(49): note: expanded from macro 'ALL_ON'
+   49 | #define ALL_ON      (~0xFF) // Turns on all the LEDs 
+      |                      ^~~~~
+3 warnings generated.
 compiling DragRace.c...
 linking...
-Program Size: Code=1904 RO-data=236 RW-data=0 ZI-data=1128  
-".\DragRace.axf" - 0 Error(s), 0 Warning(s).
+Program Size: Code=1892 RO-data=236 RW-data=0 ZI-data=1128  
+".\DragRace.axf" - 0 Error(s), 3 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -51,8 +67,8 @@ Package Vendor: Keil
 
 <h2>Collection of Component include folders:</h2>
   ./RTE/_DragRace
-  C:/Users/mavri/AppData/Local/Arm/Packs/ARM/CMSIS/5.9.0/CMSIS/Core/Include
-  C:/Users/mavri/AppData/Local/Arm/Packs/Keil/TM4C_DFP/1.1.0/Device/Include/TM4C123
+  C:/Users/PugWomp/AppData/Local/Arm/Packs/ARM/CMSIS/5.9.0/CMSIS/Core/Include
+  C:/Users/PugWomp/AppData/Local/Arm/Packs/Keil/TM4C_DFP/1.1.0/Device/Include/TM4C123
 
 <h2>Collection of Component Files used:</h2>
 
