@@ -111,7 +111,10 @@ uint8_t volatile check;
 			
 			S = DragRace_FSM[S].Next[Input];
 			Input = SENSORS>>2;	
+			reset = RESET;
 		}
+		SysTick_Stop();
+		S = Init;
   }
 }
 

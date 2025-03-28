@@ -59,9 +59,9 @@ void Reset_Init(void){
     GPIO_PORTE_PUR_R |= RESET_MASK;      // Weak pull down on PE2
     
     //Interrupt INit Stuff; 
-    GPIO_PORTE_IS_R  |= RESET_MASK;     // Enables Edge sensitive
-    GPIO_PORTE_IBE_R |= RESET_MASK;     // Enables Both-edge sensitive
-    // Dont need IEV
+    GPIO_PORTE_IS_R  |= RESET_MASK;     // Enables Level sensitive
+    GPIO_PORTE_IBE_R &= ~RESET_MASK;     // check interrupt event iev
+    GPIO_PORTE_IEV_R |= RESET_MASK;			// choose high level sensitive = 1
     GPIO_PORTE_IM_R  |= RESET_MASK;  
 
     // Interrupt Controller
