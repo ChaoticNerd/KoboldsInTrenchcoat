@@ -73,7 +73,7 @@ STyp DragRace_FSM[NUM_STATE] = {
 };
 
 // TODO: define bit positions for left, right and reset buttons
-#define RESET_MASK  899			(0x01) // bit position for reset button
+#define RESET_MASK  			(0x01) // bit position for reset button
 #define LEFT_SENSOR_MASK  (0x04) // bit position for left sensor
 #define RIGHT_SENSOR_MASK (0x08) // bit position for left sensor
 	
@@ -91,11 +91,10 @@ uint8_t volatile check;
 	 reset = false;
 	 timesup = false;
 	 S = Init;
-		
+
   while(1){
     // TODO: reset FSM to its Initial state, reset globals to default values
    	
-		reset = false;
 		Input = SENSORS>>2;	
 		while (!reset) {
 			// TO Do: take care of FSM outputs and time in state.
