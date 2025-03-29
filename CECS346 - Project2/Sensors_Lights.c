@@ -6,16 +6,16 @@
 #include <stdint.h> // C99 data types
 #include "Sensors_Lights.h"
 
-#define SWITCHES_MASK   0x0C
-#define RESET_MASK      0x04
-#define LIGHTS_MASK     0xFF
+#define SWITCHES_MASK   0x0C  // masks PA3-2
+#define RESET_MASK      0x04  // masks PE2
+#define LIGHTS_MASK     0xFF  // masks PB7-0
 #define NVIC_EN0_PORTA  0x00000001  // For PA2, PA3; matches IRQ for PORTA_HANDLER
 #define NVIC_EN0_PORTE  0x00000010  // Matches IRQ for PORTE_HANDLER
-#define GPIO_PORTCTRL_SENSORS   0x0000FF00  // DOUBLE CHECK
-#define GPIO_PORTCTRL_RESET			0x00000F00
+#define GPIO_PORTCTRL_SENSORS   0x0000FF00  // targets PA3-2 port control
+#define GPIO_PORTCTRL_RESET			0x00000F00  // targets PE2 port control
 #define PORTA_PRI_BITS  0x20        // Clears bits 7-5
 #define PORTE_PRI_BITS  0x10        // Clears bits 7-5
-#define PORTB_CNTRL    	0xFFFFFFFF
+#define PORTB_CNTRL    	0xFFFFFFFF  // targets PB7-0 port control
 #define PORTA_INT_PRI   2U          // Priority 2 for both edge trigger
 #define PORTE_INT_PRI   1U          // Priority 1
 
@@ -48,6 +48,7 @@ void Sensors_Init(void){ // matches Switch_LED_Init
 
 // Initialize the reset button: use level triggered interrupt
 void Reset_Init(void){
+		// set up port e clock and wait for clock to be ready
     SYSCTL_RCGC2_R |= SYSCTL_RCGC2_GPIOE;
     while((SYSCTL_RCGC2_R & SYSCTL_RCGC2_GPIOE) != SYSCTL_RCGC2_GPIOE);
 
@@ -66,7 +67,7 @@ void Reset_Init(void){
     GPIO_PORTE_IM_R  |= RESET_MASK;         // Enable interrupt
 
     // Interrupt Controller
-    NVIC_PRI1_R = (NVIC_PRI1_R&~PORTE_PRI_BITS)|PORTE_INT_PRI<<5; // 
+    NVIC_PRI1_R = (NVIC_PRI1_R&~PORTE_PRI_BITS)|PORTE_INT_PRI<<5; // clear priority bits and set priority to 1
     NVIC_EN0_R |= NVIC_EN0_PORTE;																	// BIT NEEDS TO MATCH IRQ
 }
 

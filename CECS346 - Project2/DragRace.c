@@ -74,9 +74,11 @@ STyp DragRace_FSM[NUM_STATE] = {
 };
 
 // TODO: define bit positions for left, right and reset buttons
-#define RESET_MASK  			(0x01) // bit position for reset button
+#define RESET_MASK  			(0x04) // bit position for reset button
 #define LEFT_SENSOR_MASK  (0x04) // bit position for left sensor
 #define RIGHT_SENSOR_MASK (0x08) // bit position for left sensor
+
+#define SENSOR_SHIFT       2     // used to shift sensors (because we use PA3-2, PE2
 	
 uint8_t Input;
 uint8_t TEST_RESET;
@@ -100,7 +102,7 @@ uint8_t volatile check;
 		while (!reset) {
 			// TO Do: take care of FSM outputs and time in state.
 			LIGHTS = DragRace_FSM[S].Out;
-      SysTick_Start(DragRace_FSM[S].Time*HALF_SEC);
+      SysTick_Start(DragRace_FSM[S].Time);
 			while((!timesup)&&(!reset)){
 			  WaitForInterrupt();
 			}
@@ -124,7 +126,7 @@ void System_Init(void) {
   // TODO: reset global variables: timesup, reset, Input 
 	timesup = false;
 	reset = false;
-	Input = SENSORS>>2;
+	Input = SENSORS>>SENSOR_SHIFT;
 	EnableInterrupts();
 }
 
@@ -132,16 +134,12 @@ void System_Init(void) {
 void GPIOPortA_Handler(void){
 	// simple solution to take care of button debounce: 20ms to 30ms delay
 	for (uint32_t i=0;i<160000;i++) {}
-	timesup = true;
-	Input = SENSORS>>2;	
+	//timesup = true; should this be here?
+	Input = SENSORS>>SENSOR_SHIFT;	
 
 		// NVIC_PRI0_R 5-7 bits 
-	if (GPIO_PORTA_RIS_R & 0x08){ //intterupt for R Lane on PA2; PA2 is pressed on during edge trigger
-		GPIO_PORTA_ICR_R = 0x08;
-	}else if (GPIO_PORTA_RIS_R & 0x04){ //intterupt for L Lane on PA3; PA3 is pressed on during edge trigger
-		GPIO_PORTA_ICR_R = 0x04;
-	}else if (GPIO_PORTA_RIS_R & 0x0C){ //intterupt for L and R Lane on both PA2 & PA3; PA2 & PA3 is pressed on during edge trigger
-		GPIO_PORTA_ICR_R = 0x0C;
+	if (GPIO_PORTA_RIS_R & (RIGHT_SENSOR_MASK | LEFT_SENSOR_MASK)){ //intterupt for L and R Lane on both PA2 & PA3; PA2 & PA3 is pressed on during edge trigger
+		GPIO_PORTA_ICR_R = (RIGHT_SENSOR_MASK | LEFT_SENSOR_MASK);
 	}
 }
 
@@ -152,8 +150,8 @@ void GPIOPortE_Handler(void) {
 	// simple solution to take care of button debounce: 20ms to 30ms delay
 	for (uint32_t i=0;i<160000;i++) {}
 
-	if (GPIO_PORTE_RIS_R & 0x04){ //Reset on PE2 is pressed during trigger
-		GPIO_PORTE_ICR_R = 0x04;
+	if (GPIO_PORTE_RIS_R & RESET_MASK){ //Reset on PE2 is pressed during trigger
+		GPIO_PORTE_ICR_R = RESET_MASK;
 		reset = RESET_ADR;
 		TEST_RESET = RESET_ADR; // DEBUG FOR RESET; checking port output
 	}
@@ -163,6 +161,6 @@ void GPIOPortE_Handler(void) {
 // Systick interrupt handler:
 // Stop systick timer and update global variable: timesup 
 void SysTick_Handler(void) {
-	SysTick_Stop();
-	timesup = true;
+	NVIC_ST_CTRL_R &= ~NVIC_ST_CTRL_ENABLE; // clear enable to end countdown
+	timesup = true; // end delay loop
 }
