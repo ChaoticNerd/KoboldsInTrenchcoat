@@ -2,7 +2,7 @@
 // Runs on TM4C123
 // Starter file for CECS346 Project 2
 // By Dr. Min He
-// Edited by Natasha Kho, Justin Narciso
+// Edited by Natasha Kho, Justin Narciso, Hanna Estrada
  
 #include "PLL.h"
 #include "tm4c123gh6pm.h"

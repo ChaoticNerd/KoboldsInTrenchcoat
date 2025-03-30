@@ -1,7 +1,7 @@
 // Sensors_Lights.c
 // Starter file for CECS346 Project 2
 // By Dr. Min He
-// Edited by Natasha Kho, Justin Narciso
+// Edited by Natasha Kho, Justin Narciso, Hanna Estrada
 #include "tm4c123gh6pm.h"
 #include <stdint.h> // C99 data types
 #include "Sensors_Lights.h"
@@ -23,7 +23,7 @@
 // Initialize the two sensors, enable both edge edge-triggered interrupt for both sensors
 void Sensors_Init(void){ // matches Switch_LED_Init
     // PORT A 2,3
-	// use rcgc gpio
+		// Using legacy mode; next time use SYSCTL_RCGCGPIO
     SYSCTL_RCGC2_R |= SYSCTL_RCGC2_GPIOA;                                // Set up PORT A Clock
     while ((SYSCTL_RCGC2_R & SYSCTL_RCGC2_GPIOA)!= SYSCTL_RCGC2_GPIOA) {}  // Waits until clock is ready
 

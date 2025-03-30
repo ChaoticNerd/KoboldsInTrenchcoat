@@ -2,6 +2,7 @@
 // Runs on TM4C123
 // Starter file for CECS346 Project 2
 // By Dr. Min He
+// Edited by Natasha Kho, Hanna Estrada, Justin Narciso
 
 // TODO:" The #define statement SYSDIV2 initializes
 // the PLL to the desired frequency.

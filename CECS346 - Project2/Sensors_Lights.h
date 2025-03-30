@@ -1,6 +1,7 @@
 // Sensors_Lights.h
 // Starter file for CECS346 Project 2
 // By Dr. Min He
+// Edited by Natasha Kho, Hanna Estrada, Justin Narciso
 
 // Initialize the two sensors, enable both edge edge-triggered interrupt for both sensors
 void Sensors_Init(void);

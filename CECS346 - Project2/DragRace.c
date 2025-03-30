@@ -110,7 +110,7 @@ uint8_t volatile check;
 			S = DragRace_FSM[S].Next[Input];
 		}
 		
-		SysTick_Stop();
+		//SysTick_Stop();
   }
 }
 
