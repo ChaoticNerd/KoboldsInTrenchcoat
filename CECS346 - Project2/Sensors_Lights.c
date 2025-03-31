@@ -1,7 +1,7 @@
 // Sensors_Lights.c
 // Starter file for CECS346 Project 2
 // By Dr. Min He
-// Edited by Natasha Kho, Justin Narciso, Hanna Estrada
+// Edited by Natasha Kho, Justin Narciso, Hanna Estrada, William Grefaldeo
 #include "tm4c123gh6pm.h"
 #include <stdint.h> // C99 data types
 #include "Sensors_Lights.h"
