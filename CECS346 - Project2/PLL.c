@@ -2,7 +2,7 @@
 // Runs on TM4C123
 // Starter file for CECS346 Project 2
 // By Dr. Min He
-// Edited by Natasha Kho, Justin Narciso, Hanna Estrada
+// Edited by Natasha Kho, Justin Narciso, Hanna Estrada, William Grefaldeo
  
 #include "PLL.h"
 #include "tm4c123gh6pm.h"
@@ -25,9 +25,9 @@ void PLL_Init(void){
 
      // 2) select the crystal value and oscillator source
     SYSCTL_RCC_R &= ~SYSCTL_RCC_XTAL_M;   // clear XTAL field: 0x7C0=> 011111000000
-    SYSCTL_RCC_R += SYSCTL_RCC_XTAL_16MHZ;// configure for 16 MHz crystal: 10101=>0x15
-    SYSCTL_RCC2_R &= ~SYSCTL_RCC2_OSCSRC2_M;// clear oscillator source field
-    SYSCTL_RCC2_R += SYSCTL_RCC2_OSCSRC2_MO;// configure for main oscillator source
+    SYSCTL_RCC_R += SYSCTL_RCC_XTAL_16MHZ; // configure for 16 MHz crystal: 10101=>0x15
+    SYSCTL_RCC2_R &= ~SYSCTL_RCC2_OSCSRC2_M; // clear oscillator source field
+    SYSCTL_RCC2_R += SYSCTL_RCC2_OSCSRC2_MO; // configure for main oscillator source
 
 	// 3) activate PLL by clearing PWRDN
     SYSCTL_RCC2_R &= ~SYSCTL_RCC2_PWRDN2; // PLL acts normally
