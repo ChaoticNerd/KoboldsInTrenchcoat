@@ -2,7 +2,7 @@
 // Runs on TM4C123
 // Starter file for CECS346 Project 2
 // By Dr. Min He
-// Edited by Natasha Kho, Justin Narciso, Hanna Estrada
+// Edited by Natasha Kho, Justin Narciso, Hanna Estrada, William Grefaldeo
 
 
 // oscilloscope or LED connected to PF2 for period measurement
