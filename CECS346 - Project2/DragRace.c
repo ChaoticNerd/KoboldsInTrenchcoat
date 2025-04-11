@@ -81,11 +81,11 @@ STyp DragRace_FSM[NUM_STATE] = {
 #define SENSOR_SHIFT       2     // used to shift sensors (because we use PA3-2, PE2
 	
 uint8_t Input;
-uint8_t TEST_RESET;
+//uint8_t TEST_RESET;
 bool timesup; // default false
 bool reset;  // flag to reset the system, set by the reset button located at breadboard, not the launchpad reset button.
 //uint8_t volatile TEST;
-uint8_t volatile check;
+//uint8_t volatile check;
 
 	 
  int main(void){
@@ -109,8 +109,6 @@ uint8_t volatile check;
 			timesup=false;
 			S = DragRace_FSM[S].Next[Input];
 		}
-		
-		//SysTick_Stop();
   }
 }
 
@@ -153,7 +151,7 @@ void GPIOPortE_Handler(void) {
 	if (GPIO_PORTE_RIS_R & RESET_MASK){ //Reset on PE2 is pressed during trigger
 		GPIO_PORTE_ICR_R = RESET_MASK;
 		reset = RESET_ADR;
-		TEST_RESET = RESET_ADR; // DEBUG FOR RESET; checking port output
+		//TEST_RESET = RESET_ADR; // DEBUG FOR RESET; checking port output
 	}
 	
 }
