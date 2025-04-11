@@ -18,7 +18,7 @@
 
 // initialize SysTick
 void SysTick_Init(void) {	
-    NVIC_ST_CTRL_R = 0; // disable SysTick when setting up
+    NVIC_ST_CTRL_R = VALUE_RESET; // disable SysTick when setting up
 	
 											// CLEARING BITS HERE										||| ASSIGNING PRIORITY HERE
 	  NVIC_SYS_PRI3_R = (NVIC_SYS_PRI3_R & PRI3_TOP3_BITS_RESET) | PRI3_TOP3_BITS_SET ;		// SLIDE 27 LECTURE 6!!!
@@ -28,6 +28,6 @@ void SysTick_Init(void) {
 // 
 void SysTick_Start(uint32_t period) {	
 	NVIC_ST_RELOAD_R = period - 1; 												// countdown from this number to 0
-	NVIC_ST_CURRENT_R = 0; 																// clear countdown counter
+	NVIC_ST_CURRENT_R = VALUE_RESET; 																// clear countdown counter
 	NVIC_ST_CTRL_R |= NVIC_ST_CTRL_ENABLE; 								// enable SysTick timer
 }

@@ -132,7 +132,6 @@ void System_Init(void) {
 void GPIOPortA_Handler(void){
 	// simple solution to take care of button debounce: 20ms to 30ms delay
 	for (uint32_t i=0;i<160000;i++) {}
-	//timesup = true; should this be here?
 	Input = SENSORS>>SENSOR_SHIFT;	
 
 		// NVIC_PRI0_R 5-7 bits 
