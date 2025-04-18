@@ -6,6 +6,7 @@
 #include <stdint.h> // C99 data types
 #include <stdbool.h> // boolean data
 #include "tm4c123gh6pm.h"
+#include "Servo.h"
 
 // TODO: LED bit address definition for PF3 and PF1
 #define LED         (*((volatile uint32_t *)0x40025028))
@@ -20,8 +21,8 @@
 #define SENSOR_MASK 0x40 // PD6
 
 #define PORTD_INT_PRI  3U
-#define PORTD_PRI_BITS 0x60000000
-#define NVIC_EN0_PORTD 0x03
+#define PORTD_PRI_BITS 0xE0000000
+#define NVIC_EN0_PORTD 0x08
 
 
 // External Function Prototypes (external functions from startup.s)
@@ -44,7 +45,8 @@ int main(void){
 	DisableInterrupts();
 	Sensor_Init();    // initialize GPIO Port F interrupt
 	Servo_Init();
-    LEDInit();
+  LEDInit();
+	SysTick_Init();
 	EnableInterrupts();
 	
 	// Initialize the LaunchPad LEDs based on the current sensor output
@@ -55,48 +57,47 @@ int main(void){
 	// i don't think bit shift since it's dependent on like. time?
 	// ah ok
 	//SERVO = SERVO_START; //Center the PWM signal
-
+	move_servo = false;
+	LED = GREEN;
+	Drive_Servo(SERVO_START);
   while(1){
 		LED = GREEN;
-		WaitForInterrupt();
-		if (move_servo){
-			// move the servo 90 degrees in the desired direction
-			// lecture code example, values for CW and CCW from example code (delete this later)
-			/*if (dir == CLOCKWISE) {
-				H = SERVO_CW_45;
-			}
-			else {
-				H = SERVO_CCW_45;
-			}
-
-			}
-			*/
+		Drive_Servo(SERVO_START);
+		while(!move_servo){
+			WaitForInterrupt();
+		}
+		LED = RED;
+		Drive_Servo(SERVO_END);
+		while(move_servo){
+			WaitForInterrupt();
 		}
   }
 }
 
 // Initialize Port F LEDs: PF1 & PF3
-void LEDInit(void) 
-{
-	SYSCTL_RCGCGPIO_R |= 0x20; // Activate Port F Clock
-	while((SYSCTL_PRGPIO_R & 0x20) == 0); //Wait for Port F to be ready
+void LEDInit(void) {
+	SYSCTL_RCGCGPIO_R |= SYSCTL_RCGCGPIO_R5; // Activate Port F Clock
+	while((SYSCTL_PRGPIO_R & SYSCTL_RCGCGPIO_R5) != SYSCTL_RCGCGPIO_R5); //Wait for Port F to be ready
 	
 	GPIO_PORTF_DIR_R |= 0x0A;
 	GPIO_PORTF_AFSEL_R &= ~0x0A;
 	GPIO_PORTF_DEN_R |= 0x0A;
-	GPIO_PORTF_AMSEL_R &= ~0x0A;
-	GPIO_PORTF_PCTL_R &= 0x0000F0F0;
+	GPIO_PORTF_AMSEL_R |= 0x0A;
+	GPIO_PORTF_PCTL_R &= ~0x0000F0F0;
 
 }
 
 // Initialize edge trigger interrupt for PD6 both edges
 void Sensor_Init(void) {
+	SYSCTL_RCGCGPIO_R |= SYSCTL_RCGCGPIO_R3;
+	while((SYSCTL_PRGPIO_R & SYSCTL_RCGCGPIO_R3) != SYSCTL_RCGCGPIO_R3); //Wait for Port F to be ready
+
 	// Port D6 setup
 	GPIO_PORTD_DIR_R		&= ~SENSOR_MASK; 
-	GPIO_PORTD_AFSEL_R  |=  SENSOR_MASK; // look up alt funct of portD
-	GPIO_PORTD_DEN_R		&= ~SENSOR_MASK;
+	GPIO_PORTD_AFSEL_R  &= ~SENSOR_MASK; // look up alt funct of portD
+	GPIO_PORTD_DEN_R		|=  SENSOR_MASK;
 	GPIO_PORTD_AMSEL_R  |=  SENSOR_MASK;
-	//GPIO_PORTD_PCTL_R	=
+	GPIO_PORTD_PCTL_R		&= ~SENSOR_MASK;
 	
 	// Edge Interrupt setup
 	// 01X1
@@ -105,18 +106,18 @@ void Sensor_Init(void) {
 	GPIO_PORTD_IM_R 	|= SENSOR_MASK;
 
 	// Priority 3
-	NVIC_PRI0_R = (NVIC_PRI0_R&~PORTD_PRI_BITS)|PORTD_INT_PRI<<28;
+	NVIC_PRI0_R = (NVIC_PRI0_R&~PORTD_PRI_BITS)|PORTD_INT_PRI<<29;
 	NVIC_EN0_R |= NVIC_EN0_PORTD;
 }
-
-
-
-
 
 //this is not on the new code, do we still need this?
 // change LED color whenever an abstacle cross detectable distance
 void GPIOPortD_Handler(void) {
-	LED = RED;
+	for(uint32_t i = 0; i < 160000; i ++){}
+	if(GPIO_PORTD_RIS_R & SENSOR_MASK){
+		GPIO_PORTD_ICR_R = 0x40;
+		move_servo = !move_servo;
+	}
 }
 
 // Interrupt service routine for sensor interrupt

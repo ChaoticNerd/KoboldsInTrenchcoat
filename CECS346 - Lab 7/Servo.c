@@ -19,7 +19,7 @@ static uint32_t L;
 
 void SysTick_Init(void){
   NVIC_ST_CTRL_R &= ~NVIC_ST_CTRL_ENABLE;    										// disable SysTick during setup
-  NVIC_SYS_PRI3_R = (NVIC_SYS_PRI3_R&0x1FFFFFFF)|0x80000000; 		// bit 31-29 for SysTick, set priority to 2
+  NVIC_SYS_PRI3_R = (NVIC_SYS_PRI3_R&0x1FFFFFFF)|0x80000000; 		// bit 31-29 for SysTick, set priority to 4
 	NVIC_ST_CTRL_R |= NVIC_ST_CTRL_CLK_SRC | NVIC_ST_CTRL_INTEN;	// enable SysTick clock source, interrupt
 }
 
@@ -32,6 +32,7 @@ void Servo_Init(void){
 	GPIO_PORTB_DIR_R 		|= SERVO_BIT_MASK;							//set to output pin
 	GPIO_PORTB_AMSEL_R 	&= ~SERVO_BIT_MASK;							//Disable Analog Function
 	GPIO_PORTB_DEN_R 		|= SERVO_BIT_MASK;							//Enable Digital I/O
+	
 }
 
 void Drive_Servo(uint32_t angle){
