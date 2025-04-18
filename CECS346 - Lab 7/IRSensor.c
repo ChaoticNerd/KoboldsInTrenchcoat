@@ -4,6 +4,7 @@
 // 4/3/2024
 
 #include <stdint.h> // C99 data types
+#include <stdbool.h> // boolean data
 #include "tm4c123gh6pm.h"
 
 // TODO: LED bit address definition for PF3 and PF1
@@ -11,9 +12,6 @@
 	
 // Sensor bit address defenition for PD6
 #define SENSOR 		(*((volatile uint32_t *)0x40007100))
-
-// Servo output bit address defenition (recommended PB6)
-#define SERVO 		(*((volatile uint32_t *)0x40005100)) 
 	
 // position definition for the two onboard LED: red(PF1) and green(PF3)
 #define RED  	0x02	//PF1
