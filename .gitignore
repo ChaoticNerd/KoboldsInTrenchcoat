@@ -50,3 +50,12 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+CECS346 - ServoExample/ServoMotor.uvguix.mavri
+CECS346 - Lab 7/IRSensor.axf
+*.htm
+*.lnp
+*.mavri
+*.willr
+*.dep
+*.axf
+*.mavri
