@@ -25,12 +25,6 @@
 #define PORTD_PRI_BITS 0x60000000
 #define NVIC_EN0_PORTD 0x03
 
-#define SERVO_BIT_MASK 	0x40
-#define SERVO_PCTL_MASK 0x0F000000
-
-#define SERVO_START   24000    // 1.5ms duty cycle (at 16 MHz clock), 90 degrees
-#define SERVO_END	  48000    // 3.0ms duty cycle (at 16 MHz clock)
-#define SERVO_PERIOD  320000   // 20ms period (at 16 MHz clock)
 
 // External Function Prototypes (external functions from startup.s)
 extern void DisableInterrupts(void); // Disable interrupts
@@ -117,18 +111,6 @@ void Sensor_Init(void) {
 	NVIC_EN0_R |= NVIC_EN0_PORTD;
 }
 
-// Initialize Servo
-void Servo_Init(void){
-	SYSCTL_RCGCGPIO_R |= SYSCTL_RCGCGPIO_R1;				//Activate GPIOB Clock
-	while((SYSCTL_RCGCGPIO_R & SYSCTL_RCGCGPIO_R1) != SYSCTL_RCGCGPIO_R1);
-	
-	GPIO_PORTB_AFSEL_R 	&= ~SERVO_BIT_MASK;							//Enable Alternate Function
-	GPIO_PORTB_PCTL_R 	&= ~SERVO_PCTL_MASK;				    //set to GPIO
-	GPIO_PORTB_DIR_R 		|= SERVO_BIT_MASK;							//set to output pin
-	GPIO_PORTB_AMSEL_R 	&= ~SERVO_BIT_MASK;							//Disable Analog Function
-	GPIO_PORTB_DEN_R 		|= SERVO_BIT_MASK;							//Enable Digital I/O
-	// move_servo=false;
-}
 
 
 
