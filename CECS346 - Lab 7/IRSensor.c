@@ -37,7 +37,6 @@ extern void WaitForInterrupt(void);  // Go to low power mode while waiting for t
 void Sensor_Init(void);  		// Initialize edge trigger interrupt for PD6
 void Servo_Init(void);   		// Initialize servo output pin
 void LEDInit(void);     		// Initialize Port F LEDs
-void Delay10ms(uint32_t n); //Delay function for debounce logic (do we still need this? this isn't in the new file)
 
 enum Servo_Dir {CLOCKWISE, COUNTERCLOCKWISE}; 
 
@@ -78,7 +77,7 @@ void LEDInit(void) {
 	GPIO_PORTF_DIR_R |= PORTF_MASK;					// set PF1 and PF3 to output
 	GPIO_PORTF_AFSEL_R &= ~PORTF_MASK;			// Not Alternate function for PORT F
 	GPIO_PORTF_DEN_R |= PORTF_MASK;					// Enable digital PINS for PF3 & PF1
-	GPIO_PORTF_AMSEL_R |= PORTF_MASK;				// disable analog functions
+	GPIO_PORTF_AMSEL_R &= ~PORTF_MASK;				// disable analog functions
 	GPIO_PORTF_PCTL_R &= ~PORTF_PCTL;				// Clear PortF PCTL
 
 }
@@ -90,9 +89,9 @@ void Sensor_Init(void) {
 
 	// Port D6 setup
 	GPIO_PORTD_DIR_R		&= ~SENSOR_MASK; // Set PD6 as input
-	GPIO_PORTD_AFSEL_R  &= ~SENSOR_MASK; // look up alt funct of portD
+	GPIO_PORTD_AFSEL_R  &= ~SENSOR_MASK; // no alt function for PORT D
 	GPIO_PORTD_DEN_R		|=  SENSOR_MASK; // enable digital Pin on PD6
-	GPIO_PORTD_AMSEL_R  |=  SENSOR_MASK; // PD6 disable enable function
+	GPIO_PORTD_AMSEL_R  &= ~SENSOR_MASK; // PD6 disable enable function
 	GPIO_PORTD_PCTL_R		&= ~SENSOR_MASK; // Clear PD6 PCTL
 	
 	// Edge Interrupt setup

@@ -31,11 +31,11 @@ void Servo_Init(void){
 	SYSCTL_RCGCGPIO_R |= SYSCTL_RCGCGPIO_R1;																//Activate GPIOB Clock
 	while((SYSCTL_RCGCGPIO_R & SYSCTL_RCGCGPIO_R1) != SYSCTL_RCGCGPIO_R1);	
 	
-	GPIO_PORTB_AFSEL_R 	&= ~SERVO_BIT_MASK;							//Enable Alternate Function
-	GPIO_PORTB_PCTL_R 	&= ~SERVO_PCTL_MASK;				    //set to GPIO
-	GPIO_PORTB_DIR_R 		|= SERVO_BIT_MASK;							//set to output pin
-	GPIO_PORTB_AMSEL_R 	&= ~SERVO_BIT_MASK;							//Disable Analog Function
-	GPIO_PORTB_DEN_R 		|= SERVO_BIT_MASK;							//Enable Digital I/O
+	GPIO_PORTB_AFSEL_R 	&= ~SERVO_BIT_MASK;							// Disable Alternate Function
+	GPIO_PORTB_PCTL_R 	&= ~SERVO_PCTL_MASK;				    // set to GPIO
+	GPIO_PORTB_DIR_R 		|= SERVO_BIT_MASK;							// set to output pin
+	GPIO_PORTB_AMSEL_R 	&= ~SERVO_BIT_MASK;							// Disable Analog Function
+	GPIO_PORTB_DEN_R 		|= SERVO_BIT_MASK;							// Enable Digital I/O
 	
 }
 
@@ -48,13 +48,8 @@ void Drive_Servo(uint32_t angle){
 	NVIC_ST_CTRL_R |= NVIC_ST_CTRL_ENABLE;		// enable SysTick
 }
 
-void Stop_Servo(void) {
-	NVIC_ST_CTRL_R &= ~NVIC_ST_CTRL_ENABLE;		// disable SysTick
-	SERVO &= ~SERVO_BIT_MASK;									// output low to Servo 
-}
-
 void SysTick_Handler(void){	
-	NVIC_ST_CTRL_R &= ~NVIC_ST_CTRL_ENABLE;	 //clears enable
+	NVIC_ST_CTRL_R &= ~NVIC_ST_CTRL_ENABLE;	 // clears enable
 	if(SERVO){                               // previous cycle is duty cycle
 		NVIC_ST_RELOAD_R = L-Duty_Cycle_toggle;// switch to non-duty cycle
 	} else{ 															   // previous cycle is not duty cycle
