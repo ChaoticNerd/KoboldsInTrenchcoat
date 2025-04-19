@@ -36,7 +36,6 @@ void Servo_Init(void){
 	GPIO_PORTB_DIR_R 		|= SERVO_BIT_MASK;							// set to output pin
 	GPIO_PORTB_AMSEL_R 	&= ~SERVO_BIT_MASK;							// Disable Analog Function
 	GPIO_PORTB_DEN_R 		|= SERVO_BIT_MASK;							// Enable Digital I/O
-	
 }
 
 void Drive_Servo(uint32_t angle){
