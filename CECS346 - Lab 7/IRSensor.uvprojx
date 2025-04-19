@@ -395,11 +395,6 @@
               <FileType>1</FileType>
               <FilePath>.\IRSensor.c</FilePath>
             </File>
-            <File>
-              <FileName>Servo.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Servo.c</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>

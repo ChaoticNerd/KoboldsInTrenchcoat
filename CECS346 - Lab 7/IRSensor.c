@@ -55,6 +55,8 @@ extern void WaitForInterrupt(void);  // Go to low power mode while waiting for t
 void Sensor_Init(void);  		// Initialize edge trigger interrupt for PD6
 void Servo_Init(void);   		// Initialize servo output pin
 void LEDInit(void);     		// Initialize Port F LEDs
+void SysTick_Init(void);		// Initalize SysTick 
+void Drive_Servo(uint32_t angle); // Initialize changing the servo angle
 
 enum Servo_Dir {CLOCKWISE, COUNTERCLOCKWISE}; 
 
