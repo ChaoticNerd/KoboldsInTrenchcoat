@@ -6,7 +6,6 @@
 #include <stdint.h> // C99 data types
 #include <stdbool.h> // boolean data
 #include "tm4c123gh6pm.h"
-#include "Servo.h"
 
 // TODO: LED bit address definition for PF3 and PF1
 #define LED         (*((volatile uint32_t *)0x40025028))		// LED value for PF3 and PF1 the onboard LEDs
