@@ -11,8 +11,8 @@
 #include "Systick.h"
 #include <stdint.h>
 
-#define ONE_MILLI_S	16				// SysTick timer reload value for one millisecond, assume 16MHz system clock.
-#define ONE_MICRO_S 16000     // SysTick timer reload value for one microsecond, assume 16MHz system clock.
+#define ONE_MILLI_S	16000			// SysTick timer reload value for one millisecond, assume 16MHz system clock.
+#define ONE_MICRO_S 16	      // SysTick timer reload value for one microsecond, assume 16MHz system clock.
 
 void SysTick_Init(void){
   NVIC_ST_CTRL_R = 0;                   // disable SysTick during setup
