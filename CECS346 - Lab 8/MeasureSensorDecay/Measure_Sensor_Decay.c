@@ -12,10 +12,14 @@
 #include "Sensor.h"
 
 int main(void){
+	// init both
 	Sensor_Init();
 	SysTick_Init();
 
   while(1){
+		// literally just collecting sensor data
+		// in short:
+		// constnatly charges caps, waits, then turns on input, collects data, turns off, then waits and restarts
 		CollectSensorData(); 
   }
 }

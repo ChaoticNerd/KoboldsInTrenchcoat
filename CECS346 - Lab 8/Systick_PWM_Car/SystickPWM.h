@@ -19,7 +19,7 @@
 #define FAST		    PERIOD*0.9
 
 // constant definitions for different moving directions.
-enum DIR {FORWARD_STRAIGHT, BACKWARD_STRAIGHT,FORWARD_LEFT,FORWARD_RIGHT,BACKWARD_LEFT,BACKWARD_RIGHT,PIVOT_CCW, PIVOT_CW};
+// enum DIR {FORWARD_STRAIGHT, FORWARD_LEFT,FORWARD_RIGHT,BACKWARD_LEFT,BACKWARD_RIGHT,PIVOT_CCW, PIVOT_CW};
 
 // This function initialize PB7-PB2 to output PWM signals and 
 // direction signals for Two DC Motors:
@@ -28,7 +28,7 @@ enum DIR {FORWARD_STRAIGHT, BACKWARD_STRAIGHT,FORWARD_LEFT,FORWARD_RIGHT,BACKWAR
 void Motor_Init(uint32_t speed);
 	
 // This function will start motor in the direction specified by dir.
-void Motor_Start(uint8_t dir);
+void Motor_Start(void);
 
 // This function will stop motor movement.
 void Motor_Stop(void);

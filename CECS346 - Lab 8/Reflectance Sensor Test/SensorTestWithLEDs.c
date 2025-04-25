@@ -11,11 +11,36 @@
 #include "Sensor.h"
 #include "LED.h"
 
+#define NUM_STATES			4
+#define BOTH_PWM        0xC0
+#define LEFT_PWM				0x80
+#define RIGHT_PWM				0x40
+#define NO_PWM					0x00
+
+struct State {
+	uint8_t COLOR;
+	uint8_t PWM;
+};
+
+typedef const struct State STyp;
+
+enum movement_States{Forward, F_Left, F_Right, Stop};
+enum movement_States S;
+
+STyp FSM[NUM_STATES]={
+	{RED,   BOTH_PWM},
+	{BLUE,  LEFT_PWM},
+	{GREEN, RIGHT_PWM},
+	{WHITE, NO_PWM}
+};
+
 int main(void){
   Sensor_Init();  
 	LED_Init();
 
   while(1){
+		// depends on sensor_data
+		// sensor data returns 00 01 10 11 based on sensor input
 		switch (Sensor_CollectData()) {
 			case 0: 
 				LED = RED;  // center

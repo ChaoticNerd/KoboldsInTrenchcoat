@@ -400,6 +400,26 @@
               <FileType>1</FileType>
               <FilePath>.\Systick_PWM_Car.c</FilePath>
             </File>
+            <File>
+              <FileName>LED.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\LED.c</FilePath>
+            </File>
+            <File>
+              <FileName>LED.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\LED.h</FilePath>
+            </File>
+            <File>
+              <FileName>Sensor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Sensor.c</FilePath>
+            </File>
+            <File>
+              <FileName>Sensor.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Sensor.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

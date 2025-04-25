@@ -37,7 +37,7 @@
 // H: number of clocks cycles for duty cycle
 // L: number of clock cycles for non-duty cycle
 volatile uint32_t H,L;
-static uint8_t pwm;  // two PWM signals on bits 7,6
+
 
 void SysTick_Init(void){
   NVIC_ST_CTRL_R = 0;           			// disable SysTick during setup
@@ -64,44 +64,8 @@ void Motor_Init(uint32_t speed){
 }
 
 // This function will start motor in the direction specified by dir.
-void Motor_Start(uint8_t dir)
+void Motor_Start(void)
 {
-	switch (dir) {
-		case FORWARD_STRAIGHT:
-			DIRECTION = FORWARD;
-	    pwm = PWM_RIGHT|PWM_LEFT;
-		  break;
-    case FORWARD_LEFT:
-			DIRECTION = FORWARD;
-			pwm = PWM_RIGHT;
-		  break;
-		case FORWARD_RIGHT:
-			DIRECTION = FORWARD;
-			pwm = PWM_LEFT;
-		  break;
-		case BACKWARD_STRAIGHT:
-			DIRECTION = BACKWARD;
-	    pwm = PWM_RIGHT|PWM_LEFT;
-		  break;
-		case BACKWARD_RIGHT:
-			DIRECTION = BACKWARD;
-			pwm = PWM_LEFT;
-		  break;
-		case BACKWARD_LEFT:
-			DIRECTION = BACKWARD;
-			pwm = PWM_RIGHT;
-		  break;
-    case PIVOT_CW:
-			DIRECTION = LEFTPIVOT;
-	    pwm = PWM_RIGHT|PWM_LEFT;
-		  break;
-		case PIVOT_CCW:
-			DIRECTION = RIGHTPIVOT;
-	    pwm = PWM_RIGHT|PWM_LEFT;
-		  break;
-		default:
-				break;
-	}
   NVIC_ST_RELOAD_R = H-1;       // reload value in number of clock cycles
   NVIC_ST_CURRENT_R = 0;        // any write to current clears it
 	NVIC_ST_CTRL_R |= NVIC_ST_CTRL_ENABLE;
@@ -118,6 +82,8 @@ void Motor_Stop(void)
 // 1. Implement timing control for duty cycle and non-duty cycle
 // 2. Output a waveform based on current duty cycle
 void SysTick_Handler(void){
+	
+	// add LED
   if(MOTORS&pwm){   // previous cycle is duty cycle
     NVIC_ST_RELOAD_R = L-1;     // switch to non-duty cycle
   } else{ // previous cycle is non-duty cycle

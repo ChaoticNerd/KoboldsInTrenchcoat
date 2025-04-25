@@ -12,6 +12,7 @@
 
 void Sensor_Init(void);
 //uint8_t Sensor_CollectData(void);
+// u-int bc it returns bit as an integer
 uint8_t Sensor_CollectData(void);
 
 #endif

@@ -14,6 +14,9 @@
 #define ONE_MILLI_S	16				// SysTick timer reload value for one millisecond, assume 16MHz system clock.
 #define ONE_MICRO_S 16000     // SysTick timer reload value for one microsecond, assume 16MHz system clock.
 
+// in short: two systick options, ms or us
+// two busy waits too
+
 void SysTick_Init(void){
   NVIC_ST_CTRL_R = 0;                   // disable SysTick during setup
   NVIC_ST_CTRL_R |= NVIC_ST_CTRL_CLK_SRC; // set SysTick timer to use core clock: 50MHz
@@ -55,7 +58,9 @@ void DelayUs(void){
 // Input: 32-bit interger for multiple of us
 void Wait_N_US(uint32_t delay){	
 	uint32_t i;
-	
+	// this just fucking calls the systick bruh
+	// literally loops 1 microsecond * delay
+	// so sensor calls for wait 10 us
 	for (i=0;i<delay;i++){
 		DelayUs();
 	}

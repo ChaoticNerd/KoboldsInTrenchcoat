@@ -8,12 +8,9 @@
 
 #include "tm4c123gh6pm.h"
 #include "Sensor.h"
-#include "Systick.h"
 #include <stdint.h>
 
 // GPIO data register bit address definitions
-#define SENSOR_CTRL       (*((volatile unsigned long *)0x4000500C))
-#define SENSORS           (*((volatile unsigned long *)0x4002400C))
 	
 
 #define SYSCTL_RCGCGPIO_PORTB	SYSCTL_RCGCGPIO_R1
@@ -30,6 +27,7 @@ uint8_t Sensor_CollectData(void){
 	// turn emittes off/on?
 	// Driving a CTRL pin low for at least 1 ms turns off the emitter LEDs
 	SENSOR_CTRL  &= ~SENSOR_CTRL_PINS;   
+	// create new 1ms delay since cannot use systick?
 	Wait_N_MS(2);
 
 	// Turn on CTRL ODD & EVEN pins turn on the emitters 

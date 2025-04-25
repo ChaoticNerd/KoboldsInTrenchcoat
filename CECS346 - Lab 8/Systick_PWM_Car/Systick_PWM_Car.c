@@ -12,6 +12,8 @@
 //////////////////////1. Pre-processor Directives Section////////////////////
 #include "tm4c123gh6pm.h"
 #include "SystickPWM.h"
+#include "Sensor.h"
+#include "LED.h"
 #include <stdint.h>
 
 /////////////////////////////////////////////////////////////////////////////
@@ -19,6 +21,8 @@
 //////////////////////2. Declarations Section////////////////////////////////
 
 ////////// Local Global Variables //////////
+
+//// note: make this once the MAIN
 
 // Function Prototype
 // Subroutine to wait 3 sec
@@ -28,9 +32,29 @@ void Delay(void);
 
 #define THREE_SEC 2300000UL
 
+// put into sensor.h iwth colors
+#define NUM_STATES			4
+static uint8_t pwm;  // two PWM signals on bits 7,6
+
+struct State {
+	uint8_t COLOR;
+	uint8_t PWM;
+};
+
+typedef const struct State STyp;
+
+enum movement_States{Forward, F_Left, F_Right, Stop};
+enum movement_States S;
+
+STyp FSM[NUM_STATES]={
+	{RED,   BOTH_PWM},
+	{BLUE,  LEFT_PWM},
+	{GREEN, RIGHT_PWM},
+	{WHITE, NO_PWM}
+};
+
 //////////////////////3. Subroutines Section/////////////////////////////////
 int main(void){
-	enum DIR dir;
 	
   Motor_Init(MID);  // medium speed: 50% duty cycle
 //  Motor_Init(SLOW); // slow speed: 30% duty cycle
@@ -40,16 +64,17 @@ int main(void){
 	// Move the motor in the following order defined in enum DIR:
 	// FORWARD_STRAIGHT, BACKWARD_STRAIGHT,FORWARD_LEFT,FORWARD_RIGHT,
 	// BACKWARD_LEFT,BACKWARD_RIGHT,PIVOT_CCW, PIVOT_CW
-	for (dir = FORWARD_STRAIGHT;dir<=PIVOT_CW;dir++) {
-		Motor_Start(dir);
-		Delay();
-
-		// stop
-		Motor_Stop(); // stop both wheels
-		Delay();
-	}
+	S = 0x03;
 	
-  while(1){}
+  while(1){
+		// put a delay somewhere
+		pwm = FSM[S].PWM;
+		LED = FSM[S].COLOR;
+		Motor_Start();
+		//temp number
+		
+		S = SENSORS;
+	}
 }
 
 // Subroutine to wait about 3 sec
