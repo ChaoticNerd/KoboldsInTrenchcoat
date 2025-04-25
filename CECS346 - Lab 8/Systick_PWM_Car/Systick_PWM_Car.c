@@ -32,9 +32,9 @@ void Delay(void);
 
 #define THREE_SEC 2300000UL
 
+
 // put into sensor.h iwth colors
 #define NUM_STATES			4
-static uint8_t pwm;  // two PWM signals on bits 7,6
 
 struct State {
 	uint8_t COLOR;

@@ -24,8 +24,8 @@
 // PB5:L:SLP,PB4:L:DIR, PB3:R:SLP,PB2:R:DIR
 // SLP|DIR: 11: forward
 // SLP|DIR: 10: backward
-#define FORWARD 0x3C    // both motors forward
-#define BACKWARD 0x28   // both motors backward
+//#define FORWARD 0x3C    // both motors forward
+//#define BACKWARD 0x28   // both motors backward
 #define LEFTPIVOT 0x2C  // left motor backward, right motor forward
 #define RIGHTPIVOT 0x38 // left motor forward, right motor backward 
 

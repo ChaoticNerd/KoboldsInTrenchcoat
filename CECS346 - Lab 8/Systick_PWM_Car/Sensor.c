@@ -27,7 +27,7 @@ uint8_t Sensor_CollectData(void){
 	// turn emittes off/on?
 	// Driving a CTRL pin low for at least 1 ms turns off the emitter LEDs
 	SENSOR_CTRL  &= ~SENSOR_CTRL_PINS;   
-	// create new 1ms delay since cannot use systick?
+	// replace delay to 1ms without systick?
 	Wait_N_MS(2);
 
 	// Turn on CTRL ODD & EVEN pins turn on the emitters 

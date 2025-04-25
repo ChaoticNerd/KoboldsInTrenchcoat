@@ -18,6 +18,8 @@
 #define MID		      PERIOD*0.5
 #define FAST		    PERIOD*0.9
 
+static uint8_t pwm;  // two PWM signals on bits 7,6
+
 // constant definitions for different moving directions.
 // enum DIR {FORWARD_STRAIGHT, FORWARD_LEFT,FORWARD_RIGHT,BACKWARD_LEFT,BACKWARD_RIGHT,PIVOT_CCW, PIVOT_CW};
 

@@ -12,13 +12,14 @@
 
 #define SENSOR_CTRL       (*((volatile unsigned long *)0x4000500C))
 #define SENSORS           (*((volatile unsigned long *)0x4002400C))
-	
+
 #define BOTH_PWM        0xC0
 #define LEFT_PWM				0x80
 #define RIGHT_PWM				0x40
 #define NO_PWM					0x00
 
 void Sensor_Init(void);
+
 //uint8_t Sensor_CollectData(void);
 // u-int bc it returns bit as an integer
 uint8_t Sensor_CollectData(void);
