@@ -12,8 +12,8 @@
 #include "Systick.h"
 #include <stdint.h>
 
-#define ONE_MILLI_S	// SysTick timer reload value for one millisecond, assume 16MHz system clock.
-#define ONE_MICRO_S // SysTick timer reload value for one microsecond, assume 16MHz system clock.
+#define ONE_MILLI_S 16000	  // SysTick timer reload value for one millisecond, assume 16MHz system clock.
+#define ONE_MICRO_S 16 // SysTick timer reload value for one microsecond, assume 16MHz system clock.
 
 void SysTick_Init(void){
 	NVIC_ST_CTRL_R = 0;           			// disable SysTick during setup
@@ -24,15 +24,15 @@ void SysTick_Init(void){
 
 void DelayMs(void){	
 	//set Reload to ONE_MILLI_S
-	
+	NVIC_ST_RELOAD_R = ONE_MILLI_S - 1;
   	// Set Current to 0                                       
-  
+	NVIC_ST_CURRENT_R = 0;
 	// enable SysTick timer
-	
+	NVIC_ST_CTRL_R |= NVIC_ST_CTRL_ENABLE;
 	// wait for COUNT bit in control register to be raised.
-	
-  // disable SysTick timer
-	
+	while ((NVIC_ST_CTRL_R & NVIC_ST_CTRL_COUNT) == 0 );
+  	// disable SysTick timer
+	NVIC_ST_CTRL_R &= ~NVIC_ST_CTRL_ENABLE;
 }
 
 // Time delay using busy wait.
@@ -40,21 +40,22 @@ void DelayMs(void){
 // Input: 32-bit interger for multiple of ms
 void Wait_N_MS(uint32_t delay){	
 	while(delay){
+		DelayMs();
 		delay--;
 	}
 }
 
 void DelayUs(void){
 	//set Reload to ONE_MICRO_S
-	
-  // Set Current to 0                                       
-  
+	NVIC_ST_RELOAD_R = ONE_MILLI_S - 1;
+  	// Set Current to 0                                       
+  	NVIC_ST_CURRENT_R = 0;
 	// enable SysTick timer
-	
+	NVIC_ST_CTRL_R |= NVIC_ST_CTRL_ENABLE;
 	// wait for COUNT bit in control register to be raised.
-	
-  // disable SysTick timer
-
+	while ((NVIC_ST_CTRL_R & NVIC_ST_CTRL_COUNT) == 0 );
+  	// disable SysTick timer
+	NVIC_ST_CTRL_R &= ~NVIC_ST_CTRL_ENABLE;
 }
 
 // Time delay using busy wait.
@@ -62,6 +63,7 @@ void DelayUs(void){
 // Input: 32-bit interger for multiple of us
 void Wait_N_US(uint32_t delay){	
 	while(delay){
+		DelayUs();
 		delay--;
 	}
 }
