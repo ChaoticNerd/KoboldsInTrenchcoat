@@ -36,21 +36,25 @@ State_t linefollower_fsm[]={
 enum states curr_s;   // Initial state
 uint8_t Input;
 
+// update sensor data THEN start motor
+// this way the systicks do not interfere
 int main(void){
 	uint8_t Input;
 	
 	System_Init();
 	
 	//TODO: Fill out starting state
-	curr_s =SENSORS;
+	curr_s = SENSORS;
+	DIRECTION |= FORWARD;
 	
 	while (1) {
 		//TODO: Fill out FSM Engine	
 		MOTORS = FSM[curr_s].motors;
 		// CHANGE LED SOMEHOW LED = FSM[curr_s].COLOR;
 		Wait_N_MS(10);
-		Input = SENSORS;
-		//curr_s =;
+		// update sensor value
+		Input = Sensor_CollectData();
+		curr_s = SENSORS;
 
 	}
 }

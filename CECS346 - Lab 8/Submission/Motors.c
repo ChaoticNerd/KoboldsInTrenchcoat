@@ -13,6 +13,7 @@
 
 // This function initialize PB7-PB2 to output PWM signals and 
 // direction signals for Two DC Motors:
+// defined in .h
 // PB67 for motor PWM signals: PB6 - Left DC Motor, PB7 - Right DC Motor
 // PB5432 for motor directions: PB54 - left DC Motor, PB32 - right DC Motor
 void Motor_Init(){
@@ -24,4 +25,5 @@ void Motor_Init(){
     GPIO_PORTB_AFSEL_R &= ~0xFC;  			// disable alt funct 
     GPIO_PORTB_DEN_R |= 0xFC;     			// enable digital I/O 
 }
+
 
