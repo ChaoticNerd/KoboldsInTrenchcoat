@@ -28,7 +28,7 @@
 // Global variables: 
 // H: number of clocks cycles for duty cycle
 // L: number of clock cycles for non-duty cycle
-volatile uint32_t H,L;
+//volatile uint32_t H, L;
 
 static uint8_t pwm;  // two PWM signals on bits 7,6
 
@@ -43,7 +43,7 @@ static uint8_t pwm;  // two PWM signals on bits 7,6
 // direction signals for Two DC Motors:
 // PB67 for motor PWM signals: PB6 - Left DC Motor, PB7 - Right DC Motor
 // PB5432 for motor directions: PB54 - left DC Motor, PB32 - right DC Motor
-void Motor_Init(void);
+void Motor_Init(uint32_t speed);
 
 // This function will start motor in the direction specified by dir.
 void Motor_Start(void);

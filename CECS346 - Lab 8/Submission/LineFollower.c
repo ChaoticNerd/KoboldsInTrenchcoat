@@ -19,7 +19,7 @@ void System_Init(void);
 
 struct State {
   uint8_t motors;              // controls motor power supply
-  uint16_t delay;              // Delay in ms
+  uint16_t delays;              // Delay in ms
   uint8_t next[4];   					 // next state
 };
 typedef const struct State State_t;
@@ -27,10 +27,10 @@ typedef const struct State State_t;
 enum states {Center,Left,Right,Stop};
 
 State_t linefollower_fsm[]={
-	{BOTH_PWM,	xxx,	{}},
-	{LEFT_PWM,	xxx,	{}},
-	{RIGHT_PWM, xxx,	{}},
-	{NO_PWM,	xxx,	{}},
+	{BOTH_PWM,	5,	{}},
+	{LEFT_PWM,	5,	{}},
+	{RIGHT_PWM, 5,	{}},
+	{NO_PWM,	10,	{}},
 };
 
 enum states curr_s;   // Initial state
@@ -49,33 +49,22 @@ int main(void){
 	
 	while (1) {
 		//TODO: Fill out FSM Engine	
-		MOTORS = FSM[curr_s].motors;
+		MOTORS = linefollower_fsm[curr_s].motors;
+		Motor_Start();
+		Wait_N_MS(linefollower_fsm[curr_s].delays);
 		// CHANGE LED SOMEHOW LED = FSM[curr_s].COLOR;
-		Wait_N_MS(10);
 		// update sensor value
+		Motor_Stop();
 		Input = Sensor_CollectData();
-		curr_s = SENSORS;
+		curr_s = Sensor_CollectData();
+		Wait_N_US(linefollower_fsm[curr_s].delays);
 
 	}
 }
 
 void System_Init(void){
+	Motor_Init(0.5 * PERIOD);
 	Sensor_Init();
 	SysTick_Init();
-	Motor_Init();
 }
 
-// SysTick ISR:
-// 1. Implement timing control for duty cycle and non-duty cycle
-// 2. Output a waveform based on current duty cycle
-void SysTick_Handler(void){
-	
-	// add LED
-  if(MOTORS&pwm){   // previous cycle is duty cycle
-    NVIC_ST_RELOAD_R = L-1;     // switch to non-duty cycle
-  } else{ // previous cycle is non-duty cycle
-    NVIC_ST_RELOAD_R = H-1;     // switch to duty cycle
-  }
-	
-	MOTORS ^= pwm; // inverse output for PWM
-}

@@ -21,8 +21,16 @@
 #define SENSOR_CTRL_PINS 0x03   // CTRL ODD: bit 1, CRTL EVEN: bit 0
 #define SENSOR_PINS      0x03   // SENSOR 0: bit 0 SENSOR 7: bit 1
 
+#define THIRTY_MS 2300000UL
+#define TWO_MS    1533UL
+#define TEN_MS		7667UL
+#define TEN_US		7UL
+#define ONE_MS		767UL
+
 // in short:
 // start by turning off/on emitters, turn on/off sensors + set high to charge caps
+
+void Delay(uint32_t time);
 
 uint8_t Sensor_CollectData(void){
   uint8_t sensor_data;
@@ -30,6 +38,7 @@ uint8_t Sensor_CollectData(void){
 	// turn emittes off/on?
 	// Driving a CTRL pin low for at least 1 ms turns off the emitter LEDs
 	SENSOR_CTRL  &= ~SENSOR_CTRL_PINS;   
+	//Delay(THIRTY_MS);
 	Wait_N_MS(2);
 
 	// Turn on CTRL ODD & EVEN pins turn on the emitters 
@@ -40,6 +49,7 @@ uint8_t Sensor_CollectData(void){
 	SENSORS |= SENSOR_PINS; // Set PE0,1 HIGH
 	
 	//Wait 10 us
+	//Delay(THIRTY_MS);
 	Wait_N_US(10);
 	
 	// finished charging
@@ -47,6 +57,7 @@ uint8_t Sensor_CollectData(void){
 	GPIO_PORTE_DIR_R &= ~SENSOR_PINS; // Set PE0,1 as input
 
 	//JUST USE 1 MS ATP
+	//Delay(THIRTY_MS);
 	Wait_N_US(1000);
 
 	// store sensor info
@@ -54,6 +65,7 @@ uint8_t Sensor_CollectData(void){
 
   // turn off CTRL ODD & EVEN	
 	SENSOR_CTRL &= ~SENSOR_CTRL_PINS;
+	//Delay(THIRTY_MS);
 	Wait_N_MS(10);
 	return sensor_data;
 }
