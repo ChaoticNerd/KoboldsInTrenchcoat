@@ -18,7 +18,7 @@
 // Reflectance sensor pin connections:
 // PB0:ODD CTRL: right; PB1:EVEN CTRL: left
 // TODO: connect to PB and PE data
-#define LINESENSOR_CTRL       (*((volatile unsigned long *))0x4000500C)
+#define LINESENSOR_CTRL       (*((volatile unsigned long *))0x40024030)
 // PE0:Sensor 0; PE1: Sensor 7 
 #define LINESENSOR						(*((volatile unsigned long *))0x4002400C)
 	
@@ -27,7 +27,7 @@
 #define TEN_MICRO_SEC			10
 
 //TODO: find the right bit positions
-#define SENSOR_CTRL_PINS 0x03   // CTRL ODD: bit 1, CRTL EVEN: bit 0
+#define SENSOR_CTRL_PINS 0x0C   // CTRL ODD: bit 1, CRTL EVEN: bit 0
 #define SENSOR_PINS      0x03   // SENSOR 0: bit 0 SENSOR 7: bit 1
 
 uint8_t Sensor_CollectData(void){
@@ -72,17 +72,11 @@ void Sensor_Init(void){
 	while ((SYSCTL_RCGCGPIO_R&SYSCTL_RCGCGPIO_R4)!=SYSCTL_RCGCGPIO_R4){}
 
   GPIO_PORTE_DIR_R   &= ~SENSOR_PINS;  // Sensor pins are inputs
-  GPIO_PORTE_AFSEL_R &= ~SENSOR_PINS;  // Disable alternate function
-  GPIO_PORTE_AMSEL_R &= ~SENSOR_PINS;  // Disable analog
-  GPIO_PORTE_DEN_R   |= SENSOR_PINS;   // Enable digital
+  GPIO_PORTE_DIR_R   |= ~SENSOR_CTRL_PINS; // sensor pins are outputs
+  GPIO_PORTE_AFSEL_R &= ~0x0F;  // Disable alternate function
+  GPIO_PORTE_AMSEL_R &= ~0x0F;  // Disable analog
+  GPIO_PORTE_DEN_R   |= 0x0F;   // Enable digital
 	
-	// port b init
-	SYSCTL_RCGCGPIO_R |= SYSCTL_RCGCGPIO_R1;       //Enable clock for Port B
-	while ((SYSCTL_RCGCGPIO_R&SYSCTL_RCGCGPIO_R1)!=SYSCTL_RCGCGPIO_R1){}
-		
-  GPIO_PORTB_DIR_R   |= SENSOR_CTRL_PINS;  // CTRL pins are outputs
-  GPIO_PORTB_AFSEL_R &= ~SENSOR_CTRL_PINS;  //Disable alternate function
-  GPIO_PORTB_AMSEL_R &= ~SENSOR_CTRL_PINS; //Disable analog
-  GPIO_PORTB_DEN_R   |= SENSOR_CTRL_PINS; //Enable digital
+
 }
  

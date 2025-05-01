@@ -23,11 +23,11 @@ void Motor_Init(uint32_t speed){
 	L = speed;
 	H = PERIOD - H;
 	
-    GPIO_PORTB_AMSEL_R &= ~0xFC;  			// disable analog functionality 
-    GPIO_PORTB_PCTL_R &= ~0xFFFFFF00; 	// configure as GPIO
-    GPIO_PORTB_DIR_R |= 0xFC;     			// set as output
-    GPIO_PORTB_AFSEL_R &= ~0xFC;  			// disable alt funct 
-    GPIO_PORTB_DEN_R |= 0xFC;     			// enable digital I/O 
+    GPIO_PORTB_AMSEL_R &= ~0x0F;  			// disable analog functionality 
+    GPIO_PORTB_PCTL_R &= ~0xFFFFFFFF; 	// configure as GPIO
+    GPIO_PORTB_DIR_R |= 0x0F;     			// set as output
+    GPIO_PORTB_AFSEL_R &= ~0x0F;  			// disable alt funct 
+    GPIO_PORTB_DEN_R |= 0x0F;     			// enable digital I/O 
 }
 
 // This function will start motor in the direction specified by dir.
@@ -41,7 +41,7 @@ void Motor_Start(void)
 void Motor_Stop(void)
 {
 	NVIC_ST_CTRL_R &= ~NVIC_ST_CTRL_ENABLE;
-	GPIO_PORTB_DATA_R &= ~(RIGHT_PWM|LEFT_PWM); // output zero for PWM
+	GPIO_PORTE_DATA_R &= ~(RIGHT_PWM|LEFT_PWM); // output zero for PWM
 }
 
 // SysTick ISR:
