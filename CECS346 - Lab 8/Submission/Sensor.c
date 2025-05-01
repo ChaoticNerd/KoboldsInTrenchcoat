@@ -55,6 +55,8 @@ uint8_t Sensor_CollectData(void){
 	SENSOR_CTRL &= ~SENSOR_CTRL_PINS;
 	//Wait 10ms
 	Wait_N_MS(TEN_MILLI_SEC);
+	
+	// return sensor data to use in LineFollower.c
 	return sensor_data;
 }
 

@@ -14,23 +14,28 @@
 
 #define ONE_MILLI_S 16000	  // SysTick timer reload value for one millisecond, assume 16MHz system clock.
 #define ONE_MICRO_S 16 // SysTick timer reload value for one microsecond, assume 16MHz system clock.
+#define SYSTICK_PRI_BITS	0x1FFFFFFF
+#define SYSTICK_PRI_TWO		0x40000000
+#define RELOAD_SHIFT	1
+#define CURRENT_CLEAR	0
+#define WAIR_FOR_RAISE	0
 
 void SysTick_Init(void){
-	NVIC_ST_CTRL_R = 0;           			// disable SysTick during setup
-	NVIC_SYS_PRI3_R = (NVIC_SYS_PRI3_R&0x1FFFFFFF)|0x40000000; // bit 31-29 for SysTick, set priority to 2
+	NVIC_ST_CTRL_R &= ~NVIC_ST_CTRL_ENABLE;           			// disable SysTick during setup
+	NVIC_SYS_PRI3_R = (NVIC_SYS_PRI3_R&SYSTICK_PRI_BITS)|SYSTICK_PRI_TWO; // bit 31-29 for SysTick, set priority to 2
 	NVIC_ST_CTRL_R = NVIC_ST_CTRL_CLK_SRC + NVIC_ST_CTRL_INTEN;  // enable with core clock (16Mhz) and interrupts, start systick timer
 	
 }
 
 void DelayMs(void){	
 	//set Reload to ONE_MILLI_S
-	NVIC_ST_RELOAD_R = ONE_MILLI_S - 1;
+	NVIC_ST_RELOAD_R = ONE_MILLI_S - RELOAD_SHIFT;
   	// Set Current to 0                                       
-	NVIC_ST_CURRENT_R = 0;
+	NVIC_ST_CURRENT_R = CURRENT_CLEAR;
 	// enable SysTick timer
 	NVIC_ST_CTRL_R |= NVIC_ST_CTRL_ENABLE;
 	// wait for COUNT bit in control register to be raised.
-	while ((NVIC_ST_CTRL_R & NVIC_ST_CTRL_COUNT) == 0 );
+	while ((NVIC_ST_CTRL_R & NVIC_ST_CTRL_COUNT) == WAIR_FOR_RAISE );
   	// disable SysTick timer
 	NVIC_ST_CTRL_R &= ~NVIC_ST_CTRL_ENABLE;
 }
@@ -47,13 +52,13 @@ void Wait_N_MS(uint32_t delay){
 
 void DelayUs(void){
 	//set Reload to ONE_MICRO_S
-	NVIC_ST_RELOAD_R = ONE_MILLI_S - 1;
+	NVIC_ST_RELOAD_R = ONE_MILLI_S - RELOAD_SHIFT;
   	// Set Current to 0                                       
-  	NVIC_ST_CURRENT_R = 0;
+  	NVIC_ST_CURRENT_R = CURRENT_CLEAR;
 	// enable SysTick timer
 	NVIC_ST_CTRL_R |= NVIC_ST_CTRL_ENABLE;
 	// wait for COUNT bit in control register to be raised.
-	while ((NVIC_ST_CTRL_R & NVIC_ST_CTRL_COUNT) == 0 );
+	while ((NVIC_ST_CTRL_R & NVIC_ST_CTRL_COUNT) == WAIR_FOR_RAISE );
   	// disable SysTick timer
 	NVIC_ST_CTRL_R &= ~NVIC_ST_CTRL_ENABLE;
 }

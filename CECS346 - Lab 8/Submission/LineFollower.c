@@ -14,55 +14,65 @@
 #include "Motors.h"
 #include "Sensor.h"
 #include <stdint.h>
+
+#define NUM_STATES	4
+#define DUTY_CYCLE	0.5
+#define DELAY_MOVING	5
+#define DELAY_STOP	10
+
 // Function prototypes
 void System_Init(void);
 
 struct State {
   uint8_t motors;              // controls motor power supply
   uint16_t delays;              // Delay in ms
-  uint8_t next[4];   					 // next state
+  uint8_t next[NUM_STATES];   			// next state
 };
 typedef const struct State State_t;
 
+// Center = move forward, left = turn left, right = turn right, stop = no movement
 enum states {Center,Left,Right,Stop};
 
-State_t linefollower_fsm[4]={
-	{FORWARD,			5,	{Center, Left, Right, Stop}},
-	{TURN_LEFT,		5,	{Center, Left, Right, Stop}},
-	{TURN_RIGHT, 	5,	{Center, Left, Right, Stop}},
-	{STOP,				10,	{Center, Left, Right, Stop}},
+State_t linefollower_fsm[NUM_STATES]={
+	{FORWARD,			DELAY_MOVING,	{Center, Left, Right, Stop}},
+	{TURN_LEFT,		DELAY_MOVING,	{Center, Left, Right, Stop}},
+	{TURN_RIGHT, 	DELAY_MOVING,	{Center, Left, Right, Stop}},
+	{STOP,				DELAY_STOP	,	{Center, Left, Right, Stop}},
 };
 
-enum states curr_s;   // Initial state
-uint8_t Input;
+enum states curr_s;   // current state
+uint8_t Input;	// define input var
 
 // update sensor data THEN start motor
 // this way the systicks do not interfere
 int main(void){
-	uint8_t Input;
 	
+	// init system
 	System_Init();
 	
-	//TODO: Fill out starting state
+	// first state based on sensors' first input
 	curr_s = SENSORS;
 		
 	while (1) {
-		//TODO: Fill out FSM Engine	
+		// set pwm
 		MOTORS = linefollower_fsm[curr_s].motors;
+		// start motor
 		Motor_Start();
+		// wait some ms before updating sensor
 		Wait_N_MS(linefollower_fsm[curr_s].delays);
-		// CHANGE LED SOMEHOW LED = FSM[curr_s].COLOR;
-		// update sensor value
+		// stop motor
 		Motor_Stop();
+		// update input from sensor, then update state
 		Input = Sensor_CollectData();
-		curr_s = Sensor_CollectData();
+		curr_s = linefollower_fsm[curr_s].next[Input];
+		// short delay before resetting loop
 		Wait_N_US(linefollower_fsm[curr_s].delays);
 
 	}
 }
 
 void System_Init(void){
-	Motor_Init(0.5 * PERIOD);
+	Motor_Init(DUTY_CYCLE * PERIOD);
 	Sensor_Init();
 	SysTick_Init();
 }
