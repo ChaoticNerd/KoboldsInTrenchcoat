@@ -26,11 +26,11 @@ typedef const struct State State_t;
 
 enum states {Center,Left,Right,Stop};
 
-State_t linefollower_fsm[]={
-	{BOTH_PWM,	5,	{}},
-	{LEFT_PWM,	5,	{}},
-	{RIGHT_PWM, 5,	{}},
-	{NO_PWM,	10,	{}},
+State_t linefollower_fsm[4]={
+	{FORWARD,			5,	{Center, Left, Right, Stop}},
+	{TURN_LEFT,		5,	{Center, Left, Right, Stop}},
+	{TURN_RIGHT, 	5,	{Center, Left, Right, Stop}},
+	{STOP,				10,	{Center, Left, Right, Stop}},
 };
 
 enum states curr_s;   // Initial state
@@ -45,8 +45,7 @@ int main(void){
 	
 	//TODO: Fill out starting state
 	curr_s = SENSORS;
-	DIRECTION |= FORWARD;
-	
+		
 	while (1) {
 		//TODO: Fill out FSM Engine	
 		MOTORS = linefollower_fsm[curr_s].motors;

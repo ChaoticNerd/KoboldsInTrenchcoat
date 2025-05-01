@@ -18,15 +18,6 @@
 #define SENSORS           (*((volatile uint32_t *)0x4002400C))
 // TODO: connect to PB and PE data
 
-// both wheels active (sensor both white)
-#define BOTH_PWM        0xC0
-// left wheel active (turn right) (sensor right white)
-#define LEFT_PWM				0x80
-// right wheel active (turn left) (sensor left white)
-#define RIGHT_PWM				0x40
-// stop movement (sensors both black)
-#define NO_PWM					0x00
-
 void Sensor_Init(void);
 uint8_t Sensor_CollectData(void);
 
