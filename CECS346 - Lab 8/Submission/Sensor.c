@@ -14,13 +14,7 @@
 #include "Systick.h"
 #include <stdint.h>
 
-// GPIO data register bit address definitions
-// Reflectance sensor pin connections:
-// PE3: Even CTRL, PE2: ODD CTRL
-// PE1: Left Sensor, PE0: Right Sensor
-#define LINESENSOR_CTRL       (*((volatile unsigned long *))0x40024030) // Port E 3,2
-#define LINESENSOR						(*((volatile unsigned long *))0x4002400C) // Port E 1,0
-	
+// bit addresses in Sensor.h
 // define busy wait delays for sensor data collection
 #define TEN_MICRO_SEC			10
 #define	ONE_MILLI_SEC			1

@@ -12,10 +12,12 @@
 
 #include <stdint.h>
 
-// PE0 connect to sensor 7; PE1 connects to Sensor 0
-// TODO: find the bit addresses
-#define SENSOR_CTRL       (*((volatile unsigned long *)0x4000500C))
-#define SENSORS           (*((volatile uint32_t *)0x4002400C))
+// GPIO data register bit address definitions
+// Reflectance sensor pin connections:
+// PE3: Even CTRL, PE2: ODD CTRL
+// PE1: Left Sensor, PE0: Right Sensor
+#define SENSOR_CTRL       (*((volatile unsigned long *)0x40024030)) // Port E 3,2
+#define SENSORS           (*((volatile uint32_t *)0x4002400C)) // Port E 1,0
 // TODO: connect to PB and PE data
 
 // both wheels active (sensor both white)
