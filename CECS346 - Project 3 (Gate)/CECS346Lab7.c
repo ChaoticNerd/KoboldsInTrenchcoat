@@ -38,8 +38,9 @@
 #define Duty_Cycle_toggle 		1 						// Duty cycle to toggle value
 #define Systick_reset 				0							// Valur to set count to 0
 
-#define SERVO_START   40000    	// 2.5ms duty cycle (at 16 MHz clock), 180 degrees
-#define SERVO_END	 	  16000   	// 1.0ms duty cycle (at 16 MHz clock), 45 degrees
+// used to be 40000-180, 16000-45
+#define SERVO_START   24000    	// 2.5ms duty cycle (at 16 MHz clock), 90 degrees
+#define SERVO_END	 	  8000   	// 1.0ms duty cycle (at 16 MHz clock), 45 degrees
 #define SERVO_PERIOD  320000    // 20ms period (at 16 MHz clock)
 
 // high(duty cycle) and low(non-duty cycle) reload values
@@ -124,6 +125,8 @@ void Sensor_Init(void) {
 	NVIC_EN0_R |= NVIC_EN0_PORTD;																		//Interrupt enable
 }
 
+// why the fuck did we use pb6
+// change to pb 6/7?
 void Servo_Init(void){
 	SYSCTL_RCGCGPIO_R |= SYSCTL_RCGCGPIO_R1;																//Activate GPIOB Clock
 	while((SYSCTL_RCGCGPIO_R & SYSCTL_RCGCGPIO_R1) != SYSCTL_RCGCGPIO_R1);	

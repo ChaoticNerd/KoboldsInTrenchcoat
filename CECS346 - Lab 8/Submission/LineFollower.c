@@ -5,7 +5,7 @@
 // CECS 497 SPRING 2025
 // California State University, Long Beach
 // Modified by Min He and Mark Joseph Austria
-// Finished by Natasha Kho, Justin Narciso, Hanna Estrada, William
+// Finished by Natasha Kho, Justin Narciso, Hanna Estrada, William Grefaldeo
 // 4/25/2025
 
 
