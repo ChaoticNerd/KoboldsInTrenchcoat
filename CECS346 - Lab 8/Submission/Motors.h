@@ -28,6 +28,6 @@ static uint8_t pwm;  // two PWM signals on bits 7,6
 // direction signals for Two DC Motors:
 // PB67 for motor PWM signals: PB6 - Left DC Motor, PB7 - Right DC Motor
 // PB5432 for motor directions: PB54 - left DC Motor, PB32 - right DC Motor
-void Motor_Init();
+void Motor_Init(void);
 
 	
