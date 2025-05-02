@@ -21,6 +21,8 @@
 #define DELAY_MOVING	5
 #define DELAY_STOP	10
 
+uint8_t move_car;
+
 // Function prototypes
 void System_Init(void);
 
@@ -47,37 +49,51 @@ uint8_t Input;	// define input var
 // update sensor data THEN start motor
 // this way the systicks do not interfere
 int main(void){
-	
 	// init system
 	System_Init();
 	
 	// first state based on sensors' first input
 	curr_s = SENSORS;
+	move_car = 1;
 		
 	while (1) {
-		// set pwm
-		MOTORS = linefollower_fsm[curr_s].motors;
-		// start motor
-		Motor_Start();
-		// wait some ms before updating sensor
-		Wait_N_MS(linefollower_fsm[curr_s].delays);
-		// stop motor
-		Motor_Stop();
-		// update input from sensor, then update state
-		Input = Sensor_CollectData();
-		curr_s = linefollower_fsm[curr_s].next[Input];
-		// short delay before resetting loop
-		Wait_N_US(linefollower_fsm[curr_s].delays);
-
+		// set to buffer state first
+		// MOTOR = buffer state val (00)
+		while (move_car) {
+			// set pwm
+			MOTORS = linefollower_fsm[curr_s].motors;
+			// wait some ms before updating sensor
+			Wait_N_MS(linefollower_fsm[curr_s].delays);
+			// update input from sensor, then update state
+			Input = Sensor_CollectData();
+			curr_s = linefollower_fsm[curr_s].next[Input];
+		}
+		MOTORS = linefollower_fsm[STOP].motors;
 	}
 }
 
+
+
+
+// KEEP THIS THE SAME
 void System_Init(void){
 	DisableInterrupts();				// Disable interrupts in order to setup
-	Motor_Init(DUTY_CYCLE * PERIOD);
+	Motor_Init();
 	Sensor_Init();
-	IRSensor_Init();
+	IR_Sensor_Init();
 	SysTick_Init();
 	EnableInterrupts();
 }
 
+void GPIOPortD_Handler(void) {
+	for(uint32_t i = 0; i < 160000; i ++){}	//Interrupt debounce
+	if(GPIO_PORTD_RIS_R & IR_SENSOR_MASK){			
+		GPIO_PORTD_ICR_R = PD_ICR_VAL;				//resets interrupt value
+		move_car ^= move_car;
+		// pwm = 0
+		// pwm = prev state?
+		// MOTORS = linefollower_fsm[buffer_state].motors; aka pwm = 0
+		// next state is always 
+	}
+	
+}

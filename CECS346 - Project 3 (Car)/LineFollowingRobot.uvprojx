@@ -415,6 +415,11 @@
               <FileType>1</FileType>
               <FilePath>.\IR_Sensor.c</FilePath>
             </File>
+            <File>
+              <FileName>IR_Sensor.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\IR_Sensor.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
