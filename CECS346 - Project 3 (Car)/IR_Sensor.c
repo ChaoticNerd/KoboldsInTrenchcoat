@@ -12,7 +12,7 @@
 // Initialize edge trigger interrupt for PD6 both edges
 void IR_Sensor_Init(void) {
 	SYSCTL_RCGCGPIO_R |= SYSCTL_RCGCGPIO_R3;
-	while((SYSCTL_PRGPIO_R & SYSCTL_RCGCGPIO_R3) != SYSCTL_RCGCGPIO_R3); //Wait for Port F to be ready
+	while((SYSCTL_PRGPIO_R & SYSCTL_RCGCGPIO_R3) != SYSCTL_RCGCGPIO_R3); //Wait for Port D to be ready
 
 	// Port D6 setup
 	GPIO_PORTD_DIR_R		&= ~IR_SENSOR_MASK; // Set PD6 as input

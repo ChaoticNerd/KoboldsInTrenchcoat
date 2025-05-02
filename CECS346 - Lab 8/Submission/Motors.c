@@ -20,7 +20,7 @@
 
 // PB67 for motor PWM signals: PB6 - Left DC Motor, PB7 - Right DC Motor
 // PB5432 for motor directions: PB54 - left DC Motor, PB32 - right DC Motor
-void Motor_Init(){
+void Motor_Init(void){
 		SYSCTL_RCGCGPIO_R |= SYSCTL_RCGCGPIO_R1;     	// activate B clock
 	
     GPIO_PORTB_AMSEL_R &= ~PORTB_BITS;  			// disable analog functionality 

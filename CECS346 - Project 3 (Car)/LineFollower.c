@@ -20,7 +20,7 @@
 #define DELAY_MOVING	5
 #define DELAY_STOP	10
 
-uint8_t move_car;
+bool move_car;
 
 // Function prototypes
 void System_Init(void);
@@ -53,7 +53,7 @@ int main(void){
 	
 	// first state based on sensors' first input
 	curr_s = SENSORS;
-	move_car = 1;
+	move_car = true;
 		
 	while (1) {
 		// check if move car is true
@@ -67,6 +67,9 @@ int main(void){
 			curr_s = linefollower_fsm[curr_s].next[Input];
 		}
 		MOTORS = linefollower_fsm[STOP].motors;
+		Wait_N_MS(linefollower_fsm[STOP].delays);
+		Input = Sensor_CollectData();
+		curr_s = linefollower_fsm[curr_s].next[Input];
 	}
 }
 
@@ -83,7 +86,7 @@ void GPIOPortD_Handler(void) {
 	for(uint32_t i = 0; i < 160000; i ++){}	//Interrupt debounce
 	if(GPIO_PORTD_RIS_R & IR_SENSOR_MASK){			
 		GPIO_PORTD_ICR_R = PD_ICR_VAL;				//resets interrupt value
-		move_car ^= move_car;
+		move_car = !move_car;
 	}
 	
 }
