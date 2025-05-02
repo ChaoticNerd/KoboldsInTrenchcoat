@@ -12,9 +12,9 @@
 #include "tm4c123gh6pm.h"
 
 // Sensor bit address defenition for PD6
-#define SENSOR 			(*((volatile uint32_t *)0x40007100))		// PD6 for sensor address
+#define IR_SENSOR 			(*((volatile uint32_t *)0x40007100))		// PD6 for sensor address
 	
-#define SENSOR_MASK 0x40						  // PD6
+#define IR_SENSOR_MASK 0x40						  // PD6
 
 #define PORTD_INT_PRI  1U							//PD priority 1
 #define PORTD_PRI_BITS 0xE0000000			//Priority Bits 31-29
@@ -26,6 +26,6 @@ extern void DisableInterrupts(void); // Disable interrupts
 extern void EnableInterrupts(void);  // Enable interrupts
 extern void WaitForInterrupt(void);  // Go to low power mode while waiting for the next interrupt
 
-void IRSensor_Init(void);  		// Initialize edge trigger interrupt for PD6
+void IR_Sensor_Init(void);  		// Initialize edge trigger interrupt for PD6
 
 
