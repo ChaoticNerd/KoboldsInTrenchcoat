@@ -17,7 +17,6 @@
 #include <stdint.h>
 
 #define NUM_STATES	4
-#define DUTY_CYCLE	0.3
 #define DELAY_MOVING	5
 #define DELAY_STOP	10
 
@@ -57,8 +56,7 @@ int main(void){
 	move_car = 1;
 		
 	while (1) {
-		// set to buffer state first
-		// MOTOR = buffer state val (00)
+		// check if move car is true
 		while (move_car) {
 			// set pwm
 			MOTORS = linefollower_fsm[curr_s].motors;
@@ -72,10 +70,6 @@ int main(void){
 	}
 }
 
-
-
-
-// KEEP THIS THE SAME
 void System_Init(void){
 	DisableInterrupts();				// Disable interrupts in order to setup
 	Motor_Init();
@@ -90,10 +84,6 @@ void GPIOPortD_Handler(void) {
 	if(GPIO_PORTD_RIS_R & IR_SENSOR_MASK){			
 		GPIO_PORTD_ICR_R = PD_ICR_VAL;				//resets interrupt value
 		move_car ^= move_car;
-		// pwm = 0
-		// pwm = prev state?
-		// MOTORS = linefollower_fsm[buffer_state].motors; aka pwm = 0
-		// next state is always 
 	}
 	
 }
