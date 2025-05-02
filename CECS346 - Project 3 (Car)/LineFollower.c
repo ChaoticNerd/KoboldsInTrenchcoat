@@ -5,7 +5,7 @@
 // CECS 497 SPRING 2025
 // California State University, Long Beach
 // Modified by Min He and Mark Joseph Austria
-// Finished by Natasha Kho, Justin Narciso, Hanna Estrada, William
+// Finished by Natasha Kho, Justin Narciso, Hanna Estrada, William Grefaldeo
 // 4/25/2025
 
 
@@ -13,10 +13,11 @@
 #include "Systick.h"
 #include "Motors.h"
 #include "Sensor.h"
+#include "IR_Sensor.h"
 #include <stdint.h>
 
 #define NUM_STATES	4
-#define DUTY_CYCLE	0.5
+#define DUTY_CYCLE	0.3
 #define DELAY_MOVING	5
 #define DELAY_STOP	10
 
@@ -72,8 +73,11 @@ int main(void){
 }
 
 void System_Init(void){
+	DisableInterrupts();				// Disable interrupts in order to setup
 	Motor_Init(DUTY_CYCLE * PERIOD);
 	Sensor_Init();
+	IRSensor_Init();
 	SysTick_Init();
+	EnableInterrupts();
 }
 

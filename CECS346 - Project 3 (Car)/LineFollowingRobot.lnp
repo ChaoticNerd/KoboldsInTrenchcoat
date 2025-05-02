@@ -4,6 +4,7 @@
 ".\linefollower.o"
 ".\motors.o"
 ".\systick.o"
+".\ir_sensor.o"
 --ro-base 0x00000000 --entry 0x00000000 --rw-base 0x20000000 --entry Reset_Handler --first __Vectors --strict --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers
 --list ".\LineFollowingRobot.map" -o .\LineFollowingRobot.axf

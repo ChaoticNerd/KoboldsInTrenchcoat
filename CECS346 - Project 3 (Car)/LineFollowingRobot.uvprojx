@@ -410,6 +410,11 @@
               <FileType>1</FileType>
               <FilePath>.\Systick.c</FilePath>
             </File>
+            <File>
+              <FileName>IR_Sensor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\IR_Sensor.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
