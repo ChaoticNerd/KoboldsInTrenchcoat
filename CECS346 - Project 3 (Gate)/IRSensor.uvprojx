@@ -391,9 +391,9 @@
               <FilePath>.\startup.s</FilePath>
             </File>
             <File>
-              <FileName>IRSensor.c</FileName>
+              <FileName>CECS346Lab7.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\IRSensor.c</FilePath>
+              <FilePath>.\CECS346Lab7.c</FilePath>
             </File>
           </Files>
         </Group>

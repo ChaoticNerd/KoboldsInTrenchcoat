@@ -26,7 +26,7 @@ volatile uint32_t H, L;
 // PB67 for motor PWM signals: PB6 - Left DC Motor, PB7 - Right DC Motor
 // PB5432 for motor directions: PB54 - left DC Motor, PB32 - right DC Motor
 void Motor_Init(uint32_t speed){
-	SYSCTL_RCGC2_R |= SYSCTL_RCGC2_GPIOB;     	// activate B clock
+	SYSCTL_RCGCGPIO_R |= SYSCTL_RCGCGPIO_R1;     	// activate B clock
 	// set up duty cycle values
 	L = speed;
 	H = PERIOD - H;
