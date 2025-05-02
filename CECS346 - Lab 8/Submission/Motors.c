@@ -50,7 +50,7 @@ void Motor_Start(void)
 void Motor_Stop(void)
 {
 	NVIC_ST_CTRL_R &= ~NVIC_ST_CTRL_ENABLE; // disable systick
-	GPIO_PORTE_DATA_R &= STOP; // output zero for PWM
+	GPIO_PORTB_DATA_R &= STOP; // output zero for PWM
 }
 
 // SysTick ISR:
