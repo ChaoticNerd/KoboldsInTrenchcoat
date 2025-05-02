@@ -14,7 +14,7 @@
 #define SENSOR 			(*((volatile uint32_t *)0x40007100))		// PD6 for sensor address
 
 // Servo bit address definition for PB6
-#define SERVO (*((volatile uint32_t *)0x40005100))  // use PB6 for Servo
+#define SERVO (*((volatile uint32_t *)0x40005300))  // use PB6-7 for Servo
 	
 // position definition for the two onboard LED: red(PF1) and green(PF3)
 #define RED  		0x02	 								// PF1
@@ -22,8 +22,8 @@
 
 #define SENSOR_MASK 0x40						  // PD6
 
-#define SERVO_BIT_MASK 	0x40								//PB6
-#define SERVO_PCTL_MASK 0x0F000000					//PB PCTL
+#define SERVO_BIT_MASK 	0x60								//PB6-7
+#define SERVO_PCTL_MASK 0xFF000000					//PB PCTL
 
 #define PORTD_INT_PRI  3U							//PD priority 3
 #define PORTD_PRI_BITS 0xE0000000			//Priority Bits 31-29
@@ -39,8 +39,8 @@
 #define Systick_reset 				0							// Valur to set count to 0
 
 // used to be 40000-180, 16000-45
-#define SERVO_START   24000    	// 2.5ms duty cycle (at 16 MHz clock), 90 degrees
-#define SERVO_END	 	  8000   	// 1.0ms duty cycle (at 16 MHz clock), 45 degrees
+#define SERVO_START   12000    	// 1.5ms duty cycle (at 16 MHz clock), Center degrees
+#define SERVO_END	 	  20000   		// 2.5ms duty cycle (at 16 MHz clock), CCW 90 degrees
 #define SERVO_PERIOD  320000    // 20ms period (at 16 MHz clock)
 
 // high(duty cycle) and low(non-duty cycle) reload values
