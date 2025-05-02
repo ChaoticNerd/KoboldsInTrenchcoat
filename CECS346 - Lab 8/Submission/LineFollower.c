@@ -56,23 +56,17 @@ int main(void){
 	while (1) {
 		// set pwm
 		MOTORS = linefollower_fsm[curr_s].motors;
-		// start motor
-		Motor_Start();
 		// wait some ms before updating sensor
 		Wait_N_MS(linefollower_fsm[curr_s].delays);
-		// stop motor
-		Motor_Stop();
 		// update input from sensor, then update state
 		Input = Sensor_CollectData();
 		curr_s = linefollower_fsm[curr_s].next[Input];
 		// short delay before resetting loop
-		Wait_N_US(linefollower_fsm[curr_s].delays);
-
 	}
 }
 
 void System_Init(void){
-	Motor_Init(DUTY_CYCLE * PERIOD);
+	Motor_Init();
 	Sensor_Init();
 	SysTick_Init();
 }

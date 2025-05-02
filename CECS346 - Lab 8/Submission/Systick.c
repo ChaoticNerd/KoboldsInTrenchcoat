@@ -14,17 +14,15 @@
 
 #define ONE_MILLI_S 16000	  // SysTick timer reload value for one millisecond, assume 16MHz system clock.
 #define ONE_MICRO_S 16 // SysTick timer reload value for one microsecond, assume 16MHz system clock.
-#define SYSTICK_PRI_BITS	0x1FFFFFFF
-#define SYSTICK_PRI_TWO		0x40000000
 #define RELOAD_SHIFT	1
 #define CURRENT_CLEAR	0
 #define WAIT_FOR_RAISE	0
 
 void SysTick_Init(void){
-	NVIC_ST_CTRL_R &= ~NVIC_ST_CTRL_ENABLE;           			// disable SysTick during setup
-	NVIC_SYS_PRI3_R = (NVIC_SYS_PRI3_R&SYSTICK_PRI_BITS)|SYSTICK_PRI_TWO; // bit 31-29 for SysTick, set priority to 2
-	NVIC_ST_CTRL_R = NVIC_ST_CTRL_CLK_SRC + NVIC_ST_CTRL_INTEN;  // enable with core clock (16Mhz) and interrupts, start systick timer
-	
+	NVIC_ST_CTRL_R = 0;           			// disable SysTick during setup
+	//NVIC_SYS_PRI3_R = (NVIC_SYS_PRI3_R&SYSTICK_PRI_BITS)|SYSTICK_PRI_TWO; // bit 31-29 for SysTick, set priority to 2
+	//NVIC_ST_CTRL_R = NVIC_ST_CTRL_CLK_SRC + NVIC_ST_CTRL_INTEN;  // enable with core clock (16Mhz) and interrupts, start systick timer
+	NVIC_ST_CTRL_R |= NVIC_ST_CTRL_CLK_SRC;
 }
 
 void DelayMs(void){	
