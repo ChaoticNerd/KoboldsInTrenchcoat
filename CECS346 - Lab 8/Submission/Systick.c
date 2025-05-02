@@ -20,9 +20,7 @@
 
 void SysTick_Init(void){
 	NVIC_ST_CTRL_R = 0;           			// disable SysTick during setup
-	//NVIC_SYS_PRI3_R = (NVIC_SYS_PRI3_R&SYSTICK_PRI_BITS)|SYSTICK_PRI_TWO; // bit 31-29 for SysTick, set priority to 2
-	//NVIC_ST_CTRL_R = NVIC_ST_CTRL_CLK_SRC + NVIC_ST_CTRL_INTEN;  // enable with core clock (16Mhz) and interrupts, start systick timer
-	NVIC_ST_CTRL_R |= NVIC_ST_CTRL_CLK_SRC;
+	NVIC_ST_CTRL_R |= NVIC_ST_CTRL_CLK_SRC; // enable systick
 }
 
 void DelayMs(void){	
