@@ -16,7 +16,6 @@
 #include <stdint.h>
 
 #define NUM_STATES	4
-#define DUTY_CYCLE	0.5
 #define DELAY_MOVING	5
 #define DELAY_STOP	10
 
@@ -43,8 +42,6 @@ State_t linefollower_fsm[NUM_STATES]={
 enum states curr_s;   // current state
 uint8_t Input;	// define input var
 
-// update sensor data THEN start motor
-// this way the systicks do not interfere
 int main(void){
 	
 	// init system
@@ -61,7 +58,6 @@ int main(void){
 		// update input from sensor, then update state
 		Input = Sensor_CollectData();
 		curr_s = linefollower_fsm[curr_s].next[Input];
-		// short delay before resetting loop
 	}
 }
 

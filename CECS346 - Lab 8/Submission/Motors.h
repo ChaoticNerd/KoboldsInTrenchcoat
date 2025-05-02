@@ -17,13 +17,6 @@
 #define TURN_RIGHT 	0x0E
 #define STOP   			0x00   
 
-#define PERIOD 			160000 // PWM Period:10ms, value is based on 16MH system clock
-
-// Global variables: 
-// H: number of clocks cycles for duty cycle
-// L: number of clock cycles for non-duty cycle
-//volatile uint32_t H, L;
-
 static uint8_t pwm;  // two PWM signals on bits 7,6
 
 // bit address definitions for port data registers

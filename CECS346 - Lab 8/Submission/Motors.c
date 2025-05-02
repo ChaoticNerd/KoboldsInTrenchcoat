@@ -18,10 +18,6 @@
 #define PORTB_BITS	0x0F // bits 3-0
 #define PORTB_PTCL	0x0000FFFF
 
-// used in systick for reload and clearing current
-#define RELOAD_SHIFT	1
-#define CURRENT_CLEAR	0
-
 // PB67 for motor PWM signals: PB6 - Left DC Motor, PB7 - Right DC Motor
 // PB5432 for motor directions: PB54 - left DC Motor, PB32 - right DC Motor
 void Motor_Init(){
