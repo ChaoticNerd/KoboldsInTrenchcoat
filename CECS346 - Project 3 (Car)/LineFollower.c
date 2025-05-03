@@ -20,8 +20,6 @@
 #define DELAY_MOVING	5
 #define DELAY_STOP	10
 
-bool move_car;
-
 // Function prototypes
 void System_Init(void);
 
@@ -44,6 +42,7 @@ State_t linefollower_fsm[NUM_STATES]={
 
 enum states curr_s;   // current state
 uint8_t Input;	// define input var
+uint8_t move_car;
 
 // update sensor data THEN start motor
 // this way the systicks do not interfere
@@ -53,7 +52,7 @@ int main(void){
 	
 	// first state based on sensors' first input
 	curr_s = SENSORS;
-	move_car = true;
+	move_car = 1;
 		
 	while (1) {
 		// check if move car is true
@@ -66,10 +65,11 @@ int main(void){
 			Input = Sensor_CollectData();
 			curr_s = linefollower_fsm[curr_s].next[Input];
 		}
-		MOTORS = linefollower_fsm[STOP].motors;
-		Wait_N_MS(linefollower_fsm[STOP].delays);
-		Input = Sensor_CollectData();
-		curr_s = linefollower_fsm[curr_s].next[Input];
+		
+		MOTORS = linefollower_fsm[STOP].motors; //linefollower_fsm[STOP].motors;
+		while(!move_car) {
+		WaitForInterrupt();
+		}
 	}
 }
 
