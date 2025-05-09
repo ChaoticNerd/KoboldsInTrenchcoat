@@ -23,11 +23,12 @@ void IR_Sensor_Init(void) {
 	
 	// Edge Interrupt setup
 	GPIO_PORTD_IS_R 	&= ~IR_SENSOR_MASK; 	 // interrupt edge triggered
-	GPIO_PORTD_IBE_R 	|= IR_SENSOR_MASK;  	 // Interrupt both Edge
+	GPIO_PORTD_IBE_R 	|= IR_SENSOR_MASK;  	 // Interrupt both Edge	
+	GPIO_PORTD_ICR_R = PD_ICR_VAL;				//resets interrupt value
 	GPIO_PORTD_IM_R 	|= IR_SENSOR_MASK;		 // set interrupt pin to be sent the interrupt controller
 
 	// Priority 1
-	NVIC_PRI0_R = (NVIC_PRI0_R&~PORTD_PRI_BITS)|PORTD_INT_PRI<<29;	//clear priority bits and set priority to 1
+	NVIC_PRI0_R = (NVIC_PRI0_R&~PORTD_PRI_BITS)|PORTD_INT_PRI;	//clear priority bits and set priority to 1
 	NVIC_EN0_R |= NVIC_EN0_PORTD;																		//Interrupt enable
 }
 

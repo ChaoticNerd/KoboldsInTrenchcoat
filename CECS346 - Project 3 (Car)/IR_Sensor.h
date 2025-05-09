@@ -16,7 +16,7 @@
 	
 #define IR_SENSOR_MASK 0x40						  // PD6
 
-#define PORTD_INT_PRI  1U							//PD priority 1
+#define PORTD_INT_PRI  0x20000000							//PD priority 1
 #define PORTD_PRI_BITS 0xE0000000			//Priority Bits 31-29
 #define NVIC_EN0_PORTD 0x08						//Value to enable PD intterupt
 #define PD_ICR_VAL 		 0x40						//intterupt clear register value
