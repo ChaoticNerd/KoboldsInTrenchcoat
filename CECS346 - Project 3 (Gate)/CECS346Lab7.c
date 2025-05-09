@@ -22,8 +22,10 @@
 
 #define SENSOR_MASK 0x40						  // PD6
 
-#define SERVO_BIT_MASK 	0x60								//PB6-7
-#define SERVO_PCTL_MASK 0xFF000000					//PB PCTL
+#define SERVO_BIT_LEFT 	0x40								// PB6 || left
+#define SERVO_BIT_RIGHT 0x80								// PB7 || right
+#define SERVO_BIT_MASK 	0xC0								// PB67|| setup purposes
+#define SERVO_PCTL_MASK 0xFF000000					// PB6-7 PCTL
 
 #define PORTD_INT_PRI  3U							//PD priority 3
 #define PORTD_PRI_BITS 0xE0000000			//Priority Bits 31-29
@@ -36,16 +38,18 @@
 #define PRI3_TOP3_BITS_RESET	0x1FFFFFFFF 	// used to clear all priority bits of systick
 #define PRI3_TOP3_BITS_SET		0x800000000		// used to set systick priority as 4
 #define Duty_Cycle_toggle 		1 						// Duty cycle to toggle value
-#define Systick_reset 				0							// Valur to set count to 0
+#define Systick_reset 				0							// ValuE to set count to 0
 
 // used to be 40000-180, 16000-45
-#define SERVO_START   12000    	// 1.5ms duty cycle (at 16 MHz clock), Center degrees
-#define SERVO_END	 	  20000   		// 2.5ms duty cycle (at 16 MHz clock), CCW 90 degrees
+#define CW180			 20000
+#define CCW180	 	 40000   		// 2.5ms duty cycle (at 16 MHz clock), CCW 90 degrees
 #define SERVO_PERIOD  320000    // 20ms period (at 16 MHz clock)
 
+int SERVO_LEFT;
+int SERVO_RIGHT;
 // high(duty cycle) and low(non-duty cycle) reload values
 static uint32_t H;
-static uint32_t L;			
+static uint32_t L;	
 
 // External Function Prototypes (external functions from startup.s)
 extern void DisableInterrupts(void); // Disable interrupts
@@ -57,7 +61,8 @@ void Sensor_Init(void);  		// Initialize edge trigger interrupt for PD6
 void Servo_Init(void);   		// Initialize servo output pin
 void LEDInit(void);     		// Initialize Port F LEDs
 void SysTick_Init(void);		// Initalize SysTick 
-void Drive_Servo(uint32_t angle); // Initialize changing the servo angle
+void Drive_Servo_Left(uint32_t angle); // Initialize changing the Left servo angle
+void Drive_Servo_Right(uint32_t angle); // Initialize changing the Right servo angle
 
 enum Servo_Dir {CLOCKWISE, COUNTERCLOCKWISE}; 
 
@@ -72,18 +77,24 @@ int main(void){
 	SysTick_Init();							// Initialize the Systick to allow CLK to function
 	EnableInterrupts();					// Renable Interrupts as set up has ended and begin functions of main
 	
-
 	move_servo = false;					// servo not moving at start
 	LED = GREEN;								// LED initially set to green
-	Drive_Servo(SERVO_START);		// Drive servo to Start Angle
+	Drive_Servo_Left(CW180);		// Drive servo to Start Angle
+	Drive_Servo_Right(CCW180);
   while(1){
-		LED = GREEN;							// set LED to green
-		Drive_Servo(SERVO_START); // Drive servo to Start Angle
+		LED = GREEN;	// set LED to green
+
+		Drive_Servo_Left(CW180); // Drive servo to Start Angle
+		// DELAY HERE
+		Drive_Servo_Right(CCW180);
 		while(!move_servo){				// While servo is not moving 
 			WaitForInterrupt();			// wait for intterupt
 		}
+
 		LED = RED;								// set LED to red
-		Drive_Servo(SERVO_END);		// drive the servo to End Angle
+		Drive_Servo_Left(CCW180); // drive the servo to End Angle
+		// DELAY HERE
+		Drive_Servo_Right(CW180);
 		while(move_servo){				// while servo is moving
 			WaitForInterrupt();			//Wait for intterupt
 		}
@@ -122,11 +133,9 @@ void Sensor_Init(void) {
 
 	// Priority 3
 	NVIC_PRI0_R = (NVIC_PRI0_R&~PORTD_PRI_BITS)|PORTD_INT_PRI<<29;	//clear priority bits and set priority to 3
-	NVIC_EN0_R |= NVIC_EN0_PORTD;																		//Interrupt enable
+	NVIC_EN0_R |= NVIC_EN0_PORTD;									//Interrupt enable
 }
 
-// why the fuck did we use pb6
-// change to pb 6/7?
 void Servo_Init(void){
 	SYSCTL_RCGCGPIO_R |= SYSCTL_RCGCGPIO_R1;																//Activate GPIOB Clock
 	while((SYSCTL_RCGCGPIO_R & SYSCTL_RCGCGPIO_R1) != SYSCTL_RCGCGPIO_R1);	
@@ -136,6 +145,8 @@ void Servo_Init(void){
 	GPIO_PORTB_DIR_R 		|= SERVO_BIT_MASK;							// set to output pin
 	GPIO_PORTB_AMSEL_R 	&= ~SERVO_BIT_MASK;							// Disable Analog Function
 	GPIO_PORTB_DEN_R 		|= SERVO_BIT_MASK;							// Enable Digital I/O
+	SERVO_LEFT = 0;
+	SERVO_RIGHT = 0;
 }
 
 void SysTick_Init(void){
@@ -144,10 +155,19 @@ void SysTick_Init(void){
 	NVIC_ST_CTRL_R |= NVIC_ST_CTRL_CLK_SRC | NVIC_ST_CTRL_INTEN;										// enable SysTick clock source, interrupt
 }
 
-void Drive_Servo(uint32_t angle){
+void Drive_Servo_Left(uint32_t angle){
 	H = angle;																// Defines reload High
 	L = SERVO_PERIOD - H;											// Defines reload Low
-	SERVO |= SERVO_BIT_MASK;									// Start Servo with high
+	SERVO |= SERVO_BIT_LEFT;									// Start Servo with high
+	NVIC_ST_RELOAD_R = H;											// Sets  reload to High
+	NVIC_ST_CURRENT_R = Systick_reset ;				// clear SysTick Count
+	NVIC_ST_CTRL_R |= NVIC_ST_CTRL_ENABLE;		// enable SysTick
+}
+
+void Drive_Servo_Right(uint32_t angle){
+	H = angle;																// Defines reload High
+	L = SERVO_PERIOD - H;											// Defines reload Low
+	SERVO |= SERVO_BIT_RIGHT;									// Start Servo with high
 	NVIC_ST_RELOAD_R = H;											// Sets  reload to High
 	NVIC_ST_CURRENT_R = Systick_reset ;				// clear SysTick Count
 	NVIC_ST_CTRL_R |= NVIC_ST_CTRL_ENABLE;		// enable SysTick
