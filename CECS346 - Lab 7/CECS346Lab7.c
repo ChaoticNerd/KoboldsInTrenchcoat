@@ -152,7 +152,7 @@ void Drive_Servo(uint32_t angle){
 
 void GPIOPortD_Handler(void) {
 	for(uint32_t i = 0; i < 160000; i ++){}	//Interrupt debounce
-	if(GPIO_PORTD_RIS_R & SENSOR_MASK){			
+	if(GPIO_PORTD_RIS_R & (SENSOR_MASK&~SENSOR)){			
 		GPIO_PORTD_ICR_R = PD_ICR_VAL;				//resets interrupt value
 		move_servo = !move_servo;							//invert the Move_servo so its the next state
 	}

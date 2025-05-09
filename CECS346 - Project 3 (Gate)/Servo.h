@@ -10,9 +10,12 @@
 
 // PWM duty cycle systick timer reload values for 0.5ms - 2.5ms duty cycle
 // period is 20ms
-#define SERVO_START   40000    	// 2.5ms duty cycle (at 16 MHz clock), 180 degrees
-#define SERVO_END	 	  16000   	// 1.0ms duty cycle (at 16 MHz clock), 45 degrees
-#define SERVO_PERIOD  320000    // 20ms period (at 16 MHz clock)
+#define SERVO_CENTER  24000    // 1.5ms duty cycle (at 16 MHz clock)
+#define SERVO_CW_45   16000    // 1.0ms duty cycle (at 16 MHz clock)
+#define SERVO_CCW_45  32000    // 2.0ms duty cycle (at 16 MHz clock)
+#define SERVO_CW_90   8000     // 0.5ms duty cycle (at 16 MHz clock)
+#define SERVO_CCW_90  40000    // 2.5ms duty cycle (at 16 MHz clock)
+#define SERVO_PERIOD  320000   // 20ms period (at 16 MHz clock)
 
 void SysTick_Init(void);
 
