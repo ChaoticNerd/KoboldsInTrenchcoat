@@ -22,6 +22,7 @@
 // PB5432 for motor directions: PB54 - left DC Motor, PB32 - right DC Motor
 void Motor_Init(void){
 	SYSCTL_RCGCGPIO_R |= SYSCTL_RCGCGPIO_R1;     	// activate B clock
+	while((SYSCTL_PRGPIO_R & SYSCTL_RCGCGPIO_R1) != SYSCTL_RCGCGPIO_R1){};
 
     GPIO_PORTB_AMSEL_R &= ~PORTB_BITS;  			// disable analog functionality 
     GPIO_PORTB_PCTL_R &= ~PORTB_PTCL; 	// configure as GPIO
