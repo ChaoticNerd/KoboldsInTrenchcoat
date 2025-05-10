@@ -15,8 +15,7 @@
 #define SENSOR 			(*((volatile uint32_t *)0x40007100))		// PD6 for sensor address
 
 // Servo bit address definition for PB6
-#define SERVO_LEFT 	(*((volatile uint32_t *)0x40005100))  // use PB6-7 for Servo
-#define SERVO_RIGHT	(*((volatile uint32_t *)0x40005200))  // use PB6-7 for Servo
+#define SERVO 	(*((volatile uint32_t *)0x40005300))  // use PB6-7 for Servo
 	
 // position definition for the two onboard LED: red(PF1) and green(PF3)
 #define RED  		0x02	 								// PF1
@@ -42,12 +41,6 @@
 #define Duty_Cycle_toggle 		1 						// Duty cycle to toggle value
 #define Systick_reset 				0							// ValuE to set count to 0
 
-// used to be 40000-180, 16000-45
-#define CW90			 8000
-#define CCW90	 	 	 40000   		// 2.5ms duty cycle (at 16 MHz clock), CCW 90 degrees
-#define SERVO_PERIOD  320000    // 20ms period (at 16 MHz clock)
-#define HALF_SEC_RELOAD 				(8000000)     // reload value for generating 500ms time interval for 16 MHz system clock.
-
 // high(duty cycle) and low(non-duty cycle) reload values
 static uint32_t H;
 static uint32_t L;	
@@ -62,9 +55,8 @@ void Sensor_Init(void);  		// Initialize edge trigger interrupt for PD6
 void Servo_Init(void);   		// Initialize servo output pin
 void LEDInit(void);     		// Initialize Port F LEDs
 void SysTick_Init(void);		// Initalize SysTick 
-void Drive_Servo_Left(uint32_t angle); // Initialize changing the Left servo angle
-void Drive_Servo_Right(uint32_t angle); // Initialize changing the Right servo angle
-void SysTick_Wait(void);
+void Open_Door(void);
+void Close_Door(void);
 
 enum Servo_Dir {CLOCKWISE, COUNTERCLOCKWISE}; 
 
@@ -85,32 +77,17 @@ int main(void){
 	
 	detected = false;
 	
-	Drive_Servo_Left(CW90);		// Drive servo to Start Angle
-	Drive_Servo_Right(CCW90);
   while(1){
-		detected = false;
 		LED = GREEN;	// set LED to green
-		
-		Drive_Servo_Left(CW90); // Drive servo to Start Angle
-		Drive_Servo_Right(CCW90);
-		
+		Close_Door();
 		while(!detected){
-			H++;
 			WaitForInterrupt();
-			//detected = true;
 		}
 		LED = RED;								// set LED to red
-		
-		while(move_servo){
-			Drive_Servo_Left(CCW90); // drive the servo to End Angle
-			Drive_Servo_Right(CW90);
-		}
-		//detected = true;
+		Open_Door();
 		while(detected){
 			WaitForInterrupt();
-			//detected = false;
 		}
-		
   }
 }
 
@@ -122,9 +99,8 @@ void LEDInit(void) {
 	GPIO_PORTF_DIR_R |= PORTF_MASK;					// set PF1 and PF3 to output
 	GPIO_PORTF_AFSEL_R &= ~PORTF_MASK;			// Not Alternate function for PORT F
 	GPIO_PORTF_DEN_R |= PORTF_MASK;					// Enable digital PINS for PF3 & PF1
-	GPIO_PORTF_AMSEL_R &= ~PORTF_MASK;				// disable analog functions
+	GPIO_PORTF_AMSEL_R &= ~PORTF_MASK;			// disable analog functions
 	GPIO_PORTF_PCTL_R &= ~PORTF_PCTL;				// Clear PortF PCTL
-
 }
 
 // Initialize edge trigger interrupt for PD6 both edges
@@ -163,64 +139,90 @@ void Servo_Init(void){
 
 void SysTick_Init(void){
   NVIC_ST_CTRL_R &= ~NVIC_ST_CTRL_ENABLE;    																			// disable SysTick during setup
-  NVIC_SYS_PRI3_R = (NVIC_SYS_PRI3_R&PRI3_TOP3_BITS_RESET)|PRI3_TOP3_BITS_SET; 		// bit 31-29 for SysTick, set priority to 4
-	NVIC_ST_CTRL_R |= NVIC_ST_CTRL_CLK_SRC;										// enable SysTick clock source, interrupt
-}
-
-void Drive_Servo_Left(uint32_t angle){
-	for (int x = 0; x < 3; x++ ){
-		SERVO_LEFT = 1;
-		NVIC_ST_RELOAD_R = angle;
-		SysTick_Wait();
-		
-		NVIC_ST_RELOAD_R = SERVO_PERIOD - angle;
-		SERVO_LEFT = 0;
-		SysTick_Wait();
-		//H++;
-	}
-	/*H = angle;																// Defines reload High
-	L = SERVO_PERIOD - H;											// Defines reload Low
-	SERVO |= SERVO_BIT_LEFT;									// Start Servo with high
-	NVIC_ST_RELOAD_R = H;											// Sets  reload to High
-	NVIC_ST_CURRENT_R = Systick_reset ;				// clear SysTick Count
-	NVIC_ST_CTRL_R |= NVIC_ST_CTRL_ENABLE;		// enable SysTick
-	*/
-}
-
-void Drive_Servo_Right(uint32_t angle){
-	for (int x = 0; x < 3; x++ ){
-		SERVO_RIGHT = 1;
-		NVIC_ST_RELOAD_R = angle;
-		SysTick_Wait();
-		
-		NVIC_ST_RELOAD_R = SERVO_PERIOD - angle;
-		SERVO_RIGHT = 0;
-		SysTick_Wait();
-		//H++;
-	}
-	/*H = angle;																// Defines reload High
-	L = SERVO_PERIOD - H;											// Defines reload Low
-	SERVO |= SERVO_BIT_RIGHT;									// Start Servo with high
-	NVIC_ST_RELOAD_R = H;											// Sets  reload to High
-	NVIC_ST_CURRENT_R = Systick_reset ;				// clear SysTick Count
-	NVIC_ST_CTRL_R |= NVIC_ST_CTRL_ENABLE;		// enable SysTick
-	*/
+	NVIC_ST_CTRL_R |= NVIC_ST_CTRL_CLK_SRC;										// enable SysTick clock source
 }
 
 void GPIOPortD_Handler(void) {
-	H++;
 	for(uint32_t i = 0; i < 160000; i ++){}	//Interrupt debounce
-	if(GPIO_PORTD_RIS_R & (SENSOR_MASK& ~SENSOR)){			
+	if(GPIO_PORTD_RIS_R & SENSOR_MASK){			
 		GPIO_PORTD_ICR_R = PD_ICR_VAL;				//resets interrupt value
 		detected = !detected;
 		move_servo = !move_servo;
 	}
 }
 
-void SysTick_Wait(void){
-	//NVIC_ST_RELOAD_R = HALF_SEC_RELOAD - 1; // countdown from this number to 0
-	NVIC_ST_CURRENT_R = 0; // clear countdown counter
-	NVIC_ST_CTRL_R |= NVIC_ST_CTRL_ENABLE; // enable SysTick timer
-	while ((NVIC_ST_CTRL_R & NVIC_ST_CTRL_COUNT) == 0); // busy wait timer
-	NVIC_ST_CTRL_R &= ~NVIC_ST_CTRL_ENABLE; // disable SysTick again to set up
+void Open_Door(void){
+	NVIC_ST_CTRL_R &= ~NVIC_ST_CTRL_ENABLE;
+	for(int i = 0; i < 10; i++){
+		
+		// ****************   HIGH CYCLE   **************** //
+		// LEFT ON
+		SERVO |= SERVO_BIT_MASK;
+		NVIC_ST_RELOAD_R = SERVO_CW_90; // AT CENTER FOR BOTH
+		// WAITING
+		NVIC_ST_CURRENT_R = 0; // clear countdown counter
+		NVIC_ST_CTRL_R |= NVIC_ST_CTRL_ENABLE; // enable SysTick timer
+		while ((NVIC_ST_CTRL_R & NVIC_ST_CTRL_COUNT) == 0); // busy wait timer
+		NVIC_ST_CTRL_R &= ~NVIC_ST_CTRL_ENABLE; // disable SysTick again to set up
+		
+		SERVO &= ~SERVO_BIT_LEFT; // LEFT OFF
+		
+		// ****************   LOW CYCLE   **************** //
+		// NVIC_ST_RELOAD_R = SERVO_CENTER + SERVO_CW_90; // CW 90    THIS MOVES CCW 90 FOR SOME REASON
+		NVIC_ST_RELOAD_R = SERVO_CCW_90 - SERVO_CW_90;
+		NVIC_ST_CURRENT_R = 0; // clear countdown counter
+		NVIC_ST_CTRL_R |= NVIC_ST_CTRL_ENABLE; // enable SysTick timer
+		while ((NVIC_ST_CTRL_R & NVIC_ST_CTRL_COUNT) == 0); // busy wait timer
+		NVIC_ST_CTRL_R &= ~NVIC_ST_CTRL_ENABLE; // disable SysTick again to set up
+		
+		SERVO &= ~SERVO_BIT_RIGHT; // LEFT OFF
+		// ****************   LOW CYCLE   **************** //    NEW ADDITION
+		NVIC_ST_RELOAD_R = SERVO_PERIOD - SERVO_CW_90 - SERVO_CW_90;
+		NVIC_ST_CURRENT_R = 0; // clear countdown counter
+		NVIC_ST_CTRL_R |= NVIC_ST_CTRL_ENABLE; // enable SysTick timer
+		while ((NVIC_ST_CTRL_R & NVIC_ST_CTRL_COUNT) == 0); // busy wait timer
+		NVIC_ST_CTRL_R &= ~NVIC_ST_CTRL_ENABLE; // disable SysTick again to set up
+		
+		/*
+		// ****************   HIGH CYCLE   **************** //
+		SERVO |= SERVO_BIT_RIGHT;
+		NVIC_ST_RELOAD_R = CENTER; // CCW 90 PERIOD - CW90 -CCW90
+		NVIC_ST_CURRENT_R = 0; // clear countdown counter
+		NVIC_ST_CTRL_R |= NVIC_ST_CTRL_ENABLE; // enable SysTick timer
+		while ((NVIC_ST_CTRL_R & NVIC_ST_CTRL_COUNT) == 0); // busy wait timer
+		NVIC_ST_CTRL_R &= ~NVIC_ST_CTRL_ENABLE; // disable SysTick again to set up
+		
+		// ****************   LOW CYCLE   **************** //
+		
+		NVIC_ST_RELOAD_R = CENTER + CCW90; // CW 90
+		NVIC_ST_CURRENT_R = 0; // clear countdown counter
+		NVIC_ST_CTRL_R |= NVIC_ST_CTRL_ENABLE; // enable SysTick timer
+		while ((NVIC_ST_CTRL_R & NVIC_ST_CTRL_COUNT) == 0); // busy wait timer
+		NVIC_ST_CTRL_R &= ~NVIC_ST_CTRL_ENABLE; // disable SysTick again to set up
+		SERVO &= ~SERVO_BIT_RIGHT;
+		*/
+	}
+}
+	
+void Close_Door(void){
+	NVIC_ST_CTRL_R &= ~NVIC_ST_CTRL_ENABLE;
+	for(int i = 0; i < 5; i++){
+	// TURN BOTH ON
+		SERVO |= SERVO_BIT_MASK;
+		NVIC_ST_RELOAD_R = SERVO_CENTER; // AT CENTER FOR BOTH
+		// WAITING
+		NVIC_ST_CURRENT_R = 0; // clear countdown counter
+		NVIC_ST_CTRL_R |= NVIC_ST_CTRL_ENABLE; // enable SysTick timer
+		while ((NVIC_ST_CTRL_R & NVIC_ST_CTRL_COUNT) == 0); // busy wait timer
+		NVIC_ST_CTRL_R &= ~NVIC_ST_CTRL_ENABLE; // disable SysTick again to set up
+		
+	// TURN BOTH OFF
+		SERVO &= ~SERVO_BIT_MASK;
+		NVIC_ST_RELOAD_R = SERVO_PERIOD - SERVO_CENTER; // AT CENTER FOR BOTH
+		// WAITING
+		NVIC_ST_CURRENT_R = 0; // clear countdown counter
+		NVIC_ST_CTRL_R |= NVIC_ST_CTRL_ENABLE; // enable SysTick timer
+		while ((NVIC_ST_CTRL_R & NVIC_ST_CTRL_COUNT) == 0); // busy wait timer
+		NVIC_ST_CTRL_R &= ~NVIC_ST_CTRL_ENABLE; // disable SysTick again to set up
+	}
 }

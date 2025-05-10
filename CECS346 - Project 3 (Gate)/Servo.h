@@ -15,7 +15,7 @@
 #define SERVO_CCW_45  32000    // 2.0ms duty cycle (at 16 MHz clock)
 #define SERVO_CW_90   8000     // 0.5ms duty cycle (at 16 MHz clock)
 #define SERVO_CCW_90  40000    // 2.5ms duty cycle (at 16 MHz clock)
-#define SERVO_PERIOD  320000   // 20ms period (at 16 MHz clock)
+#define SERVO_PERIOD  32000   // 20ms period (at 16 MHz clock)
 
 void SysTick_Init(void);
 
