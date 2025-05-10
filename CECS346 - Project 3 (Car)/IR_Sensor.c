@@ -23,6 +23,9 @@ void IR_Sensor_Init(void) {
 	
 	// Edge Interrupt setup
 	GPIO_PORTD_IS_R 	&= ~IR_SENSOR_MASK; 	 // interrupt edge triggered
+	/*GPIO_PORTD_IS_R 	|= IR_SENSOR_MASK;		// interrupt level triggered
+	GPIO_PORTD_IBE_R &= ~IR_SENSOR_MASK;        // check interrupt event iev
+	GPIO_PORTD_IEV_R |= IR_SENSOR_MASK;		// high level trigger*/
 	GPIO_PORTD_IBE_R 	|= IR_SENSOR_MASK;  	 // Interrupt both Edge	
 	GPIO_PORTD_ICR_R = PD_ICR_VAL;				//resets interrupt value
 	GPIO_PORTD_IM_R 	|= IR_SENSOR_MASK;		 // set interrupt pin to be sent the interrupt controller

@@ -48,7 +48,7 @@ void Wait_N_MS(uint32_t delay){
 
 void DelayUs(void){
 	//set Reload to ONE_MICRO_S
-	NVIC_ST_RELOAD_R = ONE_MILLI_S - RELOAD_SHIFT;
+	NVIC_ST_RELOAD_R = ONE_MICRO_S - RELOAD_SHIFT;
   	// Set Current to 0                                       
   	NVIC_ST_CURRENT_R = CURRENT_CLEAR;
 	// enable SysTick timer
