@@ -12,17 +12,11 @@
 
 // Define motor outputs for different motions.
 // both on (connected to BOTH_PWM sensor)
-#define FORWARD_HIGH			0x0F
-#define FORWARD_LOW				0x0C
-#define TURN_LEFT_HIGH		0x0D
-#define TURN_LEFT_LOW			0x0C
-#define TURN_RIGHT_HIGH		0x0E
-#define TURN_RIGHT_LOW		0x0C
-#define STOP							0x0C
-/*#define FORWARD 		0x0F
-#define TURN_LEFT 	0x0D
-#define TURN_RIGHT 	0x0E
-#define STOP   			0x00   */
+#define FORWARD						0x03
+#define TURN_LEFT					0x02
+#define TURN_RIGHT				0x01
+#define HALT							0x00
+
 
 //static uint8_t pwm;  // two PWM signals on bits 7,6
 

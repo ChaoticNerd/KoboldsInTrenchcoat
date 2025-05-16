@@ -22,8 +22,8 @@
 #define TEN_MILLI_SEC			10
 
 //TODO: find the right bit positions
-#define SENSOR_CTRL_PINS 0x0C   // CTRL ODD: bit 2, CRTL EVEN: bit 3
-#define SENSOR_PINS      0x03   // SENSOR 0: bit 0 SENSOR 7: bit 1
+#define SENSOR_CTRL_PINS 0x30   // CTRL ODD: bit 2, CRTL EVEN: bit 3
+#define SENSOR_PINS      0x0F   // SENSOR 0: bit 0 SENSOR 7: bit 1
 
 uint8_t Sensor_CollectData(void){
 	Sensor_Init(); // init sensor
