@@ -88,6 +88,7 @@ int main(void){
 		while(detected){
 			WaitForInterrupt();
 		}
+		for(int i = 0; i < 0xFF; i++){}
   }
 }
 
@@ -205,7 +206,12 @@ void Open_Door(void){
 }
 	
 void Close_Door(void){
-	NVIC_ST_CTRL_R &= ~NVIC_ST_CTRL_ENABLE;
+	NVIC_ST_RELOAD_R = 16000000;
+	NVIC_ST_CURRENT_R = 0; // clear countdown counter
+	NVIC_ST_CTRL_R |= NVIC_ST_CTRL_ENABLE; // enable SysTick timer
+	while ((NVIC_ST_CTRL_R & NVIC_ST_CTRL_COUNT) == 0); // busy wait timer
+	NVIC_ST_CTRL_R &= ~NVIC_ST_CTRL_ENABLE; // disable SysTick again to set up
+	
 	for(int i = 0; i < 5; i++){
 	// TURN BOTH ON
 		SERVO |= SERVO_BIT_MASK;
