@@ -68,7 +68,7 @@ void Sensor_Init(void){
 	while ((SYSCTL_RCGCGPIO_R&SYSCTL_RCGCGPIO_R4)!=SYSCTL_RCGCGPIO_R4){} // Wait for clock to be ready
 
   GPIO_PORTE_DIR_R   &= ~SENSOR_PINS;  // Sensor pins are inputs
-  GPIO_PORTE_DIR_R   |= ~SENSOR_CTRL_PINS; // sensor pins are outputs
+  GPIO_PORTE_DIR_R   |= SENSOR_CTRL_PINS; // sensor pins are outputs
   GPIO_PORTE_AFSEL_R &= ~(SENSOR_PINS | SENSOR_CTRL_PINS);  // Disable alternate function
   GPIO_PORTE_AMSEL_R &= ~(SENSOR_PINS | SENSOR_CTRL_PINS);  // Disable analog
   GPIO_PORTE_DEN_R   |= (SENSOR_PINS | SENSOR_CTRL_PINS);   // Enable digital
