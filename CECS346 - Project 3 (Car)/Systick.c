@@ -39,7 +39,7 @@ void DelayMs(void){
 // Time delay using busy wait.
 // This function will generate multiple of millisecond.
 // Input: 32-bit interger for multiple of ms
-void Wait_N_MS(uint32_t delay){	
+void Wait_N_MS(double delay){	
 	while(delay){
 		DelayMs();
 		delay--;
