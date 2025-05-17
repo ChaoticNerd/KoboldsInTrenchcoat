@@ -84,7 +84,7 @@ int main(void){
 		// check if move car is true
 		//move_car = true;
 		
-//		while (move_car) {
+		while (move_car) {
 			
 			MOTORS = linefollower_fsm[curr_s].motors;
 			Wait_N_MS(linefollower_fsm[curr_s].delays);		
@@ -92,12 +92,12 @@ int main(void){
 			Input = Sensor_CollectData();
 		  //Input = 0;
 			curr_s = linefollower_fsm[curr_s].next[Input];
-//		}
-//		MOTORS = HALT;
-//		while(!move_car){
-//			WaitForInterrupt();
+		}
+		MOTORS = HALT;
+		while(!move_car){
+			WaitForInterrupt();
 
-//		}
+		}
 	}
 }
 
