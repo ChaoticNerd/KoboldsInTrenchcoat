@@ -5,7 +5,6 @@
 
 #include <stdint.h> // C99 data types
 #include <stdbool.h> // boolean data
-#include "Servo.h"
 #include "tm4c123gh6pm.h"
 
 // TODO: LED bit address definition for PF3 and PF1
@@ -40,6 +39,22 @@
 #define PRI3_TOP3_BITS_SET		0x800000000		// used to set systick priority as 4
 #define Duty_Cycle_toggle 		1 						// Duty cycle to toggle value
 #define Systick_reset 				0							// ValuE to set count to 0
+#define Current_clear					0							// clear current value
+#define Busy_wait_flag				0							// wait for flag to raise
+
+// PWM duty cycle systick timer reload values for 0.5ms - 2.5ms duty cycle
+// period is 20ms
+#define SERVO_CENTER  24000    // 1.5ms duty cycle (at 16 MHz clock)
+#define SERVO_CW_45   16000    // 1.0ms duty cycle (at 16 MHz clock)
+#define SERVO_CCW_45  32000    // 2.0ms duty cycle (at 16 MHz clock)
+#define SERVO_CW_90   8000     // 0.5ms duty cycle (at 16 MHz clock)
+#define SERVO_CCW_90  40000    // 2.5ms duty cycle (at 16 MHz clock)
+#define SERVO_PERIOD  32000   // 20ms period (at 16 MHz clock)
+
+#define Servo_open_loop				10						// # of times to loop servo to open soor
+#define Servo_close_loop			5							// # of times to loop servo to close door
+#define Servo_loop_reset			0							// resets for loop integer to 0
+#define Servo_close_delay			16000000			// 1 sec reload before servo door closes
 
 // high(duty cycle) and low(non-duty cycle) reload values
 static uint32_t H;
@@ -88,7 +103,6 @@ int main(void){
 		while(detected){
 			WaitForInterrupt();
 		}
-		for(int i = 0; i < 0xFF; i++){}
   }
 }
 
@@ -154,16 +168,16 @@ void GPIOPortD_Handler(void) {
 
 void Open_Door(void){
 	NVIC_ST_CTRL_R &= ~NVIC_ST_CTRL_ENABLE;
-	for(int i = 0; i < 10; i++){
+	for(int i = Servo_loop_reset; i < Servo_open_loop; i++){
 		
 		// ****************   HIGH CYCLE   **************** //
 		// LEFT ON
 		SERVO |= SERVO_BIT_MASK;
 		NVIC_ST_RELOAD_R = SERVO_CW_90; // AT CENTER FOR BOTH
 		// WAITING
-		NVIC_ST_CURRENT_R = 0; // clear countdown counter
+		NVIC_ST_CURRENT_R = Current_clear; // clear countdown counter
 		NVIC_ST_CTRL_R |= NVIC_ST_CTRL_ENABLE; // enable SysTick timer
-		while ((NVIC_ST_CTRL_R & NVIC_ST_CTRL_COUNT) == 0); // busy wait timer
+		while ((NVIC_ST_CTRL_R & NVIC_ST_CTRL_COUNT) == Busy_wait_flag); // busy wait timer
 		NVIC_ST_CTRL_R &= ~NVIC_ST_CTRL_ENABLE; // disable SysTick again to set up
 		
 		SERVO &= ~SERVO_BIT_LEFT; // LEFT OFF
@@ -171,17 +185,17 @@ void Open_Door(void){
 		// ****************   LOW CYCLE   **************** //
 		// NVIC_ST_RELOAD_R = SERVO_CENTER + SERVO_CW_90; // CW 90    THIS MOVES CCW 90 FOR SOME REASON
 		NVIC_ST_RELOAD_R = SERVO_CCW_90 - SERVO_CW_90;
-		NVIC_ST_CURRENT_R = 0; // clear countdown counter
+		NVIC_ST_CURRENT_R = Current_clear; // clear countdown counter
 		NVIC_ST_CTRL_R |= NVIC_ST_CTRL_ENABLE; // enable SysTick timer
-		while ((NVIC_ST_CTRL_R & NVIC_ST_CTRL_COUNT) == 0); // busy wait timer
+		while ((NVIC_ST_CTRL_R & NVIC_ST_CTRL_COUNT) == Busy_wait_flag); // busy wait timer
 		NVIC_ST_CTRL_R &= ~NVIC_ST_CTRL_ENABLE; // disable SysTick again to set up
 		
 		SERVO &= ~SERVO_BIT_RIGHT; // LEFT OFF
 		// ****************   LOW CYCLE   **************** //    NEW ADDITION
 		NVIC_ST_RELOAD_R = SERVO_PERIOD - SERVO_CW_90 - SERVO_CW_90;
-		NVIC_ST_CURRENT_R = 0; // clear countdown counter
+		NVIC_ST_CURRENT_R = Current_clear; // clear countdown counter
 		NVIC_ST_CTRL_R |= NVIC_ST_CTRL_ENABLE; // enable SysTick timer
-		while ((NVIC_ST_CTRL_R & NVIC_ST_CTRL_COUNT) == 0); // busy wait timer
+		while ((NVIC_ST_CTRL_R & NVIC_ST_CTRL_COUNT) == Busy_wait_flag); // busy wait timer
 		NVIC_ST_CTRL_R &= ~NVIC_ST_CTRL_ENABLE; // disable SysTick again to set up
 		
 		/*
@@ -206,29 +220,29 @@ void Open_Door(void){
 }
 	
 void Close_Door(void){
-	NVIC_ST_RELOAD_R = 16000000;
-	NVIC_ST_CURRENT_R = 0; // clear countdown counter
+	NVIC_ST_RELOAD_R = Servo_close_delay;
+	NVIC_ST_CURRENT_R = Current_clear; // clear countdown counter
 	NVIC_ST_CTRL_R |= NVIC_ST_CTRL_ENABLE; // enable SysTick timer
-	while ((NVIC_ST_CTRL_R & NVIC_ST_CTRL_COUNT) == 0); // busy wait timer
+	while ((NVIC_ST_CTRL_R & NVIC_ST_CTRL_COUNT) == Busy_wait_flag); // busy wait timer
 	NVIC_ST_CTRL_R &= ~NVIC_ST_CTRL_ENABLE; // disable SysTick again to set up
 	
-	for(int i = 0; i < 5; i++){
+	for(int i = Servo_loop_reset; i < Servo_close_loop; i++){
 	// TURN BOTH ON
 		SERVO |= SERVO_BIT_MASK;
 		NVIC_ST_RELOAD_R = SERVO_CENTER; // AT CENTER FOR BOTH
 		// WAITING
-		NVIC_ST_CURRENT_R = 0; // clear countdown counter
+		NVIC_ST_CURRENT_R = Current_clear; // clear countdown counter
 		NVIC_ST_CTRL_R |= NVIC_ST_CTRL_ENABLE; // enable SysTick timer
-		while ((NVIC_ST_CTRL_R & NVIC_ST_CTRL_COUNT) == 0); // busy wait timer
+		while ((NVIC_ST_CTRL_R & NVIC_ST_CTRL_COUNT) == Busy_wait_flag); // busy wait timer
 		NVIC_ST_CTRL_R &= ~NVIC_ST_CTRL_ENABLE; // disable SysTick again to set up
 		
 	// TURN BOTH OFF
 		SERVO &= ~SERVO_BIT_MASK;
 		NVIC_ST_RELOAD_R = SERVO_PERIOD - SERVO_CENTER; // AT CENTER FOR BOTH
 		// WAITING
-		NVIC_ST_CURRENT_R = 0; // clear countdown counter
+		NVIC_ST_CURRENT_R = Current_clear; // clear countdown counter
 		NVIC_ST_CTRL_R |= NVIC_ST_CTRL_ENABLE; // enable SysTick timer
-		while ((NVIC_ST_CTRL_R & NVIC_ST_CTRL_COUNT) == 0); // busy wait timer
+		while ((NVIC_ST_CTRL_R & NVIC_ST_CTRL_COUNT) == Busy_wait_flag); // busy wait timer
 		NVIC_ST_CTRL_R &= ~NVIC_ST_CTRL_ENABLE; // disable SysTick again to set up
 	}
 }
