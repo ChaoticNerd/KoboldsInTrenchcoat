@@ -16,7 +16,7 @@
 
 // bit addresses in Sensor.h
 // define busy wait delays for sensor data collection
-#define TEN_MICRO_SEC			10
+#define WAIT_TIME				1000 //changed from 10 to 200 for SENSOR COLLECT
 #define	ONE_MILLI_SEC			1
 #define TWO_MILLI_SEC			2
 #define TEN_MILLI_SEC			10
@@ -32,7 +32,7 @@ uint8_t Sensor_CollectData(void){
 	// Driving a CTRL pin low for at least 1 ms turns off the emitter LEDs
 	SENSOR_CTRL &= ~SENSOR_CTRL_PINS;
 	//Delay of 2ms
-	Wait_N_MS(TWO_MILLI_SEC);
+	Wait_N_MS(ONE_MILLI_SEC);
 
 	// Turn on CTRL ODD & EVEN pins to turn on the LED emitters 
 	SENSOR_CTRL |= SENSOR_CTRL_PINS;
@@ -41,20 +41,20 @@ uint8_t Sensor_CollectData(void){
 	GPIO_PORTE_DIR_R  |= SENSOR_PINS;  // Set PE0,1 as output
 	SENSORS |= SENSOR_PINS; // Set PE0,1 HIGH
 	//Wait 10 us
-	Wait_N_US(TEN_MICRO_SEC);
-	
+	Wait_N_US(10);
+	//sensor_data = SENSORS;	
 	//Set PE0,1 as inputs
 	GPIO_PORTE_DIR_R &= ~SENSOR_PINS;
 
 	//Wait 'WAIT_TIME' us
-	Wait_N_MS(ONE_MILLI_SEC);
-	
-	//update sensor_data with the current sensor inputs
+	Wait_N_MS(WAIT_TIME);
 	sensor_data = SENSORS;	
+	//update sensor_data with the current sensor inputs
+	//sensor_data = SENSORS;	
   // turn off CTRL ODD & EVEN	pins to turn off the LED emitters to save power
 	SENSOR_CTRL &= ~SENSOR_CTRL_PINS;
-	//Wait 10ms
-	Wait_N_MS(TEN_MILLI_SEC);
+	//Wait 1ms
+	Wait_N_MS(ONE_MILLI_SEC);
 	
 	// return sensor data to use in LineFollower.c
 	return sensor_data;

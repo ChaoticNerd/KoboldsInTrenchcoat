@@ -11,6 +11,6 @@
 
 void SysTick_Init(void);
 
-void Wait_N_MS(double delay);
+void Wait_N_MS(uint32_t delay);
 
 void Wait_N_US(uint32_t delay);

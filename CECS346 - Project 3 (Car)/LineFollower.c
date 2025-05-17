@@ -18,21 +18,13 @@
 
 #define NUM_STATES	17
 
-#define DUTY_1				.01
-#define DUTY_98				.98
-#define DUTY_99				.99
-
-#define DUTY_5				.05
-#define DUTY_95				.95
-
-#define DUTY_10				.10
-#define DUTY_90				.90
-
+#define DUTY_1				1
+#define DUTY_5				5
+#define DUTY_10				10
 #define DUTY_30				30
-#define DUTY_40				.40
-#define DUTY_50				5
-
-#define DELAY_LOST		10
+#define DUTY_40				40
+#define DUTY_50				50
+#define DELAY_LOST		100
 
 // Function prototypes
 void System_Init(void);
@@ -45,45 +37,33 @@ struct State {
 typedef const struct State State_t;
 
 // Center = move forward, left = turn left, right = turn right, stop = no movement
-enum states {FORWARD1, FORWARD2, FORWARD3, SLIGHT_R1, SLIGHT_R2, SLIGHT_R3, RIGHT1, RIGHT2, RIGHT3, 
-SLIGHT_L1, SLIGHT_L2, SLIGHT_L3, LEFT1, LEFT2, LEFT3, LOST, STOP};
+enum states {FORWARD1, FORWARD2, SLIGHT_R1, SLIGHT_R2,SLIGHT_R3,
+SLIGHT_L1, SLIGHT_L2,SLIGHT_L3, STOP};
 						
 
 /*{Center,Left,Right,Stop}*/
 
 State_t linefollower_fsm[NUM_STATES]={
-	{	FORWARD, 		DUTY_10, 		{ FORWARD2, 	FORWARD2, 	FORWARD2, 	FORWARD2, 	FORWARD2, 	FORWARD2, 	FORWARD2, 	FORWARD2, 	FORWARD2, 	FORWARD2, 	FORWARD2, 	FORWARD2, 	FORWARD2, 	FORWARD2, 	FORWARD2, 	FORWARD2	}},
-	{	HALT,				DUTY_10, 		{	FORWARD3, 	FORWARD3, 	FORWARD3, 	FORWARD3, 	FORWARD3, 	FORWARD3, 			FORWARD3, 	FORWARD3,FORWARD3, 	FORWARD3, 			FORWARD3, 	FORWARD3,FORWARD3, 	FORWARD3, 			FORWARD3, 	FORWARD3			}},
-	{	HALT,				DUTY_10, 		{	FORWARD1, 	LEFT1, 			SLIGHT_L1, 	SLIGHT_L1, 	SLIGHT_R1, 	FORWARD1, 	FORWARD1, 	LEFT1, 			SLIGHT_R1, 	FORWARD1, 	FORWARD1, 	FORWARD1, 	SLIGHT_R1, 	FORWARD1, 	RIGHT1, 		LOST			}},
+	{	FORWARD, 		2, 		{ FORWARD2, 	FORWARD2, 	FORWARD2, 	FORWARD2}},
+	{	HALT,				8, 		{	FORWARD1, 	SLIGHT_R1, 			SLIGHT_L1, 	STOP	}},
 
 	
-	{	FORWARD, 		DUTY_10, 		{ SLIGHT_R2, 	SLIGHT_R2, 	SLIGHT_R2, 	SLIGHT_R2, 	SLIGHT_R2, 	SLIGHT_R2, 	SLIGHT_R2, 	SLIGHT_R2, 	SLIGHT_R2, 	SLIGHT_R2, 	SLIGHT_R2, 	SLIGHT_R2, 	SLIGHT_R2, 	SLIGHT_R2, 	SLIGHT_R2, 	SLIGHT_R2	}},
-	{ TURN_RIGHT, DUTY_10, 		{ SLIGHT_R3, 	SLIGHT_R3, 	SLIGHT_R3, 	SLIGHT_R3, 	SLIGHT_R3, 	SLIGHT_R3, 	SLIGHT_R3, 	SLIGHT_R3, 	SLIGHT_R3, 	SLIGHT_R3, 	SLIGHT_R3, 	SLIGHT_R3, 	SLIGHT_R3, 	SLIGHT_R3, 	SLIGHT_R3, 	SLIGHT_R3	}},
-	{	HALT,				DUTY_30,		{ FORWARD1, 	LEFT1, 			SLIGHT_L1, 	SLIGHT_L1, 	SLIGHT_R1, 	FORWARD1, 	FORWARD1, 	LEFT1, 			SLIGHT_R1, 	FORWARD1, 	FORWARD1, 	FORWARD1, 	SLIGHT_R1, 	FORWARD1, 	RIGHT1, 		LOST			}},
+	{	FORWARD, 		1, 		{ SLIGHT_R2, 	SLIGHT_R2, 	SLIGHT_R2, 	SLIGHT_R2	}},
+	{ TURN_LEFT, 	1, 		{ SLIGHT_R3, 	SLIGHT_R3, 	SLIGHT_R3, 	SLIGHT_R3}},
+	{	HALT,				8,		{ FORWARD1, 	SLIGHT_R1, 			SLIGHT_L1, 	STOP}},
+	
+	{	FORWARD,		1,			{ SLIGHT_L2, 	SLIGHT_L2, 	SLIGHT_L2, 	SLIGHT_L2, 	}},
+	{	TURN_RIGHT, 1,			{ SLIGHT_L3, 	SLIGHT_L3, 	SLIGHT_L3, 	SLIGHT_L3 }},
+	{	HALT,				8,		{ FORWARD1, 	SLIGHT_R1, 			SLIGHT_L1, 	STOP}},
 
-	
-	{	FORWARD, 		DUTY_10, 		{ RIGHT2, 		RIGHT2, 		RIGHT2, 		RIGHT2, 		RIGHT2, 		RIGHT2, 		RIGHT2, 		RIGHT2, 		RIGHT2, 		RIGHT2, 		RIGHT2, 		RIGHT2, 		RIGHT2, 		RIGHT2, 		RIGHT2, 		RIGHT2		}},
-	{ TURN_RIGHT, DUTY_50, 		{ RIGHT3, 		RIGHT3, 		RIGHT3, 		RIGHT3, 		RIGHT3, 		RIGHT3, 		RIGHT3, 		RIGHT3, 		RIGHT3, 		RIGHT3, 		RIGHT3, 		RIGHT3, 		RIGHT3, 		RIGHT3, 		RIGHT3, 		RIGHT3		}},
-	{	HALT,				DUTY_30,		{ FORWARD1, 	LEFT1, 			SLIGHT_L1, 	SLIGHT_L1, 	SLIGHT_R1, 	FORWARD1, 	FORWARD1, 	LEFT1, 			SLIGHT_R1, 	FORWARD1, 	FORWARD1, 	FORWARD1, 	SLIGHT_R1, 	FORWARD1, 	RIGHT1, 		STOP			}},
-
-	
-	{	FORWARD,		DUTY_10,			{ SLIGHT_L2, 	SLIGHT_L2, 	SLIGHT_L2, 	SLIGHT_L2, 	SLIGHT_L2, 	SLIGHT_L2, 	SLIGHT_L2, 	SLIGHT_L2, 	SLIGHT_L2, 	SLIGHT_L2, 	SLIGHT_L2, 	SLIGHT_L2, 	SLIGHT_L2, 	SLIGHT_L2, 	SLIGHT_L2, 	SLIGHT_L2	}},
-	{	TURN_LEFT,	DUTY_10,			{ SLIGHT_L3, 	SLIGHT_L3, 	SLIGHT_L3, 	SLIGHT_L3, 	SLIGHT_L3, 	SLIGHT_L3, 	SLIGHT_L3, 	SLIGHT_L3, 	SLIGHT_L3, 	SLIGHT_L3, 	SLIGHT_L3, 	SLIGHT_L3, 	SLIGHT_L3, 	SLIGHT_L3, 	SLIGHT_L3, 	SLIGHT_L3 }},
-	{	HALT,				DUTY_30,		{ FORWARD1, 	LEFT1, 			SLIGHT_L1, 	SLIGHT_L1, 	SLIGHT_R1, 	FORWARD1, 	FORWARD1, 	LEFT1, 			SLIGHT_R1, 	FORWARD1, 	FORWARD1, 	FORWARD1, 	SLIGHT_R1, 	FORWARD1, 	RIGHT1, 		STOP			}},
-	
-	{	FORWARD,		DUTY_10,			{ LEFT2, 			LEFT2, 			LEFT2, 			LEFT2, 			LEFT2, 			LEFT2, 			LEFT2, 			LEFT2, 			LEFT2, 			LEFT2, 			LEFT2, 			LEFT2, 			LEFT2, 			LEFT2, 			LEFT2, 			LEFT2			}},
-	{	TURN_LEFT,	DUTY_50,		{ LEFT3, 			LEFT3, 			LEFT3, 			LEFT3, 			LEFT3, 			LEFT3, 			LEFT3, 			LEFT3, 			LEFT3, 			LEFT3, 			LEFT3, 			LEFT3, 			LEFT3, 			LEFT3, 			LEFT3, 			LEFT3 		}},
-	{	HALT,				DUTY_30,		{	FORWARD1, 	LEFT1, 			SLIGHT_L1, 	SLIGHT_L1, 	SLIGHT_R1, 	FORWARD1, 	FORWARD1, 	LEFT1, 			SLIGHT_R1, 	FORWARD1, 	FORWARD1, 	FORWARD1, 	SLIGHT_R1, 	FORWARD1, 	RIGHT1, 		STOP			}},
-
-	
-	{	HALT,				DELAY_LOST,	{ STOP, 			STOP, 			STOP, 			STOP, 			STOP, 			STOP, 			STOP, 			STOP, 			STOP, 			STOP, 			STOP, 			STOP, 			STOP, 			STOP, 			STOP, 			STOP			}},
-	{	HALT,				3,		{ FORWARD1, 	LEFT1, 			SLIGHT_L1, 	SLIGHT_L1, 	SLIGHT_R1, 	FORWARD1, 	FORWARD1, 	LEFT1, 			SLIGHT_R1, 	FORWARD1, 	FORWARD1, 	FORWARD1, 	SLIGHT_R1, 	FORWARD1, 	RIGHT1, 		LOST			}}
+	{	HALT,				10,		{ FORWARD1, 	SLIGHT_R1, 			SLIGHT_L1, 	STOP	}}
 };
 
 enum states curr_s;   // current state
 uint8_t Input;	// define input var
 bool move_car;
-
+//testing 
+uint8_t time; 
 // update sensor data THEN start motor
 // this way the systicks do not interfere
 int main(void){
@@ -91,23 +71,33 @@ int main(void){
 	System_Init();
 	
 	// first state based on sensors' first input
-	Input = Sensor_CollectData();
-	curr_s = linefollower_fsm[curr_s].next[Input];;
+	//Input = Sensor_CollectData();
+	curr_s = FORWARD1;
 	move_car = true;
-		
+//	while(1){
+//		MOTORS = FORWARD;
+//		Wait_N_MS(2);
+//		MOTORS = HALT;
+//		Wait_N_MS(8);
+//	}
 	while (1) {
 		// check if move car is true
-
-		while (move_car) {
-			Input = Sensor_CollectData();
-			Wait_N_MS(linefollower_fsm[curr_s].delays);		
+		//move_car = true;
+		
+//		while (move_car) {
+			
 			MOTORS = linefollower_fsm[curr_s].motors;
+			Wait_N_MS(linefollower_fsm[curr_s].delays);		
+			time = linefollower_fsm[curr_s].delays;
+			Input = Sensor_CollectData();
+		  //Input = 0;
 			curr_s = linefollower_fsm[curr_s].next[Input];
-		}
-		WaitForInterrupt();
-		NVIC_ST_CTRL_R |= NVIC_ST_CTRL_ENABLE;
-		move_car = true;
+//		}
+//		MOTORS = HALT;
+//		while(!move_car){
+//			WaitForInterrupt();
 
+//		}
 	}
 }
 
@@ -122,12 +112,12 @@ void System_Init(void){
 
 void GPIOPortD_Handler(void) {
 	for(uint32_t i = 0; i < 320000; i ++){}	//Interrupt debounce
-
-	if(GPIO_PORTD_RIS_R & IR_SENSOR_MASK){			
-		GPIO_PORTD_ICR_R = PD_ICR_VAL;				//resets interrupt value
-		NVIC_ST_CTRL_R &= ~NVIC_ST_CTRL_ENABLE;
-		move_car = false;
-		curr_s = STOP;
+	//GPIO_PORTD_RIS_R & IR_SENSOR_MASK		
+		GPIO_PORTD_ICR_R = IR_SENSOR_MASK;				//resets interrupt value
+		if(!(IR_SENSOR & IR_SENSOR_MASK)){
+			move_car = false;
+		} else {
+			move_car = true;
+		}
 	}
 	
-}
