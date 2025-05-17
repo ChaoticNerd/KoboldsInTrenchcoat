@@ -18,13 +18,10 @@
 
 #define NUM_STATES	17
 
-#define DUTY_1				1
-#define DUTY_5				5
-#define DUTY_10				10
-#define DUTY_30				30
-#define DUTY_40				40
-#define DUTY_50				50
-#define DELAY_LOST		100
+#define DELAY_1US				1
+#define DELAY_2US				2
+#define DELAY_8US				8
+#define DELAY_10US				10
 
 // Function prototypes
 void System_Init(void);
@@ -44,19 +41,19 @@ SLIGHT_L1, SLIGHT_L2,SLIGHT_L3, STOP};
 /*{Center,Left,Right,Stop}*/
 
 State_t linefollower_fsm[NUM_STATES]={
-	{	FORWARD, 		2, 		{ FORWARD2, 	FORWARD2, 	FORWARD2, 	FORWARD2}},
-	{	HALT,				8, 		{	FORWARD1, 	SLIGHT_R1, 			SLIGHT_L1, 	STOP	}},
+	{	FORWARD, 		DELAY_2US, 		{ FORWARD2, 	FORWARD2, 	FORWARD2, 	FORWARD2}},
+	{	HALT,				DELAY_8US, 		{	FORWARD1, 	SLIGHT_R1, 			SLIGHT_L1, 	STOP	}},
 
 	
-	{	FORWARD, 		1, 		{ SLIGHT_R2, 	SLIGHT_R2, 	SLIGHT_R2, 	SLIGHT_R2	}},
-	{ TURN_LEFT, 	1, 		{ SLIGHT_R3, 	SLIGHT_R3, 	SLIGHT_R3, 	SLIGHT_R3}},
-	{	HALT,				8,		{ FORWARD1, 	SLIGHT_R1, 			SLIGHT_L1, 	STOP}},
+	{	FORWARD, 		DELAY_1US, 		{ SLIGHT_R2, 	SLIGHT_R2, 	SLIGHT_R2, 	SLIGHT_R2	}},
+	{ TURN_LEFT, 	DELAY_1US, 		{ SLIGHT_R3, 	SLIGHT_R3, 	SLIGHT_R3, 	SLIGHT_R3}},
+	{	HALT,				DELAY_8US,		{ FORWARD1, 	SLIGHT_R1, 			SLIGHT_L1, 	STOP}},
 	
-	{	FORWARD,		1,			{ SLIGHT_L2, 	SLIGHT_L2, 	SLIGHT_L2, 	SLIGHT_L2, 	}},
-	{	TURN_RIGHT, 1,			{ SLIGHT_L3, 	SLIGHT_L3, 	SLIGHT_L3, 	SLIGHT_L3 }},
-	{	HALT,				8,		{ FORWARD1, 	SLIGHT_R1, 			SLIGHT_L1, 	STOP}},
+	{	FORWARD,		DELAY_1US,		{ SLIGHT_L2, 	SLIGHT_L2, 	SLIGHT_L2, 	SLIGHT_L2, 	}},
+	{	TURN_RIGHT, DELAY_1US,		{ SLIGHT_L3, 	SLIGHT_L3, 	SLIGHT_L3, 	SLIGHT_L3 }},
+	{	HALT,				DELAY_8US,		{ FORWARD1, 	SLIGHT_R1, 			SLIGHT_L1, 	STOP}},
 
-	{	HALT,				10,		{ FORWARD1, 	SLIGHT_R1, 			SLIGHT_L1, 	STOP	}}
+	{	HALT,				DELAY_10US,		{ FORWARD1, 	SLIGHT_R1, 			SLIGHT_L1, 	STOP	}}
 };
 
 enum states curr_s;   // current state
