@@ -8,30 +8,30 @@ Section Cross References
     startup.o(HEAP) refers (Special) to heapauxi.o(.text) for __use_two_region_memory
     startup.o(RESET) refers (Special) to heapauxi.o(.text) for __use_two_region_memory
     startup.o(RESET) refers to startup.o(STACK) for StackMem
-    startup.o(RESET) refers to cecs346lab7.o(.text.GPIOPortD_Handler) for GPIOPortD_Handler
+    startup.o(RESET) refers to ir sensor servo gate.o(.text.GPIOPortD_Handler) for GPIOPortD_Handler
     startup.o(RESET) refers to __main.o(!!!main) for __main
     startup.o(.text) refers (Special) to heapauxi.o(.text) for __use_two_region_memory
     startup.o(.text) refers to startup.o(HEAP) for HeapMem
     startup.o(.text) refers to startup.o(STACK) for StackMem
-    cecs346lab7.o(.text.main) refers to startup.o(.text) for DisableInterrupts
-    cecs346lab7.o(.text.main) refers to cecs346lab7.o(.text.Sensor_Init) for Sensor_Init
-    cecs346lab7.o(.text.main) refers to cecs346lab7.o(.text.Servo_Init) for Servo_Init
-    cecs346lab7.o(.text.main) refers to cecs346lab7.o(.text.LEDInit) for LEDInit
-    cecs346lab7.o(.text.main) refers to cecs346lab7.o(.text.SysTick_Init) for SysTick_Init
-    cecs346lab7.o(.text.main) refers to cecs346lab7.o(.bss.move_servo) for move_servo
-    cecs346lab7.o(.text.main) refers to cecs346lab7.o(.bss.detected) for detected
-    cecs346lab7.o(.text.main) refers to cecs346lab7.o(.text.Close_Door) for Close_Door
-    cecs346lab7.o(.text.main) refers to cecs346lab7.o(.text.Open_Door) for Open_Door
-    cecs346lab7.o(.ARM.exidx.text.main) refers to cecs346lab7.o(.text.main) for [Anonymous Symbol]
-    cecs346lab7.o(.ARM.exidx.text.Sensor_Init) refers to cecs346lab7.o(.text.Sensor_Init) for [Anonymous Symbol]
-    cecs346lab7.o(.ARM.exidx.text.Servo_Init) refers to cecs346lab7.o(.text.Servo_Init) for [Anonymous Symbol]
-    cecs346lab7.o(.ARM.exidx.text.LEDInit) refers to cecs346lab7.o(.text.LEDInit) for [Anonymous Symbol]
-    cecs346lab7.o(.ARM.exidx.text.SysTick_Init) refers to cecs346lab7.o(.text.SysTick_Init) for [Anonymous Symbol]
-    cecs346lab7.o(.ARM.exidx.text.Close_Door) refers to cecs346lab7.o(.text.Close_Door) for [Anonymous Symbol]
-    cecs346lab7.o(.ARM.exidx.text.Open_Door) refers to cecs346lab7.o(.text.Open_Door) for [Anonymous Symbol]
-    cecs346lab7.o(.text.GPIOPortD_Handler) refers to cecs346lab7.o(.bss.detected) for detected
-    cecs346lab7.o(.text.GPIOPortD_Handler) refers to cecs346lab7.o(.bss.move_servo) for move_servo
-    cecs346lab7.o(.ARM.exidx.text.GPIOPortD_Handler) refers to cecs346lab7.o(.text.GPIOPortD_Handler) for [Anonymous Symbol]
+    ir sensor servo gate.o(.text.main) refers to startup.o(.text) for DisableInterrupts
+    ir sensor servo gate.o(.text.main) refers to ir sensor servo gate.o(.text.Sensor_Init) for Sensor_Init
+    ir sensor servo gate.o(.text.main) refers to ir sensor servo gate.o(.text.Servo_Init) for Servo_Init
+    ir sensor servo gate.o(.text.main) refers to ir sensor servo gate.o(.text.LEDInit) for LEDInit
+    ir sensor servo gate.o(.text.main) refers to ir sensor servo gate.o(.text.SysTick_Init) for SysTick_Init
+    ir sensor servo gate.o(.text.main) refers to ir sensor servo gate.o(.bss.move_servo) for move_servo
+    ir sensor servo gate.o(.text.main) refers to ir sensor servo gate.o(.bss.detected) for detected
+    ir sensor servo gate.o(.text.main) refers to ir sensor servo gate.o(.text.Close_Door) for Close_Door
+    ir sensor servo gate.o(.text.main) refers to ir sensor servo gate.o(.text.Open_Door) for Open_Door
+    ir sensor servo gate.o(.ARM.exidx.text.main) refers to ir sensor servo gate.o(.text.main) for [Anonymous Symbol]
+    ir sensor servo gate.o(.ARM.exidx.text.Sensor_Init) refers to ir sensor servo gate.o(.text.Sensor_Init) for [Anonymous Symbol]
+    ir sensor servo gate.o(.ARM.exidx.text.Servo_Init) refers to ir sensor servo gate.o(.text.Servo_Init) for [Anonymous Symbol]
+    ir sensor servo gate.o(.ARM.exidx.text.LEDInit) refers to ir sensor servo gate.o(.text.LEDInit) for [Anonymous Symbol]
+    ir sensor servo gate.o(.ARM.exidx.text.SysTick_Init) refers to ir sensor servo gate.o(.text.SysTick_Init) for [Anonymous Symbol]
+    ir sensor servo gate.o(.ARM.exidx.text.Close_Door) refers to ir sensor servo gate.o(.text.Close_Door) for [Anonymous Symbol]
+    ir sensor servo gate.o(.ARM.exidx.text.Open_Door) refers to ir sensor servo gate.o(.text.Open_Door) for [Anonymous Symbol]
+    ir sensor servo gate.o(.text.GPIOPortD_Handler) refers to ir sensor servo gate.o(.bss.detected) for detected
+    ir sensor servo gate.o(.text.GPIOPortD_Handler) refers to ir sensor servo gate.o(.bss.move_servo) for move_servo
+    ir sensor servo gate.o(.ARM.exidx.text.GPIOPortD_Handler) refers to ir sensor servo gate.o(.text.GPIOPortD_Handler) for [Anonymous Symbol]
     __main.o(!!!main) refers to __rtentry.o(.ARM.Collect$$rtentry$$00000000) for __rt_entry
     __rtentry.o(.ARM.Collect$$rtentry$$00000000) refers (Special) to __rtentry2.o(.ARM.Collect$$rtentry$$0000000A) for __rt_entry_li
     __rtentry.o(.ARM.Collect$$rtentry$$00000000) refers (Special) to __rtentry2.o(.ARM.Collect$$rtentry$$0000000D) for __rt_entry_main
@@ -42,7 +42,7 @@ Section Cross References
     __rtentry2.o(.ARM.Collect$$rtentry$$00000008) refers to boardinit2.o(.text) for _platform_post_stackheap_init
     __rtentry2.o(.ARM.Collect$$rtentry$$0000000A) refers to libinit.o(.ARM.Collect$$libinit$$00000000) for __rt_lib_init
     __rtentry2.o(.ARM.Collect$$rtentry$$0000000B) refers to boardinit3.o(.text) for _platform_post_lib_init
-    __rtentry2.o(.ARM.Collect$$rtentry$$0000000D) refers to cecs346lab7.o(.text.main) for main
+    __rtentry2.o(.ARM.Collect$$rtentry$$0000000D) refers to ir sensor servo gate.o(.text.main) for main
     __rtentry2.o(.ARM.Collect$$rtentry$$0000000D) refers to exit.o(.text) for exit
     __rtentry2.o(.ARM.exidx) refers to __rtentry2.o(.ARM.Collect$$rtentry$$00000001) for .ARM.Collect$$rtentry$$00000001
     __rtentry2.o(.ARM.exidx) refers to __rtentry2.o(.ARM.Collect$$rtentry$$00000008) for .ARM.Collect$$rtentry$$00000008
@@ -143,17 +143,17 @@ Section Cross References
 
 Removing Unused input sections from the image.
 
-    Removing cecs346lab7.o(.text), (0 bytes).
-    Removing cecs346lab7.o(.ARM.exidx.text.main), (8 bytes).
-    Removing cecs346lab7.o(.ARM.exidx.text.Sensor_Init), (8 bytes).
-    Removing cecs346lab7.o(.ARM.exidx.text.Servo_Init), (8 bytes).
-    Removing cecs346lab7.o(.ARM.exidx.text.LEDInit), (8 bytes).
-    Removing cecs346lab7.o(.ARM.exidx.text.SysTick_Init), (8 bytes).
-    Removing cecs346lab7.o(.ARM.exidx.text.Close_Door), (8 bytes).
-    Removing cecs346lab7.o(.ARM.exidx.text.Open_Door), (8 bytes).
-    Removing cecs346lab7.o(.ARM.exidx.text.GPIOPortD_Handler), (8 bytes).
-    Removing cecs346lab7.o(.bss.dir), (1 bytes).
-    Removing cecs346lab7.o(.ARM.use_no_argv), (4 bytes).
+    Removing ir sensor servo gate.o(.text), (0 bytes).
+    Removing ir sensor servo gate.o(.ARM.exidx.text.main), (8 bytes).
+    Removing ir sensor servo gate.o(.ARM.exidx.text.Sensor_Init), (8 bytes).
+    Removing ir sensor servo gate.o(.ARM.exidx.text.Servo_Init), (8 bytes).
+    Removing ir sensor servo gate.o(.ARM.exidx.text.LEDInit), (8 bytes).
+    Removing ir sensor servo gate.o(.ARM.exidx.text.SysTick_Init), (8 bytes).
+    Removing ir sensor servo gate.o(.ARM.exidx.text.Close_Door), (8 bytes).
+    Removing ir sensor servo gate.o(.ARM.exidx.text.Open_Door), (8 bytes).
+    Removing ir sensor servo gate.o(.ARM.exidx.text.GPIOPortD_Handler), (8 bytes).
+    Removing ir sensor servo gate.o(.bss.dir), (1 bytes).
+    Removing ir sensor servo gate.o(.ARM.use_no_argv), (4 bytes).
 
 11 unused section(s) (total 69 bytes) removed from the image.
 
@@ -216,7 +216,7 @@ Image Symbol Table
     ../clib/stdlib.c                         0x00000000   Number         0  exit.o ABSOLUTE
     ../fplib/fpinit.s                        0x00000000   Number         0  fpinit.o ABSOLUTE
     ../fplib/fpinit_empty.s                  0x00000000   Number         0  fpinit_empty.o ABSOLUTE
-    CECS346Lab7.c                            0x00000000   Number         0  cecs346lab7.o ABSOLUTE
+    IR Sensor Servo Gate.c                   0x00000000   Number         0  ir sensor servo gate.o ABSOLUTE
     dc.s                                     0x00000000   Number         0  dc.o ABSOLUTE
     startup.s                                0x00000000   Number         0  startup.o ABSOLUTE
     RESET                                    0x00000000   Section      644  startup.o(RESET)
@@ -274,14 +274,14 @@ Image Symbol Table
     .text                                    0x000003cc   Section        0  sys_exit.o(.text)
     .text                                    0x000003d8   Section        2  use_no_semi.o(.text)
     .text                                    0x000003da   Section        0  indicate_semi.o(.text)
-    [Anonymous Symbol]                       0x000003dc   Section        0  cecs346lab7.o(.text.Close_Door)
-    [Anonymous Symbol]                       0x000004c4   Section        0  cecs346lab7.o(.text.GPIOPortD_Handler)
-    [Anonymous Symbol]                       0x0000052c   Section        0  cecs346lab7.o(.text.LEDInit)
-    [Anonymous Symbol]                       0x000005a8   Section        0  cecs346lab7.o(.text.Open_Door)
-    [Anonymous Symbol]                       0x000006e8   Section        0  cecs346lab7.o(.text.Sensor_Init)
-    [Anonymous Symbol]                       0x000007b4   Section        0  cecs346lab7.o(.text.Servo_Init)
-    [Anonymous Symbol]                       0x00000830   Section        0  cecs346lab7.o(.text.SysTick_Init)
-    [Anonymous Symbol]                       0x0000084c   Section        0  cecs346lab7.o(.text.main)
+    [Anonymous Symbol]                       0x000003dc   Section        0  ir sensor servo gate.o(.text.Close_Door)
+    [Anonymous Symbol]                       0x00000508   Section        0  ir sensor servo gate.o(.text.GPIOPortD_Handler)
+    [Anonymous Symbol]                       0x00000570   Section        0  ir sensor servo gate.o(.text.LEDInit)
+    [Anonymous Symbol]                       0x000005ec   Section        0  ir sensor servo gate.o(.text.Open_Door)
+    [Anonymous Symbol]                       0x0000072c   Section        0  ir sensor servo gate.o(.text.Sensor_Init)
+    [Anonymous Symbol]                       0x000007f8   Section        0  ir sensor servo gate.o(.text.Servo_Init)
+    [Anonymous Symbol]                       0x00000874   Section        0  ir sensor servo gate.o(.text.SysTick_Init)
+    [Anonymous Symbol]                       0x00000890   Section        0  ir sensor servo gate.o(.text.main)
     .bss                                     0x20000000   Section       96  libspace.o(.bss)
     HeapMem                                  0x20000068   Data           0  startup.o(HEAP)
     StackMem                                 0x20000068   Data           0  startup.o(STACK)
@@ -514,20 +514,20 @@ Image Symbol Table
     __I$use$semihosting                      0x000003d9   Thumb Code     0  use_no_semi.o(.text)
     __use_no_semihosting_swi                 0x000003d9   Thumb Code     2  use_no_semi.o(.text)
     __semihosting_library_function           0x000003db   Thumb Code     0  indicate_semi.o(.text)
-    Close_Door                               0x000003dd   Thumb Code   230  cecs346lab7.o(.text.Close_Door)
-    GPIOPortD_Handler                        0x000004c5   Thumb Code   102  cecs346lab7.o(.text.GPIOPortD_Handler)
-    LEDInit                                  0x0000052d   Thumb Code   124  cecs346lab7.o(.text.LEDInit)
-    Open_Door                                0x000005a9   Thumb Code   320  cecs346lab7.o(.text.Open_Door)
-    Sensor_Init                              0x000006e9   Thumb Code   204  cecs346lab7.o(.text.Sensor_Init)
-    Servo_Init                               0x000007b5   Thumb Code   122  cecs346lab7.o(.text.Servo_Init)
-    SysTick_Init                             0x00000831   Thumb Code    26  cecs346lab7.o(.text.SysTick_Init)
-    main                                     0x0000084d   Thumb Code   152  cecs346lab7.o(.text.main)
-    Region$$Table$$Base                      0x000008e4   Number         0  anon$$obj.o(Region$$Table)
-    Region$$Table$$Limit                     0x000008f4   Number         0  anon$$obj.o(Region$$Table)
+    Close_Door                               0x000003dd   Thumb Code   298  ir sensor servo gate.o(.text.Close_Door)
+    GPIOPortD_Handler                        0x00000509   Thumb Code   102  ir sensor servo gate.o(.text.GPIOPortD_Handler)
+    LEDInit                                  0x00000571   Thumb Code   124  ir sensor servo gate.o(.text.LEDInit)
+    Open_Door                                0x000005ed   Thumb Code   320  ir sensor servo gate.o(.text.Open_Door)
+    Sensor_Init                              0x0000072d   Thumb Code   204  ir sensor servo gate.o(.text.Sensor_Init)
+    Servo_Init                               0x000007f9   Thumb Code   122  ir sensor servo gate.o(.text.Servo_Init)
+    SysTick_Init                             0x00000875   Thumb Code    26  ir sensor servo gate.o(.text.SysTick_Init)
+    main                                     0x00000891   Thumb Code   176  ir sensor servo gate.o(.text.main)
+    Region$$Table$$Base                      0x00000940   Number         0  anon$$obj.o(Region$$Table)
+    Region$$Table$$Limit                     0x00000950   Number         0  anon$$obj.o(Region$$Table)
     __libspace_start                         0x20000000   Data          96  libspace.o(.bss)
     __temporary_stack_top$libspace           0x20000060   Data           0  libspace.o(.bss)
-    detected                                 0x20000060   Data           1  cecs346lab7.o(.bss.detected)
-    move_servo                               0x20000061   Data           1  cecs346lab7.o(.bss.move_servo)
+    detected                                 0x20000060   Data           1  ir sensor servo gate.o(.bss.detected)
+    move_servo                               0x20000061   Data           1  ir sensor servo gate.o(.bss.move_servo)
 
 
 
@@ -537,9 +537,9 @@ Memory Map of the image
 
   Image Entry point : 0x0000026d
 
-  Load Region LR_1 (Base: 0x00000000, Size: 0x000008f4, Max: 0xffffffff, ABSOLUTE)
+  Load Region LR_1 (Base: 0x00000000, Size: 0x00000950, Max: 0xffffffff, ABSOLUTE)
 
-    Execution Region ER_RO (Exec base: 0x00000000, Load base: 0x00000000, Size: 0x000008f4, Max: 0xffffffff, ABSOLUTE)
+    Execution Region ER_RO (Exec base: 0x00000000, Load base: 0x00000000, Size: 0x00000950, Max: 0xffffffff, ABSOLUTE)
 
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
@@ -602,34 +602,34 @@ Memory Map of the image
     0x000003d8   0x000003d8   0x00000002   Code   RO          149    .text               c_w.l(use_no_semi.o)
     0x000003da   0x000003da   0x00000000   Code   RO          151    .text               c_w.l(indicate_semi.o)
     0x000003da   0x000003da   0x00000002   PAD
-    0x000003dc   0x000003dc   0x000000e6   Code   RO           23    .text.Close_Door    cecs346lab7.o
-    0x000004c2   0x000004c2   0x00000002   PAD
-    0x000004c4   0x000004c4   0x00000066   Code   RO           27    .text.GPIOPortD_Handler  cecs346lab7.o
-    0x0000052a   0x0000052a   0x00000002   PAD
-    0x0000052c   0x0000052c   0x0000007c   Code   RO           19    .text.LEDInit       cecs346lab7.o
-    0x000005a8   0x000005a8   0x00000140   Code   RO           25    .text.Open_Door     cecs346lab7.o
-    0x000006e8   0x000006e8   0x000000cc   Code   RO           15    .text.Sensor_Init   cecs346lab7.o
-    0x000007b4   0x000007b4   0x0000007a   Code   RO           17    .text.Servo_Init    cecs346lab7.o
-    0x0000082e   0x0000082e   0x00000002   PAD
-    0x00000830   0x00000830   0x0000001a   Code   RO           21    .text.SysTick_Init  cecs346lab7.o
-    0x0000084a   0x0000084a   0x00000002   PAD
-    0x0000084c   0x0000084c   0x00000098   Code   RO           13    .text.main          cecs346lab7.o
-    0x000008e4   0x000008e4   0x00000010   Data   RO          207    Region$$Table       anon$$obj.o
+    0x000003dc   0x000003dc   0x0000012a   Code   RO           23    .text.Close_Door    ir sensor servo gate.o
+    0x00000506   0x00000506   0x00000002   PAD
+    0x00000508   0x00000508   0x00000066   Code   RO           27    .text.GPIOPortD_Handler  ir sensor servo gate.o
+    0x0000056e   0x0000056e   0x00000002   PAD
+    0x00000570   0x00000570   0x0000007c   Code   RO           19    .text.LEDInit       ir sensor servo gate.o
+    0x000005ec   0x000005ec   0x00000140   Code   RO           25    .text.Open_Door     ir sensor servo gate.o
+    0x0000072c   0x0000072c   0x000000cc   Code   RO           15    .text.Sensor_Init   ir sensor servo gate.o
+    0x000007f8   0x000007f8   0x0000007a   Code   RO           17    .text.Servo_Init    ir sensor servo gate.o
+    0x00000872   0x00000872   0x00000002   PAD
+    0x00000874   0x00000874   0x0000001a   Code   RO           21    .text.SysTick_Init  ir sensor servo gate.o
+    0x0000088e   0x0000088e   0x00000002   PAD
+    0x00000890   0x00000890   0x000000b0   Code   RO           13    .text.main          ir sensor servo gate.o
+    0x00000940   0x00000940   0x00000010   Data   RO          207    Region$$Table       anon$$obj.o
 
 
-    Execution Region ER_RW (Exec base: 0x20000000, Load base: 0x000008f4, Size: 0x00000000, Max: 0xffffffff, ABSOLUTE)
+    Execution Region ER_RW (Exec base: 0x20000000, Load base: 0x00000950, Size: 0x00000000, Max: 0xffffffff, ABSOLUTE)
 
     **** No section assigned to this execution region ****
 
 
-    Execution Region ER_ZI (Exec base: 0x20000000, Load base: 0x000008f4, Size: 0x00000468, Max: 0xffffffff, ABSOLUTE)
+    Execution Region ER_ZI (Exec base: 0x20000000, Load base: 0x00000950, Size: 0x00000468, Max: 0xffffffff, ABSOLUTE)
 
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
     0x20000000        -       0x00000060   Zero   RW           72    .bss                c_w.l(libspace.o)
-    0x20000060        -       0x00000001   Zero   RW           30    .bss.detected       cecs346lab7.o
-    0x20000061        -       0x00000001   Zero   RW           29    .bss.move_servo     cecs346lab7.o
-    0x20000062   0x000008f4   0x00000006   PAD
+    0x20000060        -       0x00000001   Zero   RW           30    .bss.detected       ir sensor servo gate.o
+    0x20000061        -       0x00000001   Zero   RW           29    .bss.move_servo     ir sensor servo gate.o
+    0x20000062   0x00000950   0x00000006   PAD
     0x20000068        -       0x00000000   Zero   RW            2    HEAP                startup.o
     0x20000068        -       0x00000400   Zero   RW            1    STACK               startup.o
 
@@ -641,11 +641,11 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   Object Name
 
-      1280          0          0          0          2       2061   cecs346lab7.o
-       692        632          0          0       1024       1028   startup.o
+      1372          0          0          0          2       2180   ir sensor servo gate.o
+       692        632          0          0       1024       1044   startup.o
 
     ----------------------------------------------------------------------
-      1980        632         16          0       1032       3089   Object Totals
+      2072        632         16          0       1032       3224   Object Totals
          0          0         16          0          0          0   (incl. Generated)
          8          0          0          0          6          0   (incl. Padding)
 
@@ -693,15 +693,15 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   
 
-      2276        648         16          0       1128       3565   Grand Totals
-      2276        648         16          0       1128       3565   ELF Image Totals
-      2276        648         16          0          0          0   ROM Totals
+      2368        648         16          0       1128       3700   Grand Totals
+      2368        648         16          0       1128       3700   ELF Image Totals
+      2368        648         16          0          0          0   ROM Totals
 
 ==============================================================================
 
-    Total RO  Size (Code + RO Data)                 2292 (   2.24kB)
+    Total RO  Size (Code + RO Data)                 2384 (   2.33kB)
     Total RW  Size (RW Data + ZI Data)              1128 (   1.10kB)
-    Total ROM Size (Code + RO Data + RW Data)       2292 (   2.24kB)
+    Total ROM Size (Code + RO Data + RW Data)       2384 (   2.33kB)
 
 ==============================================================================
 
