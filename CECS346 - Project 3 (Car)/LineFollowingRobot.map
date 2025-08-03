@@ -320,15 +320,15 @@ Image Symbol Table
     [Anonymous Symbol]                       0x000003fc   Section        0  ir_sensor.o(.text.IR_Sensor_Init)
     [Anonymous Symbol]                       0x0000048c   Section        0  motors.o(.text.Motor_Init)
     [Anonymous Symbol]                       0x000004e4   Section        0  sensor.o(.text.Sensor_CollectData)
-    [Anonymous Symbol]                       0x0000059c   Section        0  sensor.o(.text.Sensor_Init)
-    [Anonymous Symbol]                       0x000005ec   Section        0  systick.o(.text.SysTick_Init)
-    [Anonymous Symbol]                       0x00000608   Section        0  systick.o(.text.Wait_N_MS)
-    [Anonymous Symbol]                       0x00000640   Section        0  systick.o(.text.Wait_N_US)
-    [Anonymous Symbol]                       0x00000678   Section        0  linefollower.o(.text.main)
-    x$fpl$dfix                               0x00000714   Section       94  dfix.o(x$fpl$dfix)
-    x$fpl$dfixu                              0x00000774   Section       90  dfixu.o(x$fpl$dfixu)
-    x$fpl$dnaninf                            0x000007ce   Section      156  dnaninf.o(x$fpl$dnaninf)
-    x$fpl$usenofp                            0x0000086a   Section        0  usenofp.o(x$fpl$usenofp)
+    [Anonymous Symbol]                       0x000005a0   Section        0  sensor.o(.text.Sensor_Init)
+    [Anonymous Symbol]                       0x000005f0   Section        0  systick.o(.text.SysTick_Init)
+    [Anonymous Symbol]                       0x0000060c   Section        0  systick.o(.text.Wait_N_MS)
+    [Anonymous Symbol]                       0x00000644   Section        0  systick.o(.text.Wait_N_US)
+    [Anonymous Symbol]                       0x0000067c   Section        0  linefollower.o(.text.main)
+    x$fpl$dfix                               0x00000734   Section       94  dfix.o(x$fpl$dfix)
+    x$fpl$dfixu                              0x00000794   Section       90  dfixu.o(x$fpl$dfixu)
+    x$fpl$dnaninf                            0x000007ee   Section      156  dnaninf.o(x$fpl$dnaninf)
+    x$fpl$usenofp                            0x0000088a   Section        0  usenofp.o(x$fpl$usenofp)
     .bss                                     0x20000000   Section       96  libspace.o(.bss)
     HeapMem                                  0x20000068   Data           0  startup.o(HEAP)
     StackMem                                 0x20000068   Data           0  startup.o(STACK)
@@ -564,21 +564,21 @@ Image Symbol Table
     GPIOPortD_Handler                        0x000003dd   Thumb Code    32  linefollower.o(.text.GPIOPortD_Handler)
     IR_Sensor_Init                           0x000003fd   Thumb Code   144  ir_sensor.o(.text.IR_Sensor_Init)
     Motor_Init                               0x0000048d   Thumb Code    86  motors.o(.text.Motor_Init)
-    Sensor_CollectData                       0x000004e5   Thumb Code   184  sensor.o(.text.Sensor_CollectData)
-    Sensor_Init                              0x0000059d   Thumb Code    80  sensor.o(.text.Sensor_Init)
-    SysTick_Init                             0x000005ed   Thumb Code    26  systick.o(.text.SysTick_Init)
-    Wait_N_MS                                0x00000609   Thumb Code    56  systick.o(.text.Wait_N_MS)
-    Wait_N_US                                0x00000641   Thumb Code    56  systick.o(.text.Wait_N_US)
-    main                                     0x00000679   Thumb Code   154  linefollower.o(.text.main)
-    __aeabi_d2iz                             0x00000715   Thumb Code     0  dfix.o(x$fpl$dfix)
-    _dfix                                    0x00000715   Thumb Code    94  dfix.o(x$fpl$dfix)
-    __aeabi_d2uiz                            0x00000775   Thumb Code     0  dfixu.o(x$fpl$dfixu)
-    _dfixu                                   0x00000775   Thumb Code    90  dfixu.o(x$fpl$dfixu)
-    __fpl_dnaninf                            0x000007cf   Thumb Code   156  dnaninf.o(x$fpl$dnaninf)
-    __I$use$fp                               0x0000086a   Number         0  usenofp.o(x$fpl$usenofp)
-    linefollower_fsm                         0x00000870   Data         680  linefollower.o(.rodata.linefollower_fsm)
-    Region$$Table$$Base                      0x00000b18   Number         0  anon$$obj.o(Region$$Table)
-    Region$$Table$$Limit                     0x00000b28   Number         0  anon$$obj.o(Region$$Table)
+    Sensor_CollectData                       0x000004e5   Thumb Code   186  sensor.o(.text.Sensor_CollectData)
+    Sensor_Init                              0x000005a1   Thumb Code    80  sensor.o(.text.Sensor_Init)
+    SysTick_Init                             0x000005f1   Thumb Code    26  systick.o(.text.SysTick_Init)
+    Wait_N_MS                                0x0000060d   Thumb Code    56  systick.o(.text.Wait_N_MS)
+    Wait_N_US                                0x00000645   Thumb Code    56  systick.o(.text.Wait_N_US)
+    main                                     0x0000067d   Thumb Code   184  linefollower.o(.text.main)
+    __aeabi_d2iz                             0x00000735   Thumb Code     0  dfix.o(x$fpl$dfix)
+    _dfix                                    0x00000735   Thumb Code    94  dfix.o(x$fpl$dfix)
+    __aeabi_d2uiz                            0x00000795   Thumb Code     0  dfixu.o(x$fpl$dfixu)
+    _dfixu                                   0x00000795   Thumb Code    90  dfixu.o(x$fpl$dfixu)
+    __fpl_dnaninf                            0x000007ef   Thumb Code   156  dnaninf.o(x$fpl$dnaninf)
+    __I$use$fp                               0x0000088a   Number         0  usenofp.o(x$fpl$usenofp)
+    linefollower_fsm                         0x00000890   Data         680  linefollower.o(.rodata.linefollower_fsm)
+    Region$$Table$$Base                      0x00000b38   Number         0  anon$$obj.o(Region$$Table)
+    Region$$Table$$Limit                     0x00000b48   Number         0  anon$$obj.o(Region$$Table)
     __libspace_start                         0x20000000   Data          96  libspace.o(.bss)
     Input                                    0x20000060   Data           1  linefollower.o(.bss.Input)
     __temporary_stack_top$libspace           0x20000060   Data           0  libspace.o(.bss)
@@ -594,9 +594,9 @@ Memory Map of the image
 
   Image Entry point : 0x0000026d
 
-  Load Region LR_1 (Base: 0x00000000, Size: 0x00000b28, Max: 0xffffffff, ABSOLUTE)
+  Load Region LR_1 (Base: 0x00000000, Size: 0x00000b48, Max: 0xffffffff, ABSOLUTE)
 
-    Execution Region ER_RO (Exec base: 0x00000000, Load base: 0x00000000, Size: 0x00000b28, Max: 0xffffffff, ABSOLUTE)
+    Execution Region ER_RO (Exec base: 0x00000000, Load base: 0x00000000, Size: 0x00000b48, Max: 0xffffffff, ABSOLUTE)
 
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
@@ -663,30 +663,30 @@ Memory Map of the image
     0x000003fc   0x000003fc   0x00000090   Code   RO           69    .text.IR_Sensor_Init  ir_sensor.o
     0x0000048c   0x0000048c   0x00000056   Code   RO           44    .text.Motor_Init    motors.o
     0x000004e2   0x000004e2   0x00000002   PAD
-    0x000004e4   0x000004e4   0x000000b8   Code   RO           13    .text.Sensor_CollectData  sensor.o
-    0x0000059c   0x0000059c   0x00000050   Code   RO           15    .text.Sensor_Init   sensor.o
-    0x000005ec   0x000005ec   0x0000001a   Code   RO           52    .text.SysTick_Init  systick.o
-    0x00000606   0x00000606   0x00000002   PAD
-    0x00000608   0x00000608   0x00000038   Code   RO           56    .text.Wait_N_MS     systick.o
-    0x00000640   0x00000640   0x00000038   Code   RO           60    .text.Wait_N_US     systick.o
-    0x00000678   0x00000678   0x0000009a   Code   RO           25    .text.main          linefollower.o
-    0x00000712   0x00000712   0x00000002   PAD
-    0x00000714   0x00000714   0x0000005e   Code   RO           82    x$fpl$dfix          fz_ws.l(dfix.o)
-    0x00000772   0x00000772   0x00000002   PAD
-    0x00000774   0x00000774   0x0000005a   Code   RO           86    x$fpl$dfixu         fz_ws.l(dfixu.o)
-    0x000007ce   0x000007ce   0x0000009c   Code   RO           91    x$fpl$dnaninf       fz_ws.l(dnaninf.o)
-    0x0000086a   0x0000086a   0x00000000   Code   RO           93    x$fpl$usenofp       fz_ws.l(usenofp.o)
-    0x0000086a   0x0000086a   0x00000006   PAD
-    0x00000870   0x00000870   0x000002a8   Data   RO           31    .rodata.linefollower_fsm  linefollower.o
-    0x00000b18   0x00000b18   0x00000010   Data   RO          255    Region$$Table       anon$$obj.o
+    0x000004e4   0x000004e4   0x000000ba   Code   RO           13    .text.Sensor_CollectData  sensor.o
+    0x0000059e   0x0000059e   0x00000002   PAD
+    0x000005a0   0x000005a0   0x00000050   Code   RO           15    .text.Sensor_Init   sensor.o
+    0x000005f0   0x000005f0   0x0000001a   Code   RO           52    .text.SysTick_Init  systick.o
+    0x0000060a   0x0000060a   0x00000002   PAD
+    0x0000060c   0x0000060c   0x00000038   Code   RO           56    .text.Wait_N_MS     systick.o
+    0x00000644   0x00000644   0x00000038   Code   RO           60    .text.Wait_N_US     systick.o
+    0x0000067c   0x0000067c   0x000000b8   Code   RO           25    .text.main          linefollower.o
+    0x00000734   0x00000734   0x0000005e   Code   RO           82    x$fpl$dfix          fz_ws.l(dfix.o)
+    0x00000792   0x00000792   0x00000002   PAD
+    0x00000794   0x00000794   0x0000005a   Code   RO           86    x$fpl$dfixu         fz_ws.l(dfixu.o)
+    0x000007ee   0x000007ee   0x0000009c   Code   RO           91    x$fpl$dnaninf       fz_ws.l(dnaninf.o)
+    0x0000088a   0x0000088a   0x00000000   Code   RO           93    x$fpl$usenofp       fz_ws.l(usenofp.o)
+    0x0000088a   0x0000088a   0x00000006   PAD
+    0x00000890   0x00000890   0x000002a8   Data   RO           31    .rodata.linefollower_fsm  linefollower.o
+    0x00000b38   0x00000b38   0x00000010   Data   RO          255    Region$$Table       anon$$obj.o
 
 
-    Execution Region ER_RW (Exec base: 0x20000000, Load base: 0x00000b28, Size: 0x00000000, Max: 0xffffffff, ABSOLUTE)
+    Execution Region ER_RW (Exec base: 0x20000000, Load base: 0x00000b48, Size: 0x00000000, Max: 0xffffffff, ABSOLUTE)
 
     **** No section assigned to this execution region ****
 
 
-    Execution Region ER_ZI (Exec base: 0x20000000, Load base: 0x00000b28, Size: 0x00000468, Max: 0xffffffff, ABSOLUTE)
+    Execution Region ER_ZI (Exec base: 0x20000000, Load base: 0x00000b48, Size: 0x00000468, Max: 0xffffffff, ABSOLUTE)
 
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
@@ -695,7 +695,7 @@ Memory Map of the image
     0x20000061        -       0x00000001   Zero   RW           32    .bss.curr_s         linefollower.o
     0x20000062        -       0x00000001   Zero   RW           33    .bss.move_car       linefollower.o
     0x20000063        -       0x00000001   Zero   RW           34    .bss.time           linefollower.o
-    0x20000064   0x00000b28   0x00000004   PAD
+    0x20000064   0x00000b48   0x00000004   PAD
     0x20000068        -       0x00000000   Zero   RW            2    HEAP                startup.o
     0x20000068        -       0x00000400   Zero   RW            1    STACK               startup.o
 
@@ -707,15 +707,15 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   Object Name
 
-       144          0          0          0          0        486   ir_sensor.o
-       186          0        680          0          4       1624   linefollower.o
-        86          0          0          0          0        452   motors.o
-       264          0          0          0          0        925   sensor.o
-       692        632          0          0       1024       1028   startup.o
-       138          0          0          0          0       1162   systick.o
+       144          0          0          0          0        484   ir_sensor.o
+       216          0        680          0          4       1674   linefollower.o
+        86          0          0          0          0        450   motors.o
+       266          0          0          0          0        923   sensor.o
+       692        632          0          0       1024       1020   startup.o
+       138          0          0          0          0       1160   systick.o
 
     ----------------------------------------------------------------------
-      1516        632        696          0       1032       5677   Object Totals
+      1548        632        696          0       1032       5711   Object Totals
          0          0         16          0          0          0   (incl. Generated)
          6          0          0          0          4          0   (incl. Padding)
 
@@ -768,15 +768,15 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   
 
-      2160        660        696          0       1128       6193   Grand Totals
-      2160        660        696          0       1128       6193   ELF Image Totals
-      2160        660        696          0          0          0   ROM Totals
+      2192        660        696          0       1128       6227   Grand Totals
+      2192        660        696          0       1128       6227   ELF Image Totals
+      2192        660        696          0          0          0   ROM Totals
 
 ==============================================================================
 
-    Total RO  Size (Code + RO Data)                 2856 (   2.79kB)
+    Total RO  Size (Code + RO Data)                 2888 (   2.82kB)
     Total RW  Size (RW Data + ZI Data)              1128 (   1.10kB)
-    Total ROM Size (Code + RO Data + RW Data)       2856 (   2.79kB)
+    Total ROM Size (Code + RO Data + RW Data)       2888 (   2.82kB)
 
 ==============================================================================
 

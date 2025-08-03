@@ -16,8 +16,8 @@
 // Reflectance sensor pin connections:
 // PE3: Even CTRL, PE2: ODD CTRL
 // PE1: Left Sensor, PE0: Right Sensor
-#define SENSOR_CTRL       (*((volatile unsigned long *)0x400240C0)) // Port E 3,2
-#define SENSORS           (*((volatile uint32_t *)0x4002400C)) // Port E 1,0
+#define SENSORS       (*((volatile unsigned long *)0x400240C0)) // Port E 3,2
+#define SENSOR_CTRL           (*((volatile uint32_t *)0x4002400C)) // Port E 1,0
 // TODO: connect to PB and PE data
 
 void Sensor_Init(void);

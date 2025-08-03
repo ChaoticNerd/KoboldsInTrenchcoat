@@ -16,7 +16,7 @@
 #define ONE_MICRO_S 16 // SysTick timer reload value for one microsecond, assume 16MHz system clock.
 #define RELOAD_SHIFT	1
 #define CURRENT_CLEAR	0
-#define WAIR_FOR_RAISE	0
+#define WAIT_FOR_RAISE	0
 
 void SysTick_Init(void){
 	NVIC_ST_CTRL_R &= ~NVIC_ST_CTRL_ENABLE;   // disable SysTick during setup
@@ -31,7 +31,7 @@ void DelayMs(void){
 	// enable SysTick timer
 	NVIC_ST_CTRL_R |= NVIC_ST_CTRL_ENABLE;
 	// wait for COUNT bit in control register to be raised.
-	while ((NVIC_ST_CTRL_R & NVIC_ST_CTRL_COUNT) == WAIR_FOR_RAISE );
+	while ((NVIC_ST_CTRL_R & NVIC_ST_CTRL_COUNT) == WAIT_FOR_RAISE );
   	// disable SysTick timer
 	NVIC_ST_CTRL_R &= ~NVIC_ST_CTRL_ENABLE;
 }
@@ -54,7 +54,7 @@ void DelayUs(void){
 	// enable SysTick timer
 	NVIC_ST_CTRL_R |= NVIC_ST_CTRL_ENABLE;
 	// wait for COUNT bit in control register to be raised.
-	while ((NVIC_ST_CTRL_R & NVIC_ST_CTRL_COUNT) == WAIR_FOR_RAISE );
+	while ((NVIC_ST_CTRL_R & NVIC_ST_CTRL_COUNT) == WAIT_FOR_RAISE );
   	// disable SysTick timer
 	NVIC_ST_CTRL_R &= ~NVIC_ST_CTRL_ENABLE;
 }

@@ -86,7 +86,7 @@ int main(void){
 			MOTORS = linefollower_fsm[curr_s].motors;
 			Wait_N_MS(linefollower_fsm[curr_s].delays);		
 			time = linefollower_fsm[curr_s].delays;
-			Input = Sensor_CollectData();
+			Input = Sensor_CollectData();  						// iNPUT STAYS AT 0 ALL THE TIME
 		  //Input = 0;
 			curr_s = linefollower_fsm[curr_s].next[Input];
 		}

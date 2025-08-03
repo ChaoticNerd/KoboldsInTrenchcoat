@@ -23,7 +23,7 @@
 
 //TODO: find the right bit positions
 #define SENSOR_CTRL_PINS 0x30   // CTRL ODD: bit 2, CRTL EVEN: bit 3
-#define SENSOR_PINS      0x0F   // SENSOR 0: bit 0 SENSOR 7: bit 1
+#define SENSOR_PINS      0x03   // SENSOR 0: bit 0 SENSOR 7: bit 1
 
 uint8_t Sensor_CollectData(void){
 	Sensor_Init(); // init sensor
@@ -39,17 +39,18 @@ uint8_t Sensor_CollectData(void){
 	
 	//Charge capacitors by setting PE0:sensor0, PE1: sensor7 as outputs and output high
 	GPIO_PORTE_DIR_R  |= SENSOR_PINS;  // Set PE0,1 as output
-	SENSORS |= SENSOR_PINS; // Set PE0,1 HIGH
+	SENSORS |= SENSOR_PINS; // Set PE0,1 HIGH CHECK
+
 	//Wait 10 us
 	Wait_N_US(10);
-	//sensor_data = SENSORS;	
+	sensor_data = SENSORS;	//update sensor_data with the current sensor inputs
 	//Set PE0,1 as inputs
 	GPIO_PORTE_DIR_R &= ~SENSOR_PINS;
 
 	//Wait 'WAIT_TIME' us
 	Wait_N_MS(WAIT_TIME);
-	sensor_data = SENSORS;	
-	//update sensor_data with the current sensor inputs
+	//sensor_data = SENSORS; // SOMETHING IS WRONG WITH THIS LINE	
+	
 	//sensor_data = SENSORS;	
   // turn off CTRL ODD & EVEN	pins to turn off the LED emitters to save power
 	SENSOR_CTRL &= ~SENSOR_CTRL_PINS;
